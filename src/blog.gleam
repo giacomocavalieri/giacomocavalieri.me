@@ -18,6 +18,7 @@ pub fn home() -> Element(a) {
             attribute("content", "#cceac3"),
             attribute("media", "(prefers-color-scheme: light)"),
           ]),
+          meta([attribute("charset", "utf-8")]),
           link([rel("stylesheet"), href("/styles/common.css")]),
           link([rel("stylesheet"), href("/styles/homepage-header.css")]),
           link([rel("stylesheet"), href("/styles/post.css")]),
