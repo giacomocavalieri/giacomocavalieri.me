@@ -1,0 +1,20 @@
+#homepage-header {
+    margin-bottom: calc(var(--h1-size) * 2);
+    text-align: center;
+}
+
+#homepage-profile-picture {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+#homepage-title {
+    margin-bottom: 1rem;
+}
+
+#homepage-subtitle {
+    font-style: italic;
+    font-weight: lighter;
+}
