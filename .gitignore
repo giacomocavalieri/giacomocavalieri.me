@@ -2,4 +2,7 @@
 *.ez
 build
 erl_crash.dump
-site/index.html
+
+site/*.html
+site/**/*.html
+.DS_Store

@@ -19,7 +19,7 @@ jobs:
           gleam-version: "0.30.5"
           rebar3-version: "3"
       - name: build
-        run: gleam run -m app
+        run: gleam run -m build
       - name: push to site branch
         uses: s0/git-publish-subdir-action@develop
         env:
