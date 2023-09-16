@@ -10,6 +10,9 @@
     --font-color: #192427;
     --main-color: hsl(106, 48%, 84%);
     --selection-color: hsl(105, 48%, 90%);
+
+    --paragraph-line-height: 1.5rem;
+    --profile-picture-size: 10rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -65,10 +68,10 @@ h2 {
 }
 
 p {
-    line-height: 1.5rem;
+    line-height: var(--paragraph-line-height);
 }
 
-/* Links */
+/* --- LINKS --- */
 
 a>* {
     /* Treat everything inside a link as an inline element */
@@ -86,4 +89,78 @@ a {
     background-position: bottom;
     padding-left: 0.2rem;
     padding-right: 0.2rem;
+}
+
+/* --- HOMEPAGE --- */
+
+#homepage-header {
+    margin-bottom: calc(var(--h1-size) * 2);
+    text-align: center;
+}
+
+#homepage-profile-picture {
+    height: var(--profile-picture-size);
+    width: var(--profile-picture-size);
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+#homepage-title {
+    margin-bottom: 1rem;
+}
+
+#homepage-subtitle {
+    font-style: italic;
+    font-weight: lighter;
+}
+
+/* --- PREVIEWS --- */
+
+#posts-previews {
+    list-style: none;
+}
+
+#posts-previews .post-preview:not(:last-child) {
+    margin-bottom: var(--h1-size);
+}
+
+/* --- TAGS --- */
+
+.post-tags {
+    display: inline;
+    margin-left: 1rem;
+    list-style: none;
+}
+
+.post-tag {
+    display: inline;
+    background-color: var(--main-color);
+    font-size: 0.9rem;
+    border-radius: 1rem;
+    padding: 0.2rem 0.5rem;
+    margin-bottom: 0.3rem;
+    margin-right: 0.3rem;
+}
+
+
+/* --- POSTS --- */
+
+.post-title {
+    margin-bottom: var(--h1-size);
+    margin-top: var(--h2-size);
+}
+
+.post-subtitle {
+    display: block;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.post-date {
+    font-style: italic;
+}
+
+.post-preview-abstract,
+.post-body {
+    text-align: justify;
 }
