@@ -1,5 +1,5 @@
 import gleam/list
-import lustre/element.{Element}
+import lustre/element
 import simplifile
 import blog/page
 import blog/post.{Post}
@@ -18,7 +18,7 @@ pub fn main() {
   list.each(posts, write_post)
 }
 
-fn write_post(post: Post(List(Element(a)))) -> Nil {
+fn write_post(post: Post) -> Nil {
   let _ =
     page.from_post(post)
     |> element.to_string

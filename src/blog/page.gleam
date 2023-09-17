@@ -9,7 +9,7 @@ import blog/post.{Post}
 
 /// Creates the home page displaying a header and the posts' previews.
 ///
-pub fn home(posts: List(Post(List(Element(a))))) -> Element(a) {
+pub fn home(posts: List(Post)) -> Element(a) {
   let main_content = main([], [post.to_previews(posts)])
   with_body("Giacomo", [home_header(), main_content])
 }
@@ -49,7 +49,7 @@ fn home_header() -> Element(a) {
 
 /// Creates the page of a post.
 ///
-pub fn from_post(post: Post(List(Element(a)))) -> Element(a) {
+pub fn from_post(post: Post) -> Element(Nil) {
   with_body(post.title, [post.to_full(post)])
 }
 
