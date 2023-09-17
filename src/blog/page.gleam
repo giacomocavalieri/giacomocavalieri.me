@@ -14,7 +14,9 @@ import blog/post.{Post}
 ///
 pub fn home(posts: List(Post)) -> Element(a) {
   let main_content = main([], [post.to_previews(posts)])
-  with_body("Giacomo", [home_header(), main_content])
+  let description =
+    "A personal blog where I share my thoughts as I jump from one obsession to the other"
+  with_body("Giacomo Cavalieri", description, [home_header(), main_content])
 }
 
 /// The homepage header with profile picture, title and short description.
@@ -75,7 +77,7 @@ fn home_header() -> Element(a) {
 /// Creates the page of a post.
 ///
 pub fn from_post(post: Post) -> Element(Nil) {
-  with_body(post.title, [post.to_full(post)])
+  with_body(post.title, post.abstract, [post.to_full(post)])
 }
 
 // --- HELPERS ---
@@ -83,20 +85,28 @@ pub fn from_post(post: Post) -> Element(Nil) {
 /// Wraps a list of elements in an html page with a given title and default
 /// head.
 /// 
-fn with_body(title: String, elements: List(Element(a))) -> Element(a) {
-  html([lang("en")], [heading(title), body([], elements)])
+fn with_body(
+  title: String,
+  description: String,
+  elements: List(Element(a)),
+) -> Element(a) {
+  html([lang("en")], [heading(title, description), body([], elements)])
 }
 
 /// The default head used by all the pages of the site, the only changing piece
 /// is the title.
 /// 
-fn heading(page_title: String) -> Element(a) {
+fn heading(page_title: String, description: String) -> Element(a) {
   head(
     [],
     [
       title([], page_title),
       charset("utf-8"),
       viewport([content("width=device-width, initial-scale=1.0")]),
+      meta([property("og:url"), content("https://giacomocavalieri.me")]),
+      meta([property("og:title"), content(page_title)]),
+      meta([property("og:type"), content("website")]),
+      meta([property("og:description"), content(description)]),
       theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
       stylesheet("/style.css"),
     ],
@@ -135,4 +145,8 @@ fn media(value: String) -> Attribute(a) {
 
 fn lang(value: String) -> Attribute(a) {
   attribute("lang", value)
+}
+
+fn property(value: String) -> Attribute(a) {
+  attribute("property", value)
 }
