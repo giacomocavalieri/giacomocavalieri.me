@@ -2,9 +2,10 @@ import lustre/element.{Element, text}
 import lustre/element/html.{
   a, article, div, h1, h2, header, li, main, p, time, ul,
 }
-import lustre/attribute.{attribute, class, classes, href, id}
+import lustre/attribute.{attribute, class, classes, href, id, rel}
 import blog/date
 import gleam/list
+import gleam/function
 
 /// A blog post, the abstract and body may be generics are generic so that they
 /// can hold data of different kinds in the future (for example they could
@@ -26,8 +27,11 @@ pub type Post {
 /// 
 pub fn to_full(post: Post) -> Element(Nil) {
   let post_classes = [#("post", True), #("h-entry", True)]
+  let home_link =
+    a([rel("author"), href("https://giacomocavalieri.me")], [text("← home")])
+
   let header =
-    [to_title, to_subtitle]
+    [to_title, function.constant(home_link), to_subtitle]
     |> list.map(fn(gen) { gen(post) })
     |> header([], _)
 
