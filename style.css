@@ -1,7 +1,6 @@
 :root {
+    --body-padding-top: 3rem;
     --body-padding: 3rem;
-    --l-body-padding: 10%;
-    --xl-body-padding: 20%;
 
     --h1-size: 3rem;
     --h2-size: 2rem;
@@ -24,6 +23,19 @@
     }
 }
 
+@media screen and (min-width: 992px) {
+    :root {
+        --body-padding: 10%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    :root {
+        --body-padding: 20%;
+    }
+}
+
+
 ::selection {
     background: var(--selection-color);
 }
@@ -39,23 +51,15 @@
     color: var(--font-color);
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     padding: var(--body-padding);
+    padding-top: var(--body-padding-top);
     background-color: var(--background-color);
-}
-
-@media screen and (min-width: 992px) {
-    body {
-        padding-left: var(--l-body-padding);
-        padding-right: var(--l-body-padding);
-    }
-}
-
-@media screen and (min-width: 1200px) {
-    body {
-        padding-left: var(--xl-body-padding);
-        padding-right: var(--xl-body-padding);
-    }
+    overflow-x: hidden;
 }
 
 h1 {
