@@ -2,7 +2,7 @@ import lustre/element.{Element, text}
 import lustre/element/html.{
   a, article, div, h1, h2, header, li, main, p, time, ul,
 }
-import lustre/attribute.{attribute, class, href, id}
+import lustre/attribute.{attribute, class, classes, href, id}
 import blog/date
 import gleam/list
 
@@ -25,12 +25,13 @@ pub type Post {
 /// for a full post page.
 /// 
 pub fn to_full(post: Post) -> Element(Nil) {
+  let post_classes = [#("post", True), #("h-entry", True)]
   let header =
     [to_title, to_subtitle]
     |> list.map(fn(gen) { gen(post) })
     |> header([], _)
 
-  article([class("post")], [header, to_body(post)])
+  article([classes(post_classes)], [header, to_body(post)])
 }
 
 /// Turns a list of posts (with html body) into a `<ul>` with all their
@@ -41,13 +42,15 @@ pub fn to_previews(posts: List(Post)) -> Element(a) {
 }
 
 fn to_preview(post: Post) -> Element(a) {
+  let preview_classes = [#("post-preview", True), #("h-entry", True)]
   [to_preview_title, to_subtitle, to_preview_abstract]
   |> list.map(fn(gen) { gen(post) })
-  |> li([class("post-preview")], _)
+  |> li([classes(preview_classes)], _)
 }
 
 fn to_title(post: Post) -> Element(a) {
-  h1([class("post-title")], [text(post.title)])
+  let title_classes = [#("post-title", True), #("p-name", True)]
+  h1([classes(title_classes)], [text(post.title)])
 }
 
 fn to_preview_title(post: Post) -> Element(a) {
@@ -55,7 +58,7 @@ fn to_preview_title(post: Post) -> Element(a) {
     class("post-preview-title"),
     href("/posts/" <> post.id <> ".html"),
   ]
-  a(attributes, [h2([], [text(post.title)])])
+  a(attributes, [h2([class("p-name")], [text(post.title)])])
 }
 
 fn to_subtitle(post: Post) -> Element(a) {
@@ -64,7 +67,8 @@ fn to_subtitle(post: Post) -> Element(a) {
 
 fn to_date(post: Post) -> Element(a) {
   let datetime = attribute("datetime", date.to_datetime(post.date))
-  let time_attributes = [class("post-date"), datetime]
+  let date_classes = [#("post-date", True), #("dt-published", True)]
+  let time_attributes = [classes(date_classes), datetime]
   time(time_attributes, [text(date.to_string(post.date))])
 }
 
@@ -74,15 +78,21 @@ fn to_tags(post: Post) -> Element(a) {
 }
 
 fn to_preview_abstract(post: Post) -> Element(a) {
-  p([class("post-preview-abstract")], [text(post.abstract)])
+  let abstract_classes = [
+    #("post-preview-abstract", True),
+    #("p-summary", True),
+  ]
+  p([classes(abstract_classes)], [text(post.abstract)])
 }
 
 fn to_body(post: Post) -> Element(Nil) {
-  main([class("post-body")], [post.body])
+  let body_classes = [#("post-body", True), #("e-content", True)]
+  main([classes(body_classes)], [post.body])
 }
 
 fn to_pill(tag: String) -> Element(a) {
   // TODO: actually send to a tag page
   let link = a([href("#")], [text(tag)])
-  li([class("post-tag")], [link])
+  let pill_classes = [#("post-tag", True), #("p-category", True)]
+  li([classes(pill_classes)], [link])
 }
