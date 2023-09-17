@@ -24,7 +24,7 @@ fn home_header() -> Element(a) {
     "https://www.gravatar.com/avatar/87534ab912fd65fd02da6b2e93f5d55b?s=440"
 
   header(
-    [id("homepage-header"), class("h-card")],
+    [id("homepage-header"), class("h-card p-author")],
     [
       img([
         id("homepage-profile-picture"),

@@ -55,10 +55,10 @@ fn to_title(post: Post) -> Element(a) {
 
 fn to_preview_title(post: Post) -> Element(a) {
   let attributes = [
-    classes([#("post-preview-title", True), #("u-url", True)]),
+    classes([#("post-preview-title", True), #("p-name", True), #("u-url", True)]),
     href("/posts/" <> post.id <> ".html"),
   ]
-  a(attributes, [h2([class("p-name")], [text(post.title)])])
+  a(attributes, [h2([], [text(post.title)])])
 }
 
 fn to_subtitle(post: Post) -> Element(a) {
