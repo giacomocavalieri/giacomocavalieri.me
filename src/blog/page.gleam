@@ -72,7 +72,7 @@ fn heading(page_title: String) -> Element(a) {
       title([], page_title),
       charset("utf-8"),
       viewport([content("width=device-width, initial-scale=1.0")]),
-      theme_color([content("#cceac3"), media("prefers-color-scheme: light)")]),
+      theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
       stylesheet("/style.css"),
     ],
   )
