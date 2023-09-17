@@ -38,7 +38,7 @@ fn home_header() -> Element(a) {
         [text("I'm "), span([class("p-given-name")], [text("Giacomo")])],
       ),
       p(
-        [id("homepage-description")],
+        [id("homepage-description"), class("p-note")],
         [
           i([], [text("He/Him")]),
           text(" • I love functional programming and learning new things"),
@@ -47,12 +47,20 @@ fn home_header() -> Element(a) {
           br([]),
           text("You can also find me on "),
           a(
-            [href("https://github.com/giacomocavalieri"), rel("me")],
+            [
+              href("https://github.com/giacomocavalieri"),
+              rel("me"),
+              class("u-url"),
+            ],
             [text("GitHub")],
           ),
           text(" and "),
           a(
-            [href("https://twitter.com/giacomo_cava"), rel("me")],
+            [
+              href("https://twitter.com/giacomo_cava"),
+              rel("me"),
+              class("u-url"),
+            ],
             [text("Twitter")],
           ),
           text("!"),
