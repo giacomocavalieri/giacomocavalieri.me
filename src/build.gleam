@@ -15,6 +15,11 @@ pub fn main() {
     |> element.to_string
     |> simplifile.write("./site/index.html")
 
+  let _ =
+    page.not_found()
+    |> element.to_string
+    |> simplifile.write("./site/404.html")
+
   list.each(posts, write_post)
 }
 

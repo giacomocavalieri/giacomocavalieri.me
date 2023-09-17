@@ -27,8 +27,7 @@ pub type Post {
 /// 
 pub fn to_full(post: Post) -> Element(Nil) {
   let post_classes = [#("post", True), #("h-entry", True)]
-  let home_link =
-    a([rel("author"), href("https://giacomocavalieri.me")], [text("← home")])
+  let home_link = a([rel("author"), href("/")], [text("← home")])
 
   let header =
     [to_title, function.constant(home_link), to_subtitle]

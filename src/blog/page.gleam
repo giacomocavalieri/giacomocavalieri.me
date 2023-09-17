@@ -19,6 +19,24 @@ pub fn home(posts: List(Post)) -> Element(a) {
   with_body("Giacomo Cavalieri", description, [home_header(), main_content])
 }
 
+/// Creates the 404 page.
+/// 
+pub fn not_found() -> Element(a) {
+  with_body(
+    "Not found",
+    "There's nothing here",
+    [
+      main(
+        [],
+        [
+          h1([], [text("There's nothing here!")]),
+          p([], [text("Go back to the "), a([href("/")], [text("home page")])]),
+        ],
+      ),
+    ],
+  )
+}
+
 /// The homepage header with profile picture, title and short description.
 ///
 fn home_header() -> Element(a) {
