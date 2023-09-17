@@ -6,6 +6,7 @@ import lustre/attribute.{attribute, class, classes, href, id, rel}
 import blog/date
 import gleam/list
 import gleam/function
+import blog/route
 
 /// A blog post, the abstract and body may be generics are generic so that they
 /// can hold data of different kinds in the future (for example they could
@@ -44,6 +45,10 @@ pub fn to_previews(posts: List(Post)) -> Element(a) {
   ul([id("posts-previews")], list.map(posts, to_preview))
 }
 
+pub fn to_route(post: Post) -> String {
+  "/posts/" <> post.id <> ".html"
+}
+
 fn to_preview(post: Post) -> Element(a) {
   let preview_classes = [#("post-preview", True), #("h-entry", True)]
   [to_preview_title, to_subtitle, to_preview_abstract]
@@ -59,7 +64,7 @@ fn to_title(post: Post) -> Element(a) {
 fn to_preview_title(post: Post) -> Element(a) {
   let attributes = [
     classes([#("post-preview-title", True), #("p-name", True), #("u-url", True)]),
-    href("/posts/" <> post.id <> ".html"),
+    href(to_route(post)),
   ]
   a(attributes, [h2([], [text(post.title)])])
 }

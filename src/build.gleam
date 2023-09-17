@@ -4,11 +4,14 @@ import simplifile
 import blog/page
 import blog/post.{Post}
 import blog/posts
+import blog/date
 
 pub fn main() {
   let _ = simplifile.create_directory("./site")
   let _ = simplifile.create_directory("./site/posts")
-  let posts = [posts.intro()]
+  let posts =
+    [posts.intro()]
+    |> list.sort(by: fn(one, other) { date.compare(one.date, other.date) })
 
   let _ =
     page.home(posts)
