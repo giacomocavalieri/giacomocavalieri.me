@@ -1,8 +1,11 @@
 import lustre/element.{Element, text}
 import lustre/element/html.{
-  a, body, br, h1, h2, head, header, html, i, img, link, main, meta, p, title,
+  a, body, br, h1, h2, head, header, html, i, img, link, main, meta, p, span,
+  title,
 }
-import lustre/attribute.{Attribute, alt, attribute, href, id, name, rel, src}
+import lustre/attribute.{
+  Attribute, alt, attribute, class, href, id, name, rel, src,
+}
 import blog/post.{Post}
 
 // --- HOME PAGE GENERATION ---
@@ -21,11 +24,19 @@ fn home_header() -> Element(a) {
     "https://www.gravatar.com/avatar/87534ab912fd65fd02da6b2e93f5d55b?s=440"
 
   header(
-    [id("homepage-header")],
+    [id("homepage-header"), class("h-card")],
     [
-      img([id("homepage-profile-picture"), alt(""), src(profile_picture_source)]),
+      img([
+        id("homepage-profile-picture"),
+        class("u-photo"),
+        alt(""),
+        src(profile_picture_source),
+      ]),
       h2([id("homepage-subtitle")], [text("Hello 👋")]),
-      h1([id("homepage-title")], [text("I'm Giacomo")]),
+      h1(
+        [id("homepage-title")],
+        [text("I'm "), span([class("p-given-name")], [text("Giacomo")])],
+      ),
       p(
         [id("homepage-description")],
         [
