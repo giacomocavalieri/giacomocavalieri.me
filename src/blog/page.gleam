@@ -35,9 +35,15 @@ fn home_header() -> Element(a) {
           text("Sharing my thoughts as I hop from one obsession to the other"),
           br([]),
           text("You can also find me on "),
-          a([href("https://github.com/giacomocavalieri")], [text("GitHub")]),
+          a(
+            [href("https://github.com/giacomocavalieri"), rel("me")],
+            [text("GitHub")],
+          ),
           text(" and "),
-          a([href("https://twitter.com/giacomo_cava")], [text("Twitter")]),
+          a(
+            [href("https://twitter.com/giacomo_cava"), rel("me")],
+            [text("Twitter")],
+          ),
           text("!"),
         ],
       ),
