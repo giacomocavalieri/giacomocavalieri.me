@@ -132,7 +132,7 @@ a {
 .post-tags {
     display: inline;
     list-style: none;
-    line-height: var(--paragraph-line-height);
+    line-height: calc(1.3 * var(--paragraph-line-height));
 }
 
 .post-tag {
@@ -141,7 +141,6 @@ a {
     font-size: 0.9rem;
     border-radius: 1rem;
     padding: 0.2rem 0.5rem;
-    margin-bottom: 0.3rem;
     margin-right: 0.3rem;
 }
 
