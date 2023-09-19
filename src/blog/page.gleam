@@ -7,122 +7,112 @@ import lustre/attribute.{
   Attribute, alt, attribute, class, href, id, name, rel, src,
 }
 import blog/post.{Post}
-import blog/route
-
-// --- HOME PAGE GENERATION ---
-
-/// Creates the home page displaying a header and the posts' previews.
-///
-pub fn home(posts: List(Post)) -> Element(a) {
-  let main_content = main([], [post.to_previews(posts)])
-  let description =
-    "A personal blog where I share my thoughts as I jump from one obsession to the other"
-  with_body(
-    "Giacomo Cavalieri",
-    route.base,
-    description,
-    [home_header(), main_content],
-  )
-}
-
-/// Creates the 404 page.
-/// 
-pub fn not_found() -> Element(a) {
-  with_body(
-    "Not found",
-    route.base <> "/404.html",
-    "There's nothing here",
-    [
-      main(
-        [],
-        [
-          h1([], [text("There's nothing here!")]),
-          p([], [text("Go back to the "), a([href("/")], [text("home page")])]),
-        ],
-      ),
-    ],
-  )
-}
 
 const profile_picture_source = "https://www.gravatar.com/avatar/87534ab912fd65fd02da6b2e93f5d55b?s=440"
 
-/// The homepage header with profile picture, title and short description.
-///
-fn home_header() -> Element(a) {
-  header(
-    [id("homepage-header"), class("h-card p-author")],
-    [
-      img([
-        id("homepage-profile-picture"),
-        class("u-photo"),
-        alt(""),
-        src(profile_picture_source),
-      ]),
-      h2([id("homepage-subtitle")], [text("Hello 👋")]),
-      h1(
-        [id("homepage-title")],
-        [text("I'm "), span([class("p-given-name")], [text("Giacomo")])],
-      ),
-      p(
-        [id("homepage-description"), class("p-note")],
-        [
-          i([], [text("He/Him")]),
-          text(" • I love functional programming and learning new things"),
-          br([]),
-          text("Sharing my thoughts as I hop from one obsession to the other"),
-          br([]),
-          text("You can also find me on "),
-          a(
-            [
-              href("https://github.com/giacomocavalieri"),
-              rel("me"),
-              class("u-url"),
-            ],
-            [text("GitHub")],
-          ),
-          text(" and "),
-          a(
-            [
-              href("https://twitter.com/giacomo_cava"),
-              rel("me"),
-              class("u-url"),
-            ],
-            [text("Twitter")],
-          ),
-          text("!"),
-        ],
-      ),
-    ],
+/// --- HOME PAGE ---
+/// 
+pub fn homepage(posts: List(Post)) -> Element(a) {
+  with_body(
+    "Giacomo Cavalieri",
+    "A personal blog where I share my thoughts as I jump from one obsession to the other",
+    [homepage_header(), main([], [post.to_preview_list(posts)])],
   )
 }
 
-// --- POST PAGE GENERATION ---
+fn homepage_header() -> Element(a) {
+  let profile_picture =
+    img([
+      id("homepage-profile-picture"),
+      class("u-photo"),
+      alt(""),
+      src(profile_picture_source),
+    ])
 
-/// Creates the page of a post.
-///
-pub fn from_post(post: Post) -> Element(Nil) {
-  let url = "https://giacomocavalieri.me" <> post.to_route(post)
-  with_body(post.title, url, post.abstract, [post.to_full(post)])
+  let subtitle = h2([id("homepage-subtitle")], [text("Hello 👋")])
+
+  let title =
+    h1(
+      [id("homepage-title")],
+      [text("I'm "), span([class("p-given-name")], [text("Giacomo")])],
+    )
+
+  let github_link =
+    a(
+      [href("https://github.com/giacomocavalieri"), rel("me"), class("u-url")],
+      [text("GitHub")],
+    )
+
+  let twitter_link =
+    a(
+      [href("https://twitter.com/giacomo_cava"), rel("me"), class("u-url")],
+      [text("Twitter")],
+    )
+
+  let description =
+    p(
+      [id("homepage-description"), class("p-note")],
+      [
+        i([], [text("He/Him")]),
+        text(" • I love functional programming and learning new things"),
+        br([]),
+        text("Sharing my thoughts as I hop from one obsession to the other"),
+        br([]),
+        text("You can also find me on "),
+        github_link,
+        text(" and "),
+        twitter_link,
+        text("!"),
+      ],
+    )
+
+  header(
+    [id("homepage-header"), class("h-card p-author")],
+    [profile_picture, subtitle, title, description],
+  )
 }
 
-// --- HELPERS ---
+/// --- 404 PAGE ---
+/// 
+pub fn not_found() -> Element(a) {
+  let title = h1([], [text("There's nothing here!")])
+  let subtitle =
+    p([], [text("Go back to the "), a([href("/")], [text("home page")])])
 
-/// Wraps a list of elements in an html page with a given title and default
-/// head.
+  with_body("Not found", "There's nothing here", [main([], [title, subtitle])])
+}
+
+/// --- POST PAGE ---
+/// 
+pub fn from_post(post: Post) -> Element(Nil) {
+  with_body(post.title, post.abstract, [post.to_article(post)])
+}
+
+/// --- TAG PAGE ---
+/// 
+pub fn from_tag(tag: String, posts: List(Post)) -> Element(Nil) {
+  let title =
+    h1(
+      [class("tag-title")],
+      [text("Posts tagged "), i([], [text("\"" <> tag <> "\"")])],
+    )
+  let previews = main([], [post.to_preview_list(posts)])
+  let abstract = "posts tagged \"" <> tag <> "\""
+  with_body(tag, abstract, [title, previews])
+}
+
+/// --- HELPERS ---
 /// 
 fn with_body(
   title: String,
-  url: String,
   description: String,
   elements: List(Element(a)),
 ) -> Element(a) {
-  html([lang("en")], [heading(title, url, description), body([], elements)])
+  let head = default_head(title, description)
+  html([lang("en")], [head, body([], elements)])
 }
 
-/// The default head used by all the pages of the site, the only changing piece
-/// is the title.
-/// 
-fn heading(page_title: String, url: String, description: String) -> Element(a) {
+fn default_head(page_title: String, description: String) -> Element(a) {
   head(
     [],
     [
@@ -130,7 +120,6 @@ fn heading(page_title: String, url: String, description: String) -> Element(a) {
       charset("utf-8"),
       viewport([content("width=device-width, initial-scale=1.0")]),
       meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
-      meta([property("og:url"), content(url)]),
       meta([property("og:title"), content(page_title)]),
       meta([property("og:type"), content("website")]),
       meta([
@@ -139,6 +128,7 @@ fn heading(page_title: String, url: String, description: String) -> Element(a) {
         content(profile_picture_source),
       ]),
       meta([property("og:description"), content(description)]),
+      meta([name("description"), content(description)]),
       meta([property("twitter:card"), content("summary")]),
       meta([property("twitter:title"), content(page_title)]),
       meta([property("twitter:description"), content(description)]),
