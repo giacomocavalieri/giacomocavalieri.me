@@ -6,7 +6,6 @@ import lustre/attribute.{attribute, class, classes, href, id, rel}
 import blog/date
 import gleam/list
 import gleam/function
-import blog/route
 
 /// A blog post, the abstract and body may be generics are generic so that they
 /// can hold data of different kinds in the future (for example they could

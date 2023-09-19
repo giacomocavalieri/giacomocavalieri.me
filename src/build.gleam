@@ -1,35 +1,28 @@
 import gleam/list
-import lustre/element
-import simplifile
+import gleam/map
 import blog/page
-import blog/post.{Post}
 import blog/posts
 import blog/date
+import lustre/ssg
+
+const out_dir = "site"
+
+const assets_dir = "assets"
 
 pub fn main() {
-  let _ = simplifile.create_directory("./site")
-  let _ = simplifile.create_directory("./site/posts")
-  let posts =
+  let sorted_posts =
     [posts.intro()]
     |> list.sort(by: fn(one, other) { date.compare(one.date, other.date) })
 
-  let _ =
-    page.home(posts)
-    |> element.to_string
-    |> simplifile.write("./site/index.html")
+  let posts =
+    sorted_posts
+    |> list.map(fn(post) { #(post.id, post) })
+    |> map.from_list
 
-  let _ =
-    page.not_found()
-    |> element.to_string
-    |> simplifile.write("./site/404.html")
-
-  list.each(posts, write_post)
-}
-
-fn write_post(post: Post) -> Nil {
-  let _ =
-    page.from_post(post)
-    |> element.to_string
-    |> simplifile.write("./site/posts/" <> post.id <> ".html")
-  Nil
+  ssg.new(out_dir)
+  |> ssg.add_static_route("/", page.home(sorted_posts))
+  |> ssg.add_static_route("/404", page.not_found())
+  |> ssg.add_dynamic_route("/posts", posts, page.from_post)
+  |> ssg.add_static_dir(assets_dir)
+  |> ssg.build
 }
