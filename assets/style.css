@@ -144,6 +144,13 @@ a {
     margin-right: 0.3rem;
 }
 
+/* --- BREADCRUMBS --- */
+/* For now it's just a simple link but could grow from here */
+
+.breadcrumbs {
+    margin-bottom: var(--paragraph-line-height);
+}
+
 
 /* --- POSTS --- */
 

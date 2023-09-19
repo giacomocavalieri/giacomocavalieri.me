@@ -2,8 +2,9 @@ import lustre/element.{Element, text}
 import lustre/element/html.{
   a, article, div, h1, h2, header, li, main, p, time, ul,
 }
-import lustre/attribute.{Attribute, attribute, class, href, id, rel}
+import lustre/attribute.{Attribute, attribute, class, href, id}
 import blog/date
+import blog/breadcrumbs
 import gleam/list
 import gleam/order.{Order}
 
@@ -27,7 +28,7 @@ pub fn compare(one: Post, other: Post) -> Order {
 /// 
 pub fn to_article(post: Post) -> Element(Nil) {
   let title = h1([classes(["post-title", "p-name"])], [text(post.title)])
-  let home_link = a([rel("author"), href("/")], [text("← home")])
+  let home_link = breadcrumbs.home()
   let subtitle = to_subtitle(post)
   let header = header([], [title, home_link, subtitle])
   let body = main([classes(["post-body", "e-content"])], [post.body])

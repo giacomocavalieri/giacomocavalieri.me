@@ -7,6 +7,7 @@ import lustre/attribute.{
   Attribute, alt, attribute, class, href, id, name, rel, src,
 }
 import blog/post.{Post}
+import blog/breadcrumbs
 
 const profile_picture_source = "https://www.gravatar.com/avatar/87534ab912fd65fd02da6b2e93f5d55b?s=440"
 
@@ -96,9 +97,10 @@ pub fn from_tag(tag: String, posts: List(Post)) -> Element(Nil) {
       [class("tag-title")],
       [text("Posts tagged "), i([], [text("\"" <> tag <> "\"")])],
     )
+  let home_link = breadcrumbs.home()
   let previews = main([], [post.to_preview_list(posts)])
   let abstract = "posts tagged \"" <> tag <> "\""
-  with_body(tag, abstract, [title, previews])
+  with_body(tag, abstract, [title, home_link, previews])
 }
 
 /// --- HELPERS ---
