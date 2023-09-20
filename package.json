@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "devDependencies": {
+      "mdast-util-from-markdown": "^2.0.0"
+    },
+    "dependencies": {
+      "highlight.js": "^11.8.0"
+    }
+}
