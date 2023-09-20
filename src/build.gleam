@@ -2,7 +2,6 @@ import gleam/list
 import gleam/map.{Map}
 import gleam/pair
 import blog/page
-import blog/posts
 import blog/post.{Post}
 import lustre/ssg
 import simplifile
