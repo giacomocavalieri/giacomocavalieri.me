@@ -2,9 +2,6 @@ import lustre/attribute.{attribute}
 import lustre/element.{Element}
 import lustre/element/html
 
-@external(javascript, "../build.ffi.mjs", "parse_md")
-pub fn parse_md(content: String) -> List(Element(Nil))
-
 pub fn code(src: String, lang: String) -> Element(msg) {
   let attributes = [
     attribute("data-lang", lang),
@@ -57,4 +54,12 @@ pub fn strong(content: List(Element(msg))) -> Element(msg) {
 
 pub fn text(content: String) -> Element(msg) {
   element.text(content)
+}
+
+pub fn blockquote(content: List(Element(msg))) -> Element(msg) {
+  html.blockquote([], content)
+}
+
+pub fn error() -> Element(msg) {
+  html.blockquote([], [element.text("There was an unhandled md element!")])
 }

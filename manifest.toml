@@ -4,14 +4,17 @@
 packages = [
   { name = "gleam_stdlib", version = "0.30.2", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "8D8BF3790AA31176B1E1C0B517DD74C86DA8235CF3389EA02043EE4FD82AE3DC" },
   { name = "gleeunit", version = "0.11.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "1397E5C4AC4108769EE979939AC39BF7870659C5AFB714630DEEEE16B8272AD5" },
+  { name = "gloml", version = "0.1.2", build_tools = ["gleam"], requirements = ["gleam_stdlib", "toml"], otp_app = "gloml", source = "hex", outer_checksum = "2DFCBB6E9ED8B1B52A8416D12DCECA20F2A6D92BFB5B5F3B9B5C8CF50F89F12A" },
   { name = "lustre", version = "3.0.3", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "lustre", source = "hex", outer_checksum = "3FE126D993DC4B5E779E75AA1D8C80A9F5EC5C5E5A4F859D5B3BAAD61CAE5557" },
-  { name = "lustre_ssg", version = "0.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "lustre", "simplifile"], otp_app = "lustre_ssg", source = "hex", outer_checksum = "75FC55ED8391727536DD40F4D8BB8179964C7665728BBF0C10E3C08BE6C17484" },
+  { name = "lustre_ssg", version = "0.1.0", build_tools = ["gleam"], requirements = ["simplifile", "gleam_stdlib", "lustre"], otp_app = "lustre_ssg", source = "hex", outer_checksum = "75FC55ED8391727536DD40F4D8BB8179964C7665728BBF0C10E3C08BE6C17484" },
   { name = "simplifile", version = "0.1.14", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "10EA0207796F20488A3A166C50A189C9385333F3C9FAC187729DE7B9CE4ADDBC" },
+  { name = "toml", version = "0.7.0", build_tools = ["mix"], requirements = [], otp_app = "toml", source = "hex", outer_checksum = "0690246A2478C1DEFD100B0C9B89B4EA280A22BE9A7B313A8A058A2408A2FA70" },
 ]
 
 [requirements]
 gleam_stdlib = { version = "~> 0.30" }
 gleeunit = { version = "~> 0.10" }
+gloml = { version = "~> 0.1" }
 lustre = { version = "~> 3.0" }
 lustre_ssg = { version = "~> 0.1" }
 simplifile = { version = "~> 0.1" }

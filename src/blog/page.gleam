@@ -86,7 +86,7 @@ pub fn not_found() -> Element(a) {
 /// --- POST PAGE ---
 /// 
 pub fn from_post(post: Post) -> Element(Nil) {
-  with_body(post.title, post.abstract, [post.to_article(post)])
+  with_body(post.meta.title, post.meta.abstract, [post.to_article(post)])
 }
 
 /// --- TAG PAGE ---

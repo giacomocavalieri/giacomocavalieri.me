@@ -1,11 +1,11 @@
 import { Empty, NonEmpty } from "./gleam.mjs";
 import { fromMarkdown } from "mdast-util-from-markdown";
-import * as Markdown from "./ffi/markdown.mjs";
+import * as Markdown from "./markdown/ffi_builders.mjs";
 
 const empty = new Empty();
 const fold_into_list = (arr, f) => arr.reduceRight((acc, val) => new NonEmpty(f(val), acc), empty);
 
-export function parse_md(markdown) {
+export function parse(markdown) {
   const ast = fromMarkdown(markdown);
   const content = fold_into_list(
     ast.children,
@@ -21,7 +21,7 @@ export function parse_md(markdown) {
         case "paragraph": return Markdown.paragraph(fold_into_list(node.children, to_lustre_element));
         case "strong": return Markdown.strong(fold_into_list(node.children, to_lustre_element));
         case "text": return Markdown.text(node.value);
-        default: return Markdown.text("");
+        default: return Markdown.error();
       }
     }
   );

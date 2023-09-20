@@ -5,17 +5,22 @@ import blog/page
 import blog/posts
 import blog/post.{Post}
 import lustre/ssg
+import simplifile
 
 const out_dir = "site"
 
 const assets_dir = "assets"
 
+const posts_dir = "posts"
+
 pub fn main() {
-  let posts = [posts.intro()]
+  // I don't care about failing gracefully, I'll just let the world burn if
+  // something goes wrong :P
+  let posts = read_posts()
   let chronological_posts = list.sort(posts, by: post.compare)
   let tagged_posts = group_by_tags(posts)
   let indexed_posts =
-    map.from_list(list.map(posts, fn(post) { #(post.id, post) }))
+    map.from_list(list.map(posts, fn(post) { #(post.meta.id, post) }))
 
   ssg.new(out_dir)
   |> ssg.add_static_route("/", page.homepage(chronological_posts))
@@ -26,9 +31,16 @@ pub fn main() {
   |> ssg.build
 }
 
+fn read_posts() -> List(Post) {
+  let assert Ok(paths) = simplifile.list_contents(of: posts_dir)
+  use file <- list.map(paths)
+  let assert Ok(post) = post.read(from: posts_dir <> "/" <> file)
+  post
+}
+
 fn group_by_tags(posts: List(Post)) -> Map(String, #(String, List(Post))) {
-  let flatten_tags = fn(post: Post) { list.map(post.tags, pair.new(_, post)) }
-  list.flat_map(posts, flatten_tags)
+  let flat_tags = fn(post: Post) { list.map(post.meta.tags, pair.new(_, post)) }
+  list.flat_map(posts, flat_tags)
   |> list.group(by: pair.first)
   |> map.map_values(with: fn(tag, tagged_posts) {
     #(tag, list.map(tagged_posts, pair.second))
