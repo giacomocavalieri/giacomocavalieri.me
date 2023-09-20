@@ -18,6 +18,14 @@ jobs:
           otp-version: "26.0.2"
           gleam-version: "0.30.5"
           rebar3-version: "3"
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+      - name: install js dependencies
+        run: npm ci
       - name: build
         run: gleam run -m build
       - name: push to site branch
