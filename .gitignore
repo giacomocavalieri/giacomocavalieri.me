@@ -3,6 +3,5 @@
 build
 erl_crash.dump
 
-site/*.html
-site/**/*.html
+site
 .DS_Store
