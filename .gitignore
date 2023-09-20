@@ -2,6 +2,7 @@
 *.ez
 build
 erl_crash.dump
+node_modules
 
 site
 .DS_Store
