@@ -6,12 +6,12 @@ import lustre/attribute.{Attribute, attribute, class, href, id}
 import blog/date.{Date}
 import blog/breadcrumbs
 import gleam/list
+import gleam/string
 import gleam/dynamic
 import gleam/order.{Order}
 import gleam/result
 import markdown
 import extra
-import simplifile
 import gloml
 
 pub type Post {
@@ -94,7 +94,8 @@ fn to_preview(post: Post) -> Element(a) {
 }
 
 fn to_subtitle(post: Post) -> Element(a) {
-  let tags = ul([class("post-tags")], list.map(post.meta.tags, to_pill))
+  let sorted_tags = list.sort(post.meta.tags, by: string.compare)
+  let tags = ul([class("post-tags")], list.map(sorted_tags, to_pill))
   div([class("post-subtitle")], [to_date(post), tags])
 }
 
