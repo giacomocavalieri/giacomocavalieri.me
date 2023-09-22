@@ -1,8 +1,8 @@
+import lustre/attribute.{href}
 import lustre/element.{text}
 import lustre/element/html.{a, br, p}
-import lustre/attribute.{href}
-import blog/post.{Post}
 import blog/date.{Sep}
+import blog/post.{Post}
 
 /// The introductory placeholder post!
 /// 

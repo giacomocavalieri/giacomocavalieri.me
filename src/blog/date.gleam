@@ -1,8 +1,8 @@
 import gleam/dynamic.{Dynamic}
 import gleam/int
 import gleam/order.{Eq, Gt, Lt, Order}
-import gleam/string
 import gleam/result
+import gleam/string
 
 pub opaque type Date {
   Date(day: Int, month: Month, year: Int)

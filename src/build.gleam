@@ -1,10 +1,10 @@
 import gleam/list
 import gleam/map.{Map}
 import gleam/pair
-import blog/page
-import blog/post.{Post}
 import lustre/ssg
 import simplifile
+import blog/page
+import blog/post.{Post}
 
 const out_dir = "site"
 

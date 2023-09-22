@@ -1,18 +1,18 @@
+import gleam/dynamic
+import gleam/list
+import gleam/order.{Order}
+import gleam/result
+import gleam/string
+import gloml
+import lustre/attribute.{Attribute, attribute, class, href, id}
 import lustre/element.{Element, text}
 import lustre/element/html.{
   a, article, div, h1, h2, header, li, main, p, time, ul,
 }
-import lustre/attribute.{Attribute, attribute, class, href, id}
-import blog/date.{Date}
 import blog/breadcrumbs
-import gleam/list
-import gleam/string
-import gleam/dynamic
-import gleam/order.{Order}
-import gleam/result
-import markdown
+import blog/date.{Date}
 import extra
-import gloml
+import markdown
 
 pub type Post {
   Post(meta: Metadata, body: List(Element(Nil)))

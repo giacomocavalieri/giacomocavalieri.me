@@ -1,13 +1,13 @@
+import lustre/attribute.{
+  Attribute, alt, attribute, class, href, id, name, rel, src,
+}
 import lustre/element.{Element, text}
 import lustre/element/html.{
   a, body, br, h1, h2, head, header, html, i, img, link, main, meta, p, span,
   title,
 }
-import lustre/attribute.{
-  Attribute, alt, attribute, class, href, id, name, rel, src,
-}
-import blog/post.{Post}
 import blog/breadcrumbs
+import blog/post.{Post}
 
 const profile_picture_source = "https://www.gravatar.com/avatar/87534ab912fd65fd02da6b2e93f5d55b?s=440"
 
