@@ -13,6 +13,7 @@ import blog/breadcrumbs
 import blog/date.{Date}
 import extra
 import markdown
+import simplifile
 
 pub type Post {
   Post(meta: Metadata, body: List(Element(Nil)))
