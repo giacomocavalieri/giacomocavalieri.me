@@ -12,6 +12,9 @@
 
     --paragraph-line-height: 1.5rem;
     --profile-picture-size: 10rem;
+
+    --link-transition-time: 0.3s;
+    --link-transition-function: cubic-bezier(.94,-0.01,.57,.91);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -92,6 +95,14 @@ a {
     background-position: bottom;
     padding-left: 0.2rem;
     padding-right: 0.2rem;
+    transition: var(--link-transition-time);
+    transition-timing-function: var(--link-transition-function);
+}
+
+a:hover {
+    background-size: 100% 100%;
+    transition: var(--link-transition-time);
+    transition-timing-function: var(--link-transition-function);
 }
 
 /* --- HOMEPAGE --- */
