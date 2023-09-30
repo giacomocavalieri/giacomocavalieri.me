@@ -9,7 +9,7 @@ pub opaque type Date {
 }
 
 pub type Month {
-  Gen
+  Jan
   Feb
   Mar
   Apr
@@ -49,7 +49,7 @@ pub fn to_datetime(date: Date) -> String {
 
 fn month_to_string(month: Month) -> String {
   case month {
-    Gen -> "genuary"
+    Jan -> "january"
     Feb -> "february"
     Mar -> "march"
     Apr -> "april"
@@ -83,7 +83,7 @@ fn month_compare(one: Month, other: Month) -> Order {
 
 fn month_to_int(month: Month) -> Int {
   case month {
-    Gen -> 1
+    Jan -> 1
     Feb -> 2
     Mar -> 3
     Apr -> 4
@@ -100,7 +100,7 @@ fn month_to_int(month: Month) -> Int {
 
 fn month_from_int(value: Int) -> Result(Month, Nil) {
   case value {
-    1 -> Ok(Gen)
+    1 -> Ok(Jan)
     2 -> Ok(Feb)
     3 -> Ok(Mar)
     4 -> Ok(Apr)
