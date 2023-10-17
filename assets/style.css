@@ -13,8 +13,8 @@
     --paragraph-line-height: 1.5rem;
     --profile-picture-size: 10rem;
 
-    --link-transition-time: 0.3s;
-    --link-transition-function: cubic-bezier(.94,-0.01,.57,.91);
+    --link-transition-time: 0.35s;
+    --link-transition-function: cubic-bezier(.25, .1, 0, 2.05);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -100,7 +100,7 @@ a {
 }
 
 a:hover {
-    background-size: 100% 100%;
+    background-size: 100% 80%;
     transition: var(--link-transition-time);
     transition-timing-function: var(--link-transition-function);
 }
