@@ -1,12 +1,10 @@
 ---
 id = "01-intro"
 title = "Look! I made this with Lustre ✨"
-abstract = "I still have to decide for an abstract"
+abstract = "I still have to write a good abstract"
 tags = ["gleam", "fp"]
 date = "2023-10-25"
 ---
-
-# Look! I made this with Gleam ✨
 
 > Wip!
 
