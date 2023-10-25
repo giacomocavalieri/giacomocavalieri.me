@@ -1,6 +1,9 @@
-name: Prerelease
+name: Preview
 
-on: [push]
+on:
+  push:
+    branches:
+      - "preview/*"
 
 jobs:
   build:
@@ -30,7 +33,7 @@ jobs:
         uses: s0/git-publish-subdir-action@develop
         env:
           REPO: self
-          BRANCH: prerelease
+          BRANCH: preview
           FOLDER: site
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MESSAGE: "{msg}"
