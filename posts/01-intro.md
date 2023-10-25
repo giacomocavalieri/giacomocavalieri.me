@@ -8,6 +8,8 @@ date = "2023-10-25"
 
 # Look! I made this with Gleam ✨
 
+> Wip!
+
 Hello! I'm Giacomo 👋
 
 I love functional programming and getting caught in rabbit holes; the thing I
