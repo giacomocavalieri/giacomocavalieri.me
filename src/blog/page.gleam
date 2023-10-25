@@ -8,8 +8,7 @@ import lustre/element/html.{
 }
 import blog/breadcrumbs
 import blog/post.{Post}
-
-const profile_picture_source = "https://www.gravatar.com/avatar/87534ab912fd65fd02da6b2e93f5d55b?s=440"
+import glevatar
 
 /// --- HOME PAGE ---
 /// 
@@ -21,15 +20,22 @@ pub fn homepage(posts: List(Post)) -> Element(a) {
   )
 }
 
-fn homepage_header() -> Element(a) {
-  let profile_picture =
-    img([
-      id("homepage-profile-picture"),
-      class("u-photo"),
-      alt(""),
-      src(profile_picture_source),
-    ])
+fn profile_picture_source() -> String {
+  glevatar.new("giacomo.cavalieri@icloud.com")
+  |> glevatar.set_size(440)
+  |> glevatar.to_string
+}
 
+fn profile_picture() -> Element(a) {
+  img([
+    id("homepage-profile-picture"),
+    class("u-photo"),
+    alt(""),
+    src(profile_picture_source()),
+  ])
+}
+
+fn homepage_header() -> Element(a) {
   let subtitle = h2([id("homepage-subtitle")], [text("Hello 👋")])
 
   let title =
@@ -69,7 +75,7 @@ fn homepage_header() -> Element(a) {
 
   header(
     [id("homepage-header"), class("h-card p-author")],
-    [profile_picture, subtitle, title, description],
+    [profile_picture(), subtitle, title, description],
   )
 }
 
@@ -127,7 +133,7 @@ fn default_head(page_title: String, description: String) -> Element(a) {
       meta([
         name("image"),
         property("og:image"),
-        content(profile_picture_source),
+        content(profile_picture_source()),
       ]),
       meta([property("og:description"), content(description)]),
       meta([name("description"), content(description)]),
@@ -135,7 +141,7 @@ fn default_head(page_title: String, description: String) -> Element(a) {
       meta([property("twitter:title"), content(page_title)]),
       meta([property("twitter:description"), content(description)]),
       meta([property("twitter:creator"), content("@giacomo_cava")]),
-      meta([property("twitter:image"), content(profile_picture_source)]),
+      meta([property("twitter:image"), content(profile_picture_source())]),
       theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
       stylesheet("/style.css"),
     ],

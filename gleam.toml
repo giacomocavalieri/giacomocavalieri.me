@@ -9,6 +9,7 @@ lustre = "~> 3.0"
 simplifile = "~> 0.1"
 lustre_ssg = "~> 0.1"
 gloml = "~> 0.1"
+glevatar = "~> 0.1"
 
 [dev-dependencies]
 gleeunit = "~> 0.10"
