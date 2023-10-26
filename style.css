@@ -61,18 +61,21 @@ html {
 body {
     padding: var(--body-padding);
     padding-top: var(--body-padding-top);
+    margin-bottom: var(--body-padding-top);
     background-color: var(--background-color);
     overflow-x: hidden;
 }
 
 h1 {
     font-size: var(--h1-size);
+}
+
+article > h1, article > h2 {
     text-align: start;
 }
 
 h2 {
     font-size: var(--h2-size);
-    text-align: start;
 }
 
 p {
