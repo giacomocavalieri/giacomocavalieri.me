@@ -61,7 +61,7 @@ html {
 body {
     padding: var(--body-padding);
     padding-top: var(--body-padding-top);
-    margin-bottom: var(--body-padding-top);
+    margin-bottom: 0;
     background-color: var(--background-color);
     overflow-x: hidden;
 }
@@ -95,11 +95,11 @@ pre {
 
 code {
     font-family: monospace ;
-
 }
 
 blockquote {
     padding-left: 2rem;
+    padding-right: 2rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
     padding-top: 1rem;
