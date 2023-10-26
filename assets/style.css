@@ -61,12 +61,17 @@ html {
 body {
     padding: var(--body-padding);
     padding-top: var(--body-padding-top);
+    margin-bottom: var(--body-padding-top);
     background-color: var(--background-color);
     overflow-x: hidden;
 }
 
 h1 {
     font-size: var(--h1-size);
+}
+
+article > h1, article > h2 {
+    text-align: start;
 }
 
 h2 {
@@ -77,11 +82,60 @@ p {
     line-height: var(--paragraph-line-height);
 }
 
+/* -- in desperate need of a good refactoring! This should only apply to
+      the posts page I think -- */
+
+pre {
+    padding: 2rem;
+    background-color: rgb(240, 246, 241);
+    overflow-x: scroll ;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+code {
+    font-family: monospace ;
+
+}
+
+blockquote {
+    padding-left: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-left: solid .8rem var(--main-color);
+    background-color: rgb(244, 250, 245);
+}
+
+p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
 /* --- LINKS --- */
 
 a>* {
     /* Treat everything inside a link as an inline element */
     display: inline;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+}
+
+a:not(:has(> *)) { /* hack to make links with just look good */
+    padding-left: 0.2rem; 
+    padding-right: 0.2rem;
 }
 
 a {
@@ -93,8 +147,6 @@ a {
     background-size: 100% 0.5rem;
     background-repeat: no-repeat;
     background-position: bottom;
-    padding-left: 0.2rem;
-    padding-right: 0.2rem;
     transition: var(--link-transition-time);
     transition-timing-function: var(--link-transition-function);
 }
