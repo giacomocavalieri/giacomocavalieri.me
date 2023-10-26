@@ -21,6 +21,7 @@ export function parse(markdown) {
         case "paragraph": return Markdown.paragraph(fold_into_list(node.children, to_lustre_element));
         case "strong": return Markdown.strong(fold_into_list(node.children, to_lustre_element));
         case "text": return Markdown.text(node.value);
+        case "blockquote": return Markdown.blockquote(fold_into_list(node.children, to_lustre_element));
         default: return Markdown.error();
       }
     }
