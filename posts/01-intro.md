@@ -25,24 +25,18 @@ The idea of writing a personal blog was already in the back of my mind, so when
 I approached Gleam I decided to write... you guessed it: a static site
 generator!
 
-Even though I never actually completed my project, I've fell in love with the
-language and I'm really enjoing my time spent around the Gleam community.
+Long story short, I never actually completed my project; but during this journey
+I fell in love with the language and its community and I decided to stick
+around!
 
 ## Gleam: get in for the language...
 
-Gleam is a statically-typed functional language that can compile both to the
-Erlang virtual machine and to JavaScript.
-If I had to describe it with a single word it would be _friendly_; I know this
-can sound kind of handwavy, but bear with me.
-
-### Simple and productive
-
-Gleam is a remarkably simple: if you're already familiar with some
+Gleam is a remarkably simple language: if you're already familiar with some
 functional programming concepts, you'll be able to pick it up in no time.
 A couple of evenings could be enough for you to learn all there is to the core
 language and start hacking on your own projects.
 
-> _"But what if you've never tried functional programming before?_
+> _"But what if I've never tried functional programming before?_
 > _Will I find it easy?"_
 >
 > Getting into functional programming can be a bit daunting.
@@ -78,6 +72,27 @@ _"For the love of me, I can't understand lambdas with receivers!"_).
 ### Your first Gleam program
 
 Enough talking, let's have a look at a Gleam program.
+
+### Outstanding developer experience
+
+Gleam as a whole is a pleasure to work with and it provides a lot of 
+
+## ...stay for the amazing community
+
+What really sealed the deal for me was the incredible community that has formed
+around the language.
+
+People in the official Discord are welcoming and incredibly nice.
+Even after the worst disheartening days at work, chatting with everyone always
+managed to lighten my mood.
+I've learnt loads of new things just by hanging around and it's just a pleasure
+to chat and share things with everyone.
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
 
 ### What if best practices were actually the norm?
 
@@ -153,18 +168,3 @@ showed you earlier.
 
 Here something truly remarkable is happening, the Gleam compiler lifts this load
 from the developer and takes care of it: the language.
-
-### Outstanding developer experience
-
-Gleam as a whole is a pleasure to work with and it provides a lot of 
-
-## ...stay for the amazing community
-
-What really sealed the deal for me was the incredible community that has formed
-around the language.
-
-People in the official Discord are welcoming and incredibly nice.
-Even after the worst disheartening days at work, chatting with everyone always
-managed to lighten my mood.
-I've learnt loads of new things just by hanging around and it's just a pleasure
-to chat and share things with everyone.
