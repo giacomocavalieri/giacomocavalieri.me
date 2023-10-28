@@ -245,12 +245,12 @@ a:hover {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
     margin-left: -100%;
-    margin-right: 100%;
+    margin-right: -100%;
 
     padding-top: 2rem;
     padding-bottom: 2rem;
     padding-left: 100%;
-    padding-right: -100%;
+    padding-right: 100%;
 
     background-color: var(--code-background-color);
     overflow-x: scroll;
