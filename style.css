@@ -253,6 +253,10 @@ a:hover {
     font-family: monospace;
 }
 
+.post code span {
+    font-family: monospace;
+}
+
 .post blockquote {
     padding-left: 2rem;
     padding-right: 2rem;
