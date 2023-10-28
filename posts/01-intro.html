@@ -62,8 +62,8 @@ class Users {
 // We can define the main function like this since
 // Java 21 with unamed classes (yet another feature)!
 void main() {
-  var user = Users.load(1)
-  System.out.println(user.name())
+  var user = Users.load(1);
+  System.out.println(user.name());
 }</code></pre><p>A season Java developer will immediately notice all the little ways in which
 this seemingly harmless snippet of code could fail. The <code>load</code> function is
 actually lying to us: it sais it will return a <code>User</code>, but in reality it may
