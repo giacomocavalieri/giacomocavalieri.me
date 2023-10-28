@@ -122,11 +122,11 @@ class Users {
   }
 }
 
-// We can define the main function like this since
-// Java 21 with unamed classes (yet another feature)!
-void main() {
-  var user = Users.load(1)
-  System.out.println(user.name())
+class Main {
+  public static void main(String[] args) {
+    var user = Users.load(1);
+    System.out.println(user.name());
+  }
 }
 ```
 
@@ -157,9 +157,21 @@ pub fn load_user(id: Int) -> Result(User, Nil) {
   // the user from a DB or somewhere else entirely
 }
 
+pub type Prova {
+  Prova(prova: Int)
+}
+
 pub fn main() {
   let user = load_user(1)
   io.println(user.name)
+
+  case user {
+    Ok(foo) -> "baz" == 1
+    Error(bar) -> "boo" <> "ben"
+  }
+
+  use <- prova(1, 2, 3)
+  result.try(foo) |> result.then(1)
 }
 ```
 

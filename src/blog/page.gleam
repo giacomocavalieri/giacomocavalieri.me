@@ -3,8 +3,8 @@ import lustre/attribute.{
 }
 import lustre/element.{Element, text}
 import lustre/element/html.{
-  a, body, br, h1, h2, head, header, html, i, img, link, main, meta, p, span,
-  title,
+  a, body, br, h1, h2, head, header, html, i, img, link, main, meta, p, script,
+  span, title,
 }
 import blog/breadcrumbs
 import blog/post.{Post}
@@ -120,6 +120,10 @@ fn with_body(
   html([lang("en")], [head, body([], elements)])
 }
 
+const hljs_script_url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+
+const gleam_hljs_script_url = "/highlightjs-gleam.js"
+
 fn default_head(page_title: String, description: String) -> Element(a) {
   head(
     [],
@@ -144,6 +148,9 @@ fn default_head(page_title: String, description: String) -> Element(a) {
       meta([property("twitter:image"), content(profile_picture_source())]),
       theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
       stylesheet("/style.css"),
+      script([src(hljs_script_url)], ""),
+      script([src(gleam_hljs_script_url)], ""),
+      script([], "hljs.highlightAll();"),
     ],
   )
 }

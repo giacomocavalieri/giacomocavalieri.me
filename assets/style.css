@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 :root {
     --body-vertical-padding: 3rem;
     --body-horizontal-padding: 3rem;
+
+    --code-font-size: 0.9rem;
+    --code-font-family: 'Fira Code', monospace;
 
     --h1-size: 3rem;
     --h2-size: 2rem;
@@ -10,6 +16,7 @@
     --post-header-margin-bottom: 3rem;
 
     --profile-picture-size: 10rem;
+    --main-content-max-size: 50rem;
     
     --link-transition-time: 0.35s;
     --link-transition-function: cubic-bezier(.25, .1, 0, 2.05);
@@ -18,7 +25,7 @@
     --font-color: #192427;
     --main-color: #cceac3;
     --selection-color: #dff2d9;
-    --code-background-color: #dff2d960;
+    --code-background-color: #dff2d940;
     --blockquote-background-color: #dff2d960;
 }
 
@@ -28,20 +35,20 @@
         --font-color: #eeeeee;
         --main-color: #525A99;
         --selection-color: #b9bfe5;
-        --code-background-color: #525a9940;
+        --code-background-color: #525a9920;
         --blockquote-background-color: #525a9940;
     }
 }
 
 @media screen and (min-width: 992px) {
     :root {
-        --body-horizontal-padding: 10%;
+        --body-horizontal-padding: 5rem;
     }
 }
 
 @media screen and (min-width: 1200px) {
     :root {
-        --body-horizontal-padding: 20%;
+        --body-horizontal-padding: 10rem;
     }
 }
 
@@ -70,6 +77,7 @@ ul, ol, dl {
 
 html {
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
 }
 
 /* --- BODY AND BASE ELEMENTS STYLING --------------------------------------- */
@@ -152,6 +160,15 @@ a:hover {
 
 /* --- PREVIEWS ------------------------------------------------------------- */
 
+#posts-previews {
+    /* Add a little space in the tag preview page between breadcrumbs
+     * and previews */
+    margin-top: var(--h3-size);
+    max-width: var(--main-content-max-size);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #posts-previews .post-preview:not(:last-child) {
     margin-bottom: var(--h1-size);
 }
@@ -179,6 +196,12 @@ a:hover {
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
+
+.post {
+    max-width: var(--main-content-max-size);
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* All titles in posts should be aligned with the start of the line */
 .post h1,
@@ -242,15 +265,35 @@ a:hover {
 }
 
 .post pre {
-    padding: 2rem;
-    background-color: var(--code-background-color);
-    overflow-x: scroll;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
+    margin-left: -100%;
+    margin-right: -100%;
+
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 100%;
+    padding-right: 100%;
+
+    background-color: var(--code-background-color);
+    overflow-x: scroll;
 }
     
-.post code {
-    font-family: monospace;
+.post pre code {
+    font-family: var(--code-font-family);
+    font-size: var(--code-font-size);
+}
+
+.post pre code span {
+    font-family: var(--code-font-family);
+    font-size: var(--code-font-size);
+}
+
+.post p code {
+    font-family: var(--code-font-family);
+    font-size: var(--code-font-size);
+    padding: 0 0.2rem;
+    background-color: var(--blockquote-background-color);
 }
 
 .post blockquote {
@@ -265,8 +308,22 @@ a:hover {
 }
 
 .post p {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+    hyphens: auto;
+}
+
+/* Drop hyphenation on big screens */
+@media screen and (min-width: 992px) {
+    .post p {
+        hyphens: none;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .post p {
+        hyphens: none;
+    }
 }
 
 .post h2 {
@@ -278,3 +335,12 @@ a:hover {
     margin-top: 2rem;
     margin-bottom: 1rem;
 }
+
+/* --- CODE HIGHLIGHT ------------------------------------------------------- */
+
+.hljs-number { color: rgb(219, 148, 14); }
+.hljs-string { color: rgb(94, 173, 94); }
+.hljs-comment { color: rgb(167, 167, 167); }
+.hljs-keyword { color: rgb(255, 69, 138); }
+.hljs-title { color: rgb(56, 146, 240); }
+.hljs-variable, .hljs-operator { color: var(--text-color); }
