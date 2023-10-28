@@ -18,7 +18,7 @@
     --font-color: #192427;
     --main-color: #cceac3;
     --selection-color: #dff2d9;
-    --code-background-color: #dff2d960;
+    --code-background-color: #dff2d940;
     --blockquote-background-color: #dff2d960;
 }
 
@@ -28,7 +28,7 @@
         --font-color: #eeeeee;
         --main-color: #525A99;
         --selection-color: #b9bfe5;
-        --code-background-color: #525a9940;
+        --code-background-color: #525a9920;
         --blockquote-background-color: #525a9940;
     }
 }
@@ -242,11 +242,18 @@ a:hover {
 }
 
 .post pre {
-    padding: 2rem;
-    background-color: var(--code-background-color);
-    overflow-x: scroll;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
+    margin-left: -100%;
+    margin-right: 100%;
+
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 100%;
+    padding-right: -100%;
+
+    background-color: var(--code-background-color);
+    overflow-x: scroll;
 }
     
 .post code {
@@ -282,3 +289,12 @@ a:hover {
     margin-top: 2rem;
     margin-bottom: 1rem;
 }
+
+/* --- CODE HIGHLIGHT ------------------------------------------------------- */
+
+.hljs-number { color: rgb(219, 148, 14); }
+.hljs-string { color: rgb(94, 173, 94); }
+.hljs-comment { color: rgb(167, 167, 167); }
+.hljs-keyword { color: rgb(255, 69, 138); }
+.hljs-title { color: rgb(56, 146, 240); }
+.hljs-variable, .hljs-operator { color: var(--text-color); }
