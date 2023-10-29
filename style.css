@@ -101,6 +101,12 @@ h3 {
     font-size: var(--h3-size);
 }
 
+.limit-max-width-and-center {
+    max-width: var(--main-content-max-size);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* --- LINKS ---------------------------------------------------------------- */
 
 a > h1, a > h2, a > h3, a > h4, a > h5, a > h6 {
@@ -164,9 +170,6 @@ a:hover {
     /* Add a little space in the tag preview page between breadcrumbs
      * and previews */
     margin-top: var(--h3-size);
-    max-width: var(--main-content-max-size);
-    margin-left: auto;
-    margin-right: auto;
 }
 
 #posts-previews .post-preview:not(:last-child) {
@@ -196,12 +199,6 @@ a:hover {
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
-
-.post {
-    max-width: var(--main-content-max-size);
-    margin-left: auto;
-    margin-right: auto;
-}
 
 /* All titles in posts should be aligned with the start of the line */
 .post h1,
