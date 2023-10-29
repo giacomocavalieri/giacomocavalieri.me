@@ -288,6 +288,19 @@ a:hover {
     hyphens: auto;
 }
 
+/* Drop hyphenation on big screens */
+@media screen and (min-width: 992px) {
+    .post p {
+        hyphens: none;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .post p {
+        hyphens: none;
+    }
+}
+
 .post h2 {
     margin-top: 4rem;
     margin-bottom: 2rem;
