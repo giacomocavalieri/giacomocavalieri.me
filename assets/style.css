@@ -31,12 +31,12 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background-color: #192427;
+        --background-color: #242829; /*#242829;*/
         --font-color: #eeeeee;
-        --main-color: #525A99;
+        --main-color: #52598c; /*#525A99*/
         --selection-color: #b9bfe5;
-        --code-background-color: #525a9920;
-        --blockquote-background-color: #525a9940;
+        --code-background-color: #52598c20;
+        --blockquote-background-color: #52598c40;
     }
 }
 
