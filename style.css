@@ -310,12 +310,12 @@ a:hover {
     hyphens: auto;
 }
 
-.post ul {
+.post-body ul {
     list-style: "-> " outside;
     padding-inline: 2rem;
 }
 
-.post ul li {
+.post-body ul li {
     font-family: var(--code-font-family);
 }
 
