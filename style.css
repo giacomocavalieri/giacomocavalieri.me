@@ -266,12 +266,21 @@ a:hover {
     overflow-x: scroll;
 }
     
-.post code {
+.post pre code {
     font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
 }
 
-.post code span {
+.post pre code span {
     font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+}
+
+.post p code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    padding: 0 0.2rem;
+    background-color: var(--blockquote-background-color);
 }
 
 .post blockquote {
