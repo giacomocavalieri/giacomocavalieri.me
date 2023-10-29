@@ -5,6 +5,9 @@
     --body-vertical-padding: 3rem;
     --body-horizontal-padding: 3rem;
 
+    --code-font-size: 0.9rem;
+    --code-font-family: 'Fira Code', monospace;
+
     --h1-size: 3rem;
     --h2-size: 2rem;
     --h3-size: 1.5rem;
@@ -267,18 +270,18 @@ a:hover {
 }
     
 .post pre code {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.8rem;
+    font-family: var(--code-font-family);
+    font-size: var(--code-font-size);
 }
 
 .post pre code span {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.8rem;
+    font-family: var(--code-font-family);
+    font-size: var(--code-font-size);
 }
 
 .post p code {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.9rem;
+    font-family: var(--code-font-family);
+    font-size: var(--code-font-size);
     padding: 0 0.2rem;
     background-color: var(--blockquote-background-color);
 }
