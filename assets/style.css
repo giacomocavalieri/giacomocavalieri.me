@@ -84,7 +84,7 @@ html {
 
 body {
     overflow-x: hidden;
-    padding: var(--body-vertical-padding) var(--body-horizontal-padding);
+    padding: var(--body-vertical-padding) max(var(--body-horizontal-padding), calc(env(safe-area-inset-left) + 1rem), calc(env(safe-area-inset-right) + 1rem));
     background-color: var(--background-color);
     line-height: var(--line-height);
 }
