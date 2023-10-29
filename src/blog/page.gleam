@@ -3,8 +3,8 @@ import lustre/attribute.{
 }
 import lustre/element.{Element, text}
 import lustre/element/html.{
-  a, body, br, h1, h2, head, header, html, i, img, link, main, meta, p, script,
-  span, title,
+  a, body, br, div, h1, h2, head, header, html, i, img, link, main, meta, p,
+  script, span, title,
 }
 import blog/breadcrumbs
 import blog/post.{Post}
@@ -117,7 +117,10 @@ fn with_body(
   elements: List(Element(a)),
 ) -> Element(a) {
   let head = default_head(title, description)
-  html([lang("en")], [head, body([], elements)])
+  html(
+    [lang("en")],
+    [head, body([], [div([class("limit-max-width-and-center")], elements)])],
+  )
 }
 
 const hljs_script_url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
