@@ -1,0 +1,61 @@
+<html lang="en"><head><title>Look! I made this with Lustre ✨</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="Look! I made this with Lustre ✨"><meta property="og:type" content="website"><meta name="image" property="og:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta property="og:description" content="I still have to write a good abstract"><meta name="description" content="I still have to write a good abstract"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Look! I made this with Lustre ✨"><meta property="twitter:description" content="I still have to write a good abstract"><meta property="twitter:creator" content="@giacomo_cava"><meta property="twitter:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">Look! I made this with Lustre ✨</h1><nav class="breadcrumbs"><a rel="author" href="/">← home</a></nav><div class="post-subtitle"><time datetime="25-10-2023" class="post-date dt-published">2023 october 25</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><p>Hello! I&#39;m Giacomo 👋</p><p>I love functional programming and getting caught in rabbit holes; the thing I
+love most, though, is sharing what I learn with my friends (sorry guys for
+nagging you, you&#39;re the best for putting up with me)!</p><p>What better way to pester even more people than setting up a personal blog?
+What gave me the push I needed to get started was an awesome language I run into
+almost a year ago: <a href="https://gleam.run">Gleam</a>.</p><p>Whenever I start learning a new language I usually try to pick up a small-ish
+project to help me get a feeling for the language and keep me motivated
+throughout my learning journey.
+The idea of writing a personal blog was already in the back of my mind, so when
+I approached Gleam I decided to write... you guessed it: a static site
+generator!</p><p>Long story short, I never actually completed my side project; but during this
+journey I fell in love with the language and its community and I decided to
+stick around and set up this blog to share my thoughts.</p><blockquote><p>If you&#39;re wondering, this blog is still written using Gleam; I ended up
+using a brilliant package called <a href="lustre.build">lustre</a>. Do check it out!</p></blockquote><h2>Simple and productive</h2><p>Gleam is a remarkably simple language: if you&#39;re already familiar with some
+functional programming concepts, you&#39;ll be able to pick it up in no time.
+A couple of evenings could be enough for you to learn all there is to the core
+language and start hacking on your own projects.</p><blockquote><p><em>&quot;But what if I&#39;ve never tried functional programming before?</em>
+<em>Will I find it easy?&quot;</em></p><p>Getting into functional programming can be a bit daunting.
+I remember when I first got started with it — almost four years ago — I
+gave up twice before it finally clicked.
+That&#39;s totally normal! FP has its own way of doing things and it can require
+quite the mindset shift and a lot of head scratching to get used to it.</p><p>If you&#39;ve never tried functional programming or — just like me — you&#39;ve tried
+and were discouraged, I can recommend you the
+<a href="https://exercism.org/tracks/gleam/concepts">Gleam&#39;s Exercism track</a>: it will
+guide you through the language and gently help you get in the &quot;functional&quot;
+mindset!</p></blockquote><p>But what does simple actually mean? To me it&#39;s the ability to <em>concisely put my</em>
+<em>ideas into code without having to trudge through loads of bells and whistles,</em>
+having to painstakingly decide which is the right fit for the problem at
+hand.</p><p>The language offers you a <em>small number of features</em> that are <em>useful and cohesive,</em>
+there&#39;s no two ways to do the same thing.
+Coming from languages with a huge surface — like Scala, Kotlin or C#, just to
+name a few — it feels almost exhilarating: the language only allows you to
+follow a single, well-defined path instead of dropping you in the middle of a
+maze of choices.</p><h3>Ok, but what does Gleam look like?</h3><p>Enough talk, let&#39;s have a look at a Gleam program:</p><pre><code data-lang="gleam" class="not-prose language-gleam">// this is not going to be the code example, I just need it
+// to get a sense of how the code will look!
+
+import gleam/io
+
+pub opaque type Foo {
+  Bar(bar: Int, baz: String)
+}
+
+/// main!!!
+///
+pub fn main() {
+  let bar = Bar(1, &quot;hello&quot;)
+  use a &lt;- result.try(Ok(1))
+  case bar {
+    Bar(1, &quot;h&quot; &lt;&gt; _) -&gt; Error(&quot;foo&quot;)
+    Bar(_, _) -&gt; Ok(11_000)
+  }
+  Nil |&gt; io.debug
+}</code></pre><h2>An outstanding developer experience</h2><p>When you start using Gleam, it&#39;s impossible not to notice the great
+amount of love and work that went into making sure the language has a lovely
+developer experience.</p><p>Let me show you how straightforward it is to get started and the many niceties
+you get out of the box.</p><p>TODO list:</p><ul><li><p>getting started with a project is as easy as <code>gleam new</code></p><ul><li><p>you get all the scaffolding needed to start hacking</p></li><li><p>and some niceties like a github action to run tests in CI (it just shows
+the great amount of care that went into it)</p></li></ul></li><li><p>zero configuration formatter out of the box</p><ul><li><p>no bikeshedding (that&#39;s huge!)</p><ul><li><p>personal experience with scala</p></li><li><p>hours lost with my friends</p></li></ul></li></ul></li><li><p>friendly and helpful compiler</p><ul><li><p>great error messages</p><ul><li><p>some examples!</p></li></ul></li><li><p>your greatest ally</p></li></ul></li></ul><h2>Get in for the language, stay for the amazing community</h2><p>What really sealed the deal for me was the incredible community that has formed
+around the language.</p><p>People in the official Discord are welcoming and incredibly nice.
+Even after the worst disheartening days at work, chatting with everyone always
+managed to lighten my mood.
+I&#39;ve learnt loads of new things just by hanging around and it&#39;s just a pleasure
+to chat and share things with everyone.</p></main></article></div></body></html>
