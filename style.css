@@ -312,7 +312,7 @@ a:hover {
 
 .post-body ul {
     list-style: "-> " outside;
-    padding-inline: 2rem;
+    padding-inline-start: 2rem;
 }
 
 .post-body ul li {
