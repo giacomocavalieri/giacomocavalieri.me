@@ -15,7 +15,10 @@ const posts_dir = "posts"
 pub fn main() {
   // I don't care about failing gracefully, I'll just let the world burn if
   // something goes wrong :P
-  let posts = read_posts()
+  let posts =
+    read_posts()
+    |> list.filter(fn(post) { post.meta.status == post.Show })
+
   let chronological_posts = list.sort(posts, by: post.compare)
   let tagged_posts = group_by_tags(posts)
   let indexed_posts =

@@ -1,4 +1,4 @@
-import gleam/dynamic
+import gleam/dynamic.{Decoder}
 import gleam/list
 import gleam/order.{Order}
 import gleam/result
@@ -19,6 +19,11 @@ pub type Post {
   Post(meta: Metadata, body: List(Element(Nil)))
 }
 
+pub type Status {
+  Hide
+  Show
+}
+
 pub type Metadata {
   Metadata(
     id: String,
@@ -26,6 +31,7 @@ pub type Metadata {
     abstract: String,
     date: Date,
     tags: List(String),
+    status: Status,
   )
 }
 
@@ -48,17 +54,28 @@ pub fn read(from file: String) -> Result(Post, Error) {
 
 fn parse_metadata(metadata: String) -> Result(Metadata, Error) {
   let decoder =
-    dynamic.decode5(
+    dynamic.decode6(
       Metadata,
       dynamic.field("id", dynamic.string),
       dynamic.field("title", dynamic.string),
       dynamic.field("abstract", dynamic.string),
       dynamic.field("date", date.decoder),
       dynamic.field("tags", dynamic.list(of: dynamic.string)),
+      dynamic.field("status", status_decoder()),
     )
 
   gloml.decode(metadata, decoder)
   |> result.map_error(WrongMetadata)
+}
+
+fn status_decoder() -> Decoder(Status) {
+  fn(dynamic) {
+    case dynamic.string(dynamic) {
+      Ok("hide") -> Ok(Hide)
+      Ok("show") -> Ok(Show)
+      Error(errors) -> Error(errors)
+    }
+  }
 }
 
 /// Turns a post (with html body) into an `<article>` element that can be used
