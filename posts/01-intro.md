@@ -1,9 +1,9 @@
 ---
-id = "01-look-i-made-this-with-lustre"
-title = "Look! I made this with Lustre ✨"
+id = "01-look-i-made-this-with-gleam"
+title = "Look! I made this with Gleam ✨"
 abstract = "I still have to write a good abstract"
 tags = ["gleam", "fp"]
-date = "2023-10-25"
+date = "2023-10-29"
 status = "show"
 ---
 
@@ -29,7 +29,8 @@ journey I fell in love with the language and its community and I decided to
 stick around and set up this blog to share my thoughts.
 
 > If you're wondering, this blog is still written using Gleam; I ended up
-> using a brilliant package called [lustre](lustre.build). Do check it out!
+> using a brilliant package called [lustre](https://lustre.build).
+> Do check it out!
 
 ## Simple and productive
 
