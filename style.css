@@ -16,6 +16,7 @@
     --post-header-margin-bottom: 3rem;
 
     --profile-picture-size: 10rem;
+    --main-content-max-size: 50rem;
     
     --link-transition-time: 0.35s;
     --link-transition-function: cubic-bezier(.25, .1, 0, 2.05);
@@ -41,13 +42,13 @@
 
 @media screen and (min-width: 992px) {
     :root {
-        --body-horizontal-padding: 10%;
+        --body-horizontal-padding: 5rem;
     }
 }
 
 @media screen and (min-width: 1200px) {
     :root {
-        --body-horizontal-padding: 20%;
+        --body-horizontal-padding: 10rem;
     }
 }
 
@@ -163,6 +164,7 @@ a:hover {
     /* Add a little space in the tag preview page between breadcrumbs
      * and previews */
     margin-top: var(--h3-size);
+    max-width: var(--main-content-max-size);
 }
 
 #posts-previews .post-preview:not(:last-child) {
@@ -192,6 +194,12 @@ a:hover {
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
+
+.post {
+    max-width: var(--main-content-max-size);
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* All titles in posts should be aligned with the start of the line */
 .post h1,
