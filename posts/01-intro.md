@@ -14,19 +14,17 @@ love most, though, is sharing what I learn with my friends (sorry guys for
 nagging you, you're the best for putting up with me)!
 
 What better way to pester even more people than setting up a personal blog?
-What gave me the push I needed to get started was an awesome language I run into
-almost a year ago: [Gleam](https://gleam.run).
+What gave me the push I needed to get started was an awesome programming
+language I run into almost a year ago: [Gleam](https://gleam.run).
 
-Whenever I start learning a new language I usually try to pick up a small-ish
-project to help me get a feeling for the language and keep me motivated
-throughout my learning journey.
-The idea of writing a personal blog was already in the back of my mind, so when
-I approached Gleam I decided to write... you guessed it: a static site
-generator!
+When I start learning a new language, I usually try to pick up a small-ish
+project to help keep me motivated; the idea of writing a personal blog was
+already in the back of my mind, so when I approached Gleam I decided to write...
+you guessed it: a static site generator!
 
 Long story short, I never actually completed my side project; but during this
-journey I fell in love with the language and its community and I decided to
-stick around and set up this blog to share my thoughts.
+journey I fell in love with Gleam and its community and I decided to stick
+around and set up this blog to share my thoughts.
 
 > If you're wondering, this blog is still written using Gleam; I ended up
 > using a brilliant package called [lustre](https://lustre.build).
@@ -34,13 +32,14 @@ stick around and set up this blog to share my thoughts.
 
 ## Simple and productive
 
-Gleam is a remarkably simple language: if you're already familiar with some
-functional programming concepts, you'll be able to pick it up in no time.
-A couple of evenings could be enough for you to learn all there is to the core
-language and start hacking on your own projects.
+The first thing that amazed me is how easy it is to pick up Gleam and be
+productive with it, even from day one.
+That's because Gleam is a remarkably simple language: a couple of evenings could
+be enough for you to learn all there is to its core and start hacking on your
+own projects.
 
 > _"But what if I've never tried functional programming before?_
-> _Will I find it easy?"_
+> _Will I find it easy anyways?"_
 >
 > Getting into functional programming can be a bit daunting.
 > I remember when I first got started with it — almost four years ago — I
@@ -49,7 +48,7 @@ language and start hacking on your own projects.
 > quite the mindset shift and a lot of head scratching to get used to it.
 >
 > If you've never tried functional programming or — just like me — you've tried
-> and were discouraged, I can recommend you the
+> and were discouraged, I can recommend the
 > [Gleam's Exercism track](https://exercism.org/tracks/gleam/concepts): it will
 > guide you through the language and gently help you get in the "functional"
 > mindset!
@@ -59,8 +58,8 @@ _ideas into code without having to trudge through loads of bells and whistles,_
 having to painstakingly decide which is the right fit for the problem at
 hand.
 
-The language offers you a _small number of features_ that are _useful and cohesive,_
-there's no two ways to do the same thing.
+The language offers you a _small number of features_ that are
+_useful and cohesive,_ there's no two ways to do the same thing.
 Coming from languages with a huge surface — like Scala, Kotlin or C#, just to
 name a few — it feels almost exhilarating: the language only allows you to
 follow a single, well-defined path instead of dropping you in the middle of a
