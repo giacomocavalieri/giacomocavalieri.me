@@ -133,7 +133,9 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     [
       title([], page_title),
       charset("utf-8"),
-      viewport([content("width=device-width, initial-scale=1.0")]),
+      viewport([
+        content("width=device-width, initial-scale=1.0, viewport-fit=cover"),
+      ]),
       meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
       meta([property("og:title"), content(page_title)]),
       meta([property("og:type"), content("website")]),
