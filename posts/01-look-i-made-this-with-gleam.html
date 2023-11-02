@@ -30,25 +30,32 @@ hand.</p><p>The language offers you a <em>small number of features</em> that are
 Coming from languages with a huge surface — like Scala, Kotlin or C#, just to
 name a few — it feels almost exhilarating: the language only allows you to
 follow a single, well-defined path instead of dropping you in the middle of a
-maze of choices.</p><h3>Ok, but what does Gleam look like?</h3><p>Enough talk, let&#39;s have a look at a Gleam program:</p><pre><code data-lang="gleam" class="not-prose language-gleam">// this is not going to be the code example, I just need it
-// to get a sense of how the code will look!
+maze of choices.</p><h3>Ok, but what does Gleam look like?</h3><p>Enough talk, let&#39;s have a look at a Gleam program:</p><pre><code data-lang="gleam" class="not-prose language-gleam">import gleam/io
 
-import gleam/io
-
-pub opaque type Foo {
-  Bar(bar: Int, baz: String)
+/// A pet can either be a cat or a dog,
+/// in either case they have a name
+///
+pub type Pet {
+  Cat(name: String)
+  Dog(name: String)
 }
 
-/// main!!!
-///
-pub fn main() {
-  let bar = Bar(1, &quot;hello&quot;)
-  use a &lt;- result.try(Ok(1))
-  case bar {
-    Bar(1, &quot;h&quot; &lt;&gt; _) -&gt; Error(&quot;foo&quot;)
-    Bar(_, _) -&gt; Ok(11_000)
+pub fn speak(pet: Pet) -&gt; String {
+  case pet {
+    Cat(..) -&gt; &quot;meow&quot;
+    Dog(..) -&gt; &quot;woof&quot;
   }
-  Nil |&gt; io.debug
+}
+
+pub fn describe(pet: Pet) -&gt; String {
+  pet.name &lt;&gt; &quot; goes &quot; &lt;&gt; speak(pet) &lt;&gt; &quot;!&quot;
+}
+
+pub fn main() {
+  Dog(name: &quot;James&quot;)
+  |&gt; describe
+  |&gt; io.println
+  // -&gt; &quot;James goes woof!&quot;
 }</code></pre><h2>An outstanding developer experience</h2><p>When you start using Gleam, it&#39;s impossible not to notice the great
 amount of love and work that went into making sure the language has a lovely
 developer experience.</p><p>Let me show you how straightforward it is to get started and the many niceties
