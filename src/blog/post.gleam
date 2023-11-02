@@ -1,16 +1,16 @@
-import gleam/dynamic.{Decoder}
+import gleam/dynamic.{type Decoder}
 import gleam/list
-import gleam/order.{Order}
+import gleam/order.{type Order}
 import gleam/result
 import gleam/string
 import gloml
-import lustre/attribute.{Attribute, attribute, class, href, id}
-import lustre/element.{Element, text}
+import lustre/attribute.{type Attribute, attribute, class, href, id}
+import lustre/element.{type Element, text}
 import lustre/element/html.{
   a, article, div, h1, h2, header, li, main, p, time, ul,
 }
 import blog/breadcrumbs
-import blog/date.{Date}
+import blog/date.{type Date}
 import extra
 import markdown
 import simplifile

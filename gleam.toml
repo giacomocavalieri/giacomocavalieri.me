@@ -2,6 +2,7 @@ name = "giacomocavalieri"
 version = "1.0.0"
 description = "My personal blog"
 target = "javascript"
+gleam = ">= 0.32.0"
 
 [dependencies]
 gleam_stdlib = "~> 0.30"

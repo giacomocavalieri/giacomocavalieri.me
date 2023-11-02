@@ -1,5 +1,5 @@
 import lustre/attribute.{attribute}
-import lustre/element.{Element}
+import lustre/element.{type Element}
 import lustre/element/html
 
 pub fn code(src: String, lang: String) -> Element(msg) {

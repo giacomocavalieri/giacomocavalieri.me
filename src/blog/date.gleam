@@ -1,6 +1,6 @@
-import gleam/dynamic.{Dynamic}
+import gleam/dynamic.{type Dynamic}
 import gleam/int
-import gleam/order.{Eq, Gt, Lt, Order}
+import gleam/order.{type Order, Eq, Gt, Lt}
 import gleam/result
 import gleam/string
 

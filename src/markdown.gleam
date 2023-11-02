@@ -1,6 +1,6 @@
 import gleam/result
 import gleam/string
-import lustre/element.{Element}
+import lustre/element.{type Element}
 
 pub type Error {
   MissingMetadata

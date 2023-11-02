@@ -1,13 +1,13 @@
 import lustre/attribute.{
-  Attribute, alt, attribute, class, href, id, name, rel, src,
+  type Attribute, alt, attribute, class, href, id, name, rel, src,
 }
-import lustre/element.{Element, text}
+import lustre/element.{type Element, text}
 import lustre/element/html.{
   a, body, br, div, h1, h2, head, header, html, i, img, link, main, meta, p,
   script, span, title,
 }
 import blog/breadcrumbs
-import blog/post.{Post}
+import blog/post.{type Post}
 import glevatar
 
 /// --- HOME PAGE ---
