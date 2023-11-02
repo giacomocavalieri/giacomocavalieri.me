@@ -70,25 +70,32 @@ maze of choices.
 Enough talk, let's have a look at a Gleam program:
 
 ```gleam
-// this is not going to be the code example, I just need it
-// to get a sense of how the code will look!
-
 import gleam/io
 
-pub opaque type Foo {
-  Bar(bar: Int, baz: String)
+/// A pet can either be a cat or a dog,
+/// in either case they have a name
+///
+pub type Pet {
+  Cat(name: String)
+  Dog(name: String)
 }
 
-/// main!!!
-///
-pub fn main() {
-  let bar = Bar(1, "hello")
-  use a <- result.try(Ok(1))
-  case bar {
-    Bar(1, "h" <> _) -> Error("foo")
-    Bar(_, _) -> Ok(11_000)
+pub fn speak(pet: Pet) -> String {
+  case pet {
+    Cat(..) -> "meow"
+    Dog(..) -> "woof"
   }
-  Nil |> io.debug
+}
+
+pub fn describe(pet: Pet) -> String {
+  pet.name <> " goes " <> speak(pet) <> "!"
+}
+
+pub fn main() {
+  Dog(name: "James")
+  |> describe
+  |> io.println
+  // -> "James goes woof!"
 }
 ```
 
@@ -101,20 +108,86 @@ developer experience.
 Let me show you how straightforward it is to get started and the many niceties
 you get out of the box.
 
-TODO list:
+### Dead simple setup
 
-- getting started with a project is as easy as `gleam new`
-  - you get all the scaffolding needed to start hacking
-  - and some niceties like a github action to run tests in CI (it just shows
-    the great amount of care that went into it)
-- zero configuration formatter out of the box
-  - no bikeshedding (that's huge!)
-    - personal experience with scala
-    - hours lost with my friends
-- friendly and helpful compiler
-  - great error messages
-    - some examples!
-  - your greatest ally
+Getting started with a new project is incredibly straightforward: just type
+`gleam new` and the name of your project and you're ready to start hacking!
+
+```text
+> gleam new my_project
+
+Your Gleam project my_project has been successfully created.
+The project can be compiled and tested by running these commands:
+
+    cd my_project
+    gleam test
+```
+
+The CLI tool takes care of all the scaffolding you need; and you also get some
+additional niceties out of the box: a `.gitignore` tailored for Gleam projects
+and a GitHub workflow to run your tests when you push to a repo. For me this
+was the cherry on top since I hate writing those!
+
+It's these little details that really show the attention that went into making
+sure the developer experience is as smooth as possible.
+
+### No bikeshedding allowed here
+
+The language also ships with a zero configuration code formatter.
+I can't stress enough how much I love this zero configuration approach: first,
+it ensures a consistent look across all Gleam projects; it's a great quality of
+life improvement, especially if you're trying to approach a codebase written by
+someone else.
+
+This also gets rid of the problem of endless bikeshedding around the look a
+program should have. I once spent a good couple of hours reading through the
+documentation and countless options of the Scala formatter, not considering the
+time it took me and my team to agree on a single style.
+
+I've been so scarred by this experience that I'll always gladly take the zero
+configuration approach over any configurable code formatter, even if the style
+is not 100% to my liking.
+
+### The compiler is your friend
+
+Another thing I love about Gleam is how nice its error messages are. The
+compiler goes out of its way to display concise and helpful messages. Take for
+example this little code snippet:
+
+```gleam
+pub type User {
+  User(id: Int, name: String)
+}
+
+pub fn main() {
+  let user = User(id: 1, name: "Rob")
+  io.println(user.nam) // <- uh oh, we've made a typo! 
+}
+```
+
+Let's have a look at the resulting error message:
+
+```text
+error: Unknown record field
+
+  ┌─ ./src/app.gleam:6:19
+  │
+4 │ io.println(user.nam)
+  │                ^^^^ Did you mean `name`?
+
+The value being accessed has this type:
+    User
+
+It has these fields:
+    .id
+    .name
+```
+
+The compiler highlights the piece of code were something's wrong and tries to be
+extra helpful; in this case it is smart enough to guess we've made a typo and
+meant to access the `name` property... how nice is that? I personally love the
+friendly and helpful attitude of the compiler, it really feels like you have a
+buddy constantly helping you and looking out for potential bugs in your code.
 
 ## Get in for the language, stay for the amazing community
 
