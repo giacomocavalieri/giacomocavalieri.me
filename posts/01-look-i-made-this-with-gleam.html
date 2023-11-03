@@ -59,8 +59,52 @@ pub fn main() {
 }</code></pre><h2>An outstanding developer experience</h2><p>When you start using Gleam, it&#39;s impossible not to notice the great
 amount of love and work that went into making sure the language has a lovely
 developer experience.</p><p>Let me show you how straightforward it is to get started and the many niceties
-you get out of the box.</p><p>TODO list:</p><ul><li><p>getting started with a project is as easy as <code>gleam new</code></p><ul><li><p>you get all the scaffolding needed to start hacking</p></li><li><p>and some niceties like a github action to run tests in CI (it just shows
-the great amount of care that went into it)</p></li></ul></li><li><p>zero configuration formatter out of the box</p><ul><li><p>no bikeshedding (that&#39;s huge!)</p><ul><li><p>personal experience with scala</p></li><li><p>hours lost with my friends</p></li></ul></li></ul></li><li><p>friendly and helpful compiler</p><ul><li><p>great error messages</p><ul><li><p>some examples!</p></li></ul></li><li><p>your greatest ally</p></li></ul></li></ul><h2>Get in for the language, stay for the amazing community</h2><p>What really sealed the deal for me was the incredible community that has formed
+you get out of the box.</p><h3>Dead simple setup</h3><p>Getting started with a new project is incredibly straightforward: just type
+<code>gleam new</code> and the name of your project and you&#39;re ready to start hacking!</p><pre><code data-lang="text" class="not-prose language-text">&gt; gleam new my_project
+
+Your Gleam project my_project has been successfully created.
+The project can be compiled and tested by running these commands:
+
+    cd my_project
+    gleam test</code></pre><p>The CLI tool takes care of all the scaffolding you need; and you also get some
+additional niceties out of the box: a <code>.gitignore</code> tailored for Gleam projects
+and a GitHub workflow to run your tests when you push to a repo. For me this
+was the cherry on top since I hate writing those!</p><p>It&#39;s these little details that really show the attention that went into making
+sure the developer experience is as smooth as possible.</p><h3>No bikeshedding allowed here</h3><p>The language also ships with a zero configuration code formatter.
+I can&#39;t stress enough how much I love this zero configuration approach: first,
+it ensures a consistent look across all Gleam projects; it&#39;s a great quality of
+life improvement, especially if you&#39;re trying to approach a codebase written by
+someone else.</p><p>This also gets rid of the problem of endless bikeshedding around the look a
+program should have. I once spent a good couple of hours reading through the
+documentation and countless options of the Scala formatter, not considering the
+time it took me and my team to agree on a single style.</p><p>I&#39;ve been so scarred by this experience that I&#39;ll always gladly take the zero
+configuration approach over any configurable code formatter, even if the style
+is not 100% to my liking.</p><h3>The compiler is your friend</h3><p>Another thing I love about Gleam is how nice its error messages are. The
+compiler goes out of its way to display concise and helpful messages. Take for
+example this little code snippet:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub type User {
+  User(id: Int, name: String)
+}
+
+pub fn main() {
+  let user = User(id: 1, name: &quot;Rob&quot;)
+  io.println(user.nam) // &lt;- uh oh, we&#39;ve made a typo! 
+}</code></pre><p>Let&#39;s have a look at the resulting error message:</p><pre><code data-lang="text" class="not-prose language-text">error: Unknown record field
+
+  ┌─ ./src/app.gleam:6:19
+  │
+4 │ io.println(user.nam)
+  │                ^^^^ Did you mean `name`?
+
+The value being accessed has this type:
+    User
+
+It has these fields:
+    .id
+    .name</code></pre><p>The compiler highlights the piece of code were something&#39;s wrong and tries to be
+extra helpful; in this case it is smart enough to guess we&#39;ve made a typo and
+meant to access the <code>name</code> property... how nice is that? I personally love the
+friendly and helpful attitude of the compiler, it really feels like you have a
+buddy constantly helping you and looking out for potential bugs in your code.</p><h2>Get in for the language, stay for the amazing community</h2><p>What really sealed the deal for me was the incredible community that has formed
 around the language.</p><p>People in the official Discord are welcoming and incredibly nice.
 Even after the worst disheartening days at work, chatting with everyone always
 managed to lighten my mood.
