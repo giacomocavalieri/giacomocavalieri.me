@@ -1,0 +1,60 @@
+<html lang="en"><head><title>What if best practices were the norm?</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="What if best practices were the norm?"><meta property="og:type" content="website"><meta name="image" property="og:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta property="og:description" content="No abstract yet"><meta name="description" content="No abstract yet"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="What if best practices were the norm?"><meta property="twitter:description" content="No abstract yet"><meta property="twitter:creator" content="@giacomo_cava"><meta property="twitter:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">What if best practices were the norm?</h1><nav class="breadcrumbs"><a rel="author" href="/">← home</a></nav><div class="post-subtitle"><time datetime="25-10-2023" class="post-date dt-published">2023 october 25</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><h3>What if best practices were actually the norm?</h3><p>During my second year at university I had to learn Java, there was even an entire
+course dedicated to object oriented languages! It really was a great course
+and it was held by one of the best professors I&#39;ve ever had the pleasure to meet.</p><p>It focused not only on the language in itself, but also on the &quot;best practices&quot;
+to follow that would make code easier to refactor and reason about: favour
+immutability, avoid exceptions as a control flow mechanism,
+<em>never</em> return <code>null</code>, and the list goes on.</p><p>The problem is, these are just <em>practices</em>, nothing is enforced by the language
+itself: you&#39;ll always be able to throw an exception or sneakily return a null.
+Since a code snippet is worth a thousand words let me show you an example:</p><pre><code data-lang="java" class="not-prose language-java">interface User {
+  String name()
+}
+
+class Users {
+  // Returns the user with the given id
+  public static User load(int id) {
+    // The implementation is not important, it may fetch
+    // the user from a DB or somewhere else entirely
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+    var user = Users.load(1);
+    System.out.println(user.name());
+  }
+}</code></pre><p>A seasoned Java developer will immediately notice all the little ways in which
+this seemingly harmless snippet of code could fail. The <code>load</code> function is
+actually lying to us: it sais it will return a <code>User</code>, but in reality it may
+throw an exception or even return a sneaky <code>null</code> resulting in a much dreaded
+<code>NullPointerException</code>.</p><p>The problem is that someone has to always be on the lookout and remember to add
+all kind of checks to ensure the program is never going to unexpectedly fail at
+runtime: check that objects are not null, wrap function calls in <code>try-catch</code>
+blocks, make defensive copies of data structures.</p><p>As programmers we&#39;re <em>incredibly good at ignoring the milion possible ways in</em>
+<em>which our software could fail</em> and focus only on the happy path. Sooner or
+later, even the best programmer will forget a null check or a try catch,
+allowing sneaky bugs to enter in the codebase.</p><h3>What if best practices were actually the norm?</h3><pre><code data-lang="gleam" class="not-prose language-gleam">pub type User
+
+// Returns the user with the given id
+pub fn load_user(id: Int) -&gt; Result(User, Nil) {
+  // The implementation is not important, it may fetch
+  // the user from a DB or somewhere else entirely
+}
+
+pub type Prova {
+  Prova(prova: Int)
+}
+
+pub fn main() {
+  let user = load_user(1)
+  io.println(user.name)
+
+  case user {
+    Ok(foo) -&gt; &quot;baz&quot; == 1
+    Error(bar) -&gt; &quot;boo&quot; &lt;&gt; &quot;ben&quot;
+  }
+
+  use &lt;- prova(1, 2, 3)
+  result.try(foo) |&gt; result.then(1)
+}</code></pre><p>On the surface, this Gleam snippet may look almost identical to the Java one I
+showed you earlier.</p><p>Here something truly remarkable is happening, the Gleam compiler lifts this load
+from the developer and takes care of it: the language.</p></main></article></div></body></html>
