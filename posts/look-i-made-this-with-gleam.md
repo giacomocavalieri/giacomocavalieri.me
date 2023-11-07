@@ -1,10 +1,10 @@
 ---
-id = "01-look-i-made-this-with-gleam"
+id = "look-i-made-this-with-gleam"
 title = "Look! I made this with Gleam ✨"
 abstract = "I still have to write a good abstract"
 tags = ["gleam", "fp"]
 date = "2023-10-29"
-status = "show"
+status = "hide"
 ---
 
 Hello! I'm Giacomo 👋

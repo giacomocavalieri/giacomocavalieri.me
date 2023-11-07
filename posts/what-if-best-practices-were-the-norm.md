@@ -1,10 +1,10 @@
 ---
-id = "02-what-if-best-practices-were-the-norm"
+id = "what-if-best-practices-were-the-norm"
 title = "What if best practices were the norm?"
 abstract = "No abstract yet"
 tags = ["gleam", "fp"]
 date = "2023-10-25"
-status = "hide"
+status = "show"
 ---
 
 ### What if best practices were actually the norm?
