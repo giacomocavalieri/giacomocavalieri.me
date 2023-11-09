@@ -1,13 +1,36 @@
 ---
 id = "what-if-best-practices-were-the-norm"
-title = "What if best practices were the norm?"
+title = "What if best practices were actually the norm?"
 abstract = "No abstract yet"
 tags = ["gleam", "fp"]
 date = "2023-10-25"
 status = "show"
 ---
 
-### What if best practices were actually the norm?
+
+During my second year of university I followed a course dedicated to
+object-oriented programming. It was an amazing course, held by one of the best
+professors I've ever had the pleasure to meet: it focused not only on the
+language in itself — Java, in this case — but also on the _best practices_
+we ought to follow to make code easier to refactor and reason about.
+To me — a freshman who only knew C — that felt almost like magic, and I fell
+in love with Java.
+
+Quite a few years have passed since then, and my honeymoon phase with Java is
+long over. As I learned new languages and grew as a developer, I've come to
+dislike a lot of the ceremonies and self-imposed restrictions that can come with
+good object-oriented code.
+
+What if the best practices I'm forcing myself to follow (with good reason, don't
+get me wrong!) were easier to adopt and put into practice? Heck, what if they
+actually were _the only way_ to write code and not some rule that could be
+ignored?
+
+_What if best practices were actually the norm?_
+
+---
+
+## What are best practices?
 
 During my second year at university I had to learn Java, there was even an entire
 course dedicated to object oriented languages! It really was a great course
