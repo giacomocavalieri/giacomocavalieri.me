@@ -9,7 +9,28 @@ long over. As I learned new languages and grew as a developer, I&#39;ve come to
 dislike a lot of the ceremonies and self-imposed restrictions that can come with
 good object-oriented code.</p><p>What if the best practices I&#39;m forcing myself to follow (with good reason, don&#39;t
 get me wrong!) were easier to adopt and put into practice? Heck, what if they
-were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were actually the norm?</em></p><h2>TODO</h2><ul><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
+were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were actually the norm?</em></p><h2>What&#39;s a best practice?</h2><p>Java is a powerful language and gives us a lot of room to write clean,
+expressive code.
+However, with great powers comes great responsibility and we have to learn that
+even some of the core &quot;features&quot; of the language can turn into a footgun if not
+used with great care.</p><p>The best practices I&#39;m going to cover are mostly unwritten rules that we need to
+<em>constrain</em> Java and make sure our code will be well-behaved.</p><h3>A running example</h3><p>Since a ~~picture~~ code snippet speaks a thousand words, we&#39;ll use a simple
+running example to show some of these practices.</p><p>Imagine you&#39;re tasked to write a class to describe the users of an application,
+for now we&#39;re just focused on storing a user&#39;s name and birthday.</p><blockquote><p>I know this example may sound a bit simplistic, a user will probably be way
+more complicated. Bear with me, we&#39;ll be able to learn a lot of things even
+from such a bare-bones example.</p></blockquote><p>Now, a programmer who&#39;s just getting started with Java might intuitively write
+something dead simple that looks like this:</p><pre><code data-lang="java" class="not-prose language-java">class User {
+  String name;
+  Date birthday;
+
+  User(String name, Date birthday) {
+    this.name = name;
+    this.birthday = birthday;
+  }
+}</code></pre><p>A seasoned Java developer will probably be horrified by this small code snippet:
+a lot of subtle sources of bugs and runtime exceptions hide in this seemingly
+harmless piece of code. We&#39;ll come to this later, but you can already start to
+notice how the simple and immediate thing is not the best one!</p><h3><code>null</code>, or the bane of every Java programmer</h3><h2>TODO</h2><ul><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
 immutability)</p></li><li><p>It should start dumb and then improve it to show some best practices!</p><ul><li><p>favour immutability (gives us peace of mind)</p></li><li><p>no null</p><ul><li><p>a function can lie!</p></li><li><p>the bane of every java programmer</p></li><li><p>we have to do a lot of defensive programming</p></li><li><p>the compiler is not helping us, so we have to always be on the lookout</p></li></ul></li><li><p>no runtime exceptions as a control flow mechanism</p><ul><li><p>a lot of similarities with null</p></li><li><p>yet another distinct mechanism to deal with control flow</p></li></ul></li><li><p>As programmers we&#39;re incredibly good at ignoring the milion possible
 ways in which our software could fail and focus only on the happy path</p></li></ul></li></ul></li><li><p>The problem with best practices</p><ul><li><p>Those are... <em>practices</em>! They can be completely ignored, I&#39;ll never have
 the guarantee that the code I&#39;m using, or my colleagues are writing will
