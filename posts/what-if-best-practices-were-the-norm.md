@@ -7,7 +7,6 @@ date = "2023-10-25"
 status = "show"
 ---
 
-
 During my second year of university I followed an amazing course dedicated to
 object-oriented programming, held by one of the best professors I've
 ever had the pleasure to meet. It focused not only on the language in itself
@@ -26,6 +25,49 @@ get me wrong!) were easier to adopt and put into practice? Heck, what if they
 were _the only way_ to write code and not some rule that could be ignored?
 
 _What if best practices were actually the norm?_
+
+## What's a best practice?
+
+Java is a powerful language and gives us a lot of room to write clean,
+expressive code.
+However, with great powers comes great responsibility and we have to learn that
+even some of the core "features" of the language can turn into a footgun if not
+used with great care.
+
+The best practices I'm going to cover are mostly unwritten rules that we need to
+_constrain_ Java and make sure our code will be well-behaved.
+
+### A running example
+
+Imagine you're tasked to write a class to describe the users of an application,
+for now we're just focused on storing a user's name and birthday.
+
+> I know this example may sound a bit simplistic, a user will surely be way
+> more complicated in a real-world scenario.
+> Bear with me, we'll be able to learn a lot of things even from such a
+> bare-bones example.
+
+Now, a programmer who's just getting started with Java might intuitively write
+something dead simple that looks like this:
+
+```java
+class User {
+  String name;
+  Date birthday;
+
+  User(String name, Date birthday) {
+    this.name = name;
+    this.birthday = birthday;
+  }
+}
+```
+
+A seasoned Java developer will probably be horrified by this small code snippet:
+a lot of subtle sources of bugs and runtime exceptions hide in this seemingly
+harmless piece of code. We'll come to this later, but you can already start to
+notice how the simple and immediate thing is not the best one!
+
+### `null`, or the bane of every Java programmer
 
 ## TODO
 
