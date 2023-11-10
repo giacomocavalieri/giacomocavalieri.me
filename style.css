@@ -17,10 +17,10 @@
 
     --profile-picture-size: 10rem;
     --main-content-max-size: 50rem;
-    
+
     --link-transition-time: 0.35s;
     --link-transition-function: cubic-bezier(.25, .1, 0, 2.05);
-    
+
     --background-color: #ffffff;
     --font-color: #192427;
     --main-color: #cceac3;
@@ -31,9 +31,11 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background-color: #242829; /*#242829;*/
+        --background-color: #242829;
+        /*#242829;*/
         --font-color: #eeeeee;
-        --main-color: #52598c; /*#525A99*/
+        --main-color: #52598c;
+        /*#525A99*/
         --selection-color: #b9bfe5;
         --code-background-color: #52598c20;
         --blockquote-background-color: #52598c40;
@@ -70,7 +72,9 @@
     color: var(--font-color);
 }
 
-ul, ol, dl {
+ul,
+ol,
+dl {
     list-style: none;
     padding-inline: 0;
 }
@@ -109,7 +113,12 @@ h3 {
 
 /* --- LINKS ---------------------------------------------------------------- */
 
-a > h1, a > h2, a > h3, a > h4, a > h5, a > h6 {
+a>h1,
+a>h2,
+a>h3,
+a>h4,
+a>h5,
+a>h6 {
     /* This is needed to disaplay nice titles with the same undeline effect
      * as normal text */
     display: inline;
@@ -118,7 +127,7 @@ a > h1, a > h2, a > h3, a > h4, a > h5, a > h6 {
 }
 
 a:not(:has(> *)) {
-    padding-left: 0.2rem; 
+    padding-left: 0.2rem;
     padding-right: 0.2rem;
 }
 
@@ -209,7 +218,8 @@ a:hover {
     text-align: start;
 }
 
-.post-title, .tag-title {
+.post-title,
+.tag-title {
     margin-left: -100%;
     margin-right: -100%;
     margin-bottom: var(--h1-size);
@@ -275,7 +285,7 @@ a:hover {
     background-color: var(--code-background-color);
     overflow-x: scroll;
 }
-    
+
 .post pre code {
     font-family: var(--code-font-family);
     font-size: var(--code-font-size);
@@ -344,9 +354,28 @@ a:hover {
 
 /* --- CODE HIGHLIGHT ------------------------------------------------------- */
 
-.hljs-number { color: rgb(219, 148, 14); }
-.hljs-string { color: rgb(94, 173, 94); }
-.hljs-comment { color: rgb(167, 167, 167); }
-.hljs-keyword { color: rgb(255, 69, 138); }
-.hljs-title { color: rgb(56, 146, 240); }
-.hljs-variable, .hljs-operator { color: var(--text-color); }
+.hljs-number {
+    color: rgb(219, 148, 14);
+}
+
+.hljs-string {
+    color: rgb(94, 173, 94);
+}
+
+.hljs-comment {
+    color: rgb(167, 167, 167);
+}
+
+.hljs-keyword,
+.hljs-built_in {
+    color: rgb(255, 69, 138);
+}
+
+.hljs-title {
+    color: rgb(56, 146, 240);
+}
+
+.hljs-variable,
+.hljs-operator {
+    color: var(--text-color);
+}

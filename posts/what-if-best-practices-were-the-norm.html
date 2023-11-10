@@ -14,11 +14,11 @@ expressive code.
 However, with great powers comes great responsibility and we have to learn that
 even some of the core &quot;features&quot; of the language can turn into a footgun if not
 used with great care.</p><p>The best practices I&#39;m going to cover are mostly unwritten rules that we need to
-<em>constrain</em> Java and make sure our code will be well-behaved.</p><h3>A running example</h3><p>Since a ~~picture~~ code snippet speaks a thousand words, we&#39;ll use a simple
-running example to show some of these practices.</p><p>Imagine you&#39;re tasked to write a class to describe the users of an application,
-for now we&#39;re just focused on storing a user&#39;s name and birthday.</p><blockquote><p>I know this example may sound a bit simplistic, a user will probably be way
-more complicated. Bear with me, we&#39;ll be able to learn a lot of things even
-from such a bare-bones example.</p></blockquote><p>Now, a programmer who&#39;s just getting started with Java might intuitively write
+<em>constrain</em> Java and make sure our code will be well-behaved.</p><h3>A running example</h3><p>Imagine you&#39;re tasked to write a class to describe the users of an application,
+for now we&#39;re just focused on storing a user&#39;s name and birthday.</p><blockquote><p>I know this example may sound a bit simplistic, a user will surely be way
+more complicated in a real-world scenario.
+Bear with me, we&#39;ll be able to learn a lot of things even from such a
+bare-bones example.</p></blockquote><p>Now, a programmer who&#39;s just getting started with Java might intuitively write
 something dead simple that looks like this:</p><pre><code data-lang="java" class="not-prose language-java">class User {
   String name;
   Date birthday;
