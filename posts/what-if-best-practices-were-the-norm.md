@@ -51,11 +51,11 @@ Now, a programmer who's just getting started with Java might intuitively write
 something dead simple that looks like this:
 
 ```java
-class User {
-  String name;
-  Date birthday;
+public class User {
+  public String name;
+  public Date birthday;
 
-  User(String name, Date birthday) {
+  public User(String name, Date birthday) {
     this.name = name;
     this.birthday = birthday;
   }
@@ -69,6 +69,62 @@ notice how the simple and immediate thing is not the best one!
 
 ### `null`, or the bane of every Java programmer
 
+In Java, whenever we deal with objects, we have to remember that they could be
+null. So, when defining a `User` we need to stop for a second and ask ourselves
+_"Does it really make sense for the name/date to be null"?_
+
+Let's say in this particular case neither the name nor birthday can be missing.
+Dealing with users we will always expect those to be defined, so we need to make
+the checks up front in the class constructor.
+We don't want to store a `null` name and then have mysterious exceptions popping
+up throughout our codebase because we expected the name to never be missing.
+Remember folks: [parse, don't validate!](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)
+
+```java
+public class User {
+  public String name;
+  public Date birthday;
+
+  public User(String name, Date birthday) {
+    Objects.requireNonNull(name, "The user's name can't be missing");
+    Objects.requireNonNull(birthday, "The user's birthday can't be missing");
+    this.name = name;
+    this.birthday = birthday;
+  }
+}
+```
+
+Things get even worse when we use functions that can return objects: we will
+always have to remember to check that those do not return a `null` reference.
+
+Imagine you also have a static method that can be used to load users from a
+database:
+
+```java
+public class Users {
+  public User load(String name) { ... }
+}
+```
+
+The problem with this definition is that the function is actually
+_lying about its behavior_: it says that given a name it will return a user
+when it could also return a null reference! `null` is not a user, and if we try
+to treat it as such, the only thing that can happen is a runtime exception.
+
+When dealing with objects we always have to be on the lookout and _remember_ to
+check they are not a null reference under the hood.
+The key takeaway here lies in the word "remember": the compiler is not helping
+us here so _we are on our own!_ And even the most skillful Java developer
+will eventually forget a null check, allowing some sneaky bugs to enter the
+codebase.
+
+## What if there was a different way?
+
+- We have to opt-in in nullability (in Java you have to opt-out with the
+  explicit checks)
+- The compiler forces us to deal with possibly missing values, we can't forget a
+  null check
+
 ## TODO
 
 - What are best practices
@@ -80,13 +136,13 @@ notice how the simple and immediate thing is not the best one!
       - favour immutability (gives us peace of mind)
       - no null
         - a function can lie!
-        - the bane of every java programmer
+        - the bane of every Java programmer
         - we have to do a lot of defensive programming
         - the compiler is not helping us, so we have to always be on the lookout
       - no runtime exceptions as a control flow mechanism
         - a lot of similarities with null
         - yet another distinct mechanism to deal with control flow
-      - As programmers we're incredibly good at ignoring the milion possible
+      - As programmers, we're incredibly good at ignoring the million possible
         ways in which our software could fail and focus only on the happy path
   - The problem with best practices
     - Those are... _practices_! They can be completely ignored, I'll never have
@@ -96,9 +152,9 @@ notice how the simple and immediate thing is not the best one!
       on the lookout
     - Even the most skilled Java programmer will eventually forget a null check
       and allow some sneaky bug to enter the codebase
-    - We have to be welcoming to new developers, if to be a good java developer
-      you have to be aware of a dozen of unwritten rules you're doing a horrible
-      job at making begginers productive in your language
+    - We have to be welcoming to new developers, if to be a good Java developer
+      you have to be aware of a dozen unwritten rules you're doing a horrible
+      job at making beginners productive in your language
   - Enters Gleam
     - Best practices become the rule of the game, the only way to write software
       is the "good" way
@@ -112,8 +168,8 @@ notice how the simple and immediate thing is not the best one!
       - It reminds me where my code could fail and forces me to handle it,
         so there's no way I'm forgetting to check if loading a user failed, even
         after 20 hours in front of a screen
-    - A begginer is immediately productive and won't be able to mess up as
+    - A beginner is immediately productive and won't be able to mess up as
       easily
       - The language shows you a single, well-defined path: it gently pushes you
-        in a "pit of success", instead of dropping you in the middle of a maze
+        into a "pit of success", instead of dropping you in the middle of a maze
         of choices you have to painfully and carefully evaluate
