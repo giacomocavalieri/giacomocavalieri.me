@@ -61,11 +61,12 @@ class User {
 }
 ```
 
-The implementation of `find` is not important (and it shouldn't be!), this
-method may fetch a user from a database, an in-memory store, or somewhere else
-entirely.
-We don't want to go and dive into the implementation of every method we
-use. To me, that's where the beauty of static types lies: just by reading the
+The implementation of `find` is not important, and it shouldn't be!
+This method may fetch a user from a database, an in-memory store, or somewhere
+else entirely.
+The point is we don't want to go and dive into the implementation of every
+method we use.
+To me, that's where the beauty of static types lies: just by reading the
 signature of a method we can get a pretty good hunch of what to expect.
 
 So, what is `find`'s signature telling us?
@@ -145,13 +146,13 @@ pub fn main() {
 }
 ```
 
-> As you might have noticed, keywords aside, this is not extremly different from
-> the Java version, there's no `new` keyword to create things and you might be
-> wondering where all the getters and setters have gone.
+> As you might have noticed, keywords aside, this is not extremely different
+> from the Java version, there's no `new` keyword to create things and you might
+> be wondering where all the getters and setters have gone.
 > Bear with me, we'll get to that later.
 
 And now onto the most important piece: the function to load users; as usual
-we don't care about the its implementation, with a quick look at its type we can
+we don't care about its implementation, with a quick look at its type we can
 already discover what matters most.
 
 ```gleam
@@ -172,7 +173,7 @@ things might not turn out as expected.
 The invaluable advantage this approach gives us is that we're no longer on our
 own when performing error checking. The compiler can now point out every single
 piece of code where things might fail that we forgot to check.
-It's like having by our side _a friendly programmer who never gets tired_; they
+It's like having _a friendly programmer by our side who never gets tired_; they
 can point to all of our pieces of code that, if not taken care of, might turn
 into runtime exceptions. Let's see what happens if we're not careful with the
 `load` function:
