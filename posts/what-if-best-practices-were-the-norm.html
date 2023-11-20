@@ -1,4 +1,4 @@
-<html lang="en"><head><title>What if best practices were actually the norm?</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="What if best practices were actually the norm?"><meta property="og:type" content="website"><meta name="image" property="og:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta property="og:description" content="No abstract yet"><meta name="description" content="No abstract yet"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="What if best practices were actually the norm?"><meta property="twitter:description" content="No abstract yet"><meta property="twitter:creator" content="@giacomo_cava"><meta property="twitter:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">What if best practices were actually the norm?</h1><nav class="breadcrumbs"><a rel="author" href="/">← home</a></nav><div class="post-subtitle"><time datetime="25-10-2023" class="post-date dt-published">2023 october 25</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><p>During my second year of university I followed an amazing course dedicated to
+<html lang="en"><head><title>What if best practices were the norm?</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="What if best practices were the norm?"><meta property="og:type" content="website"><meta name="image" property="og:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta property="og:description" content="No abstract yet"><meta name="description" content="No abstract yet"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="What if best practices were the norm?"><meta property="twitter:description" content="No abstract yet"><meta property="twitter:creator" content="@giacomo_cava"><meta property="twitter:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">What if best practices were the norm?</h1><nav class="breadcrumbs"><a rel="author" href="/">← home</a></nav><div class="post-subtitle"><time datetime="25-10-2023" class="post-date dt-published">2023 october 25</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><p>During my second year of university I followed an amazing course dedicated to
 object-oriented programming, held by one of the best professors I&#39;ve
 ever had the pleasure to meet. It focused not only on the language in itself
 — Java, in this case — but also on the <em>best practices</em> we ought to follow to
@@ -9,59 +9,124 @@ long over. As I learned new languages and grew as a developer, I&#39;ve come to
 dislike a lot of the ceremonies and self-imposed restrictions that can come with
 good object-oriented code.</p><p>What if the best practices I&#39;m forcing myself to follow (with good reason, don&#39;t
 get me wrong!) were easier to adopt and put into practice? Heck, what if they
-were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were actually the norm?</em></p><h2>What&#39;s a best practice?</h2><p>Java is a powerful language and gives us a lot of room to write clean,
+were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were the norm?</em></p><h2>Lies, lies, lies</h2><p>Java is a powerful language that gives us a lot of room to write clean,
 expressive code.
-However, with great powers comes great responsibility and we have to learn that
+However, with great power comes great responsibility and we have to learn that
 even some of the core &quot;features&quot; of the language can turn into a footgun if not
-used with great care.</p><p>The best practices I&#39;m going to cover are mostly unwritten rules that we need to
-<em>constrain</em> Java and make sure our code will be well-behaved.</p><h3>A running example</h3><p>Imagine you&#39;re tasked to write a class to describe the users of an application,
-for now we&#39;re just focused on storing a user&#39;s name and birthday.</p><blockquote><p>I know this example may sound a bit simplistic, a user will surely be way
-more complicated in a real-world scenario.
-Bear with me, we&#39;ll be able to learn a lot of things even from such a
-bare-bones example.</p></blockquote><p>Now, a programmer who&#39;s just getting started with Java might intuitively write
-something dead simple that looks like this:</p><pre><code data-lang="java" class="not-prose language-java">public class User {
-  public String name;
-  public Date birthday;
+used with great care.
+That&#39;s why we need some rules to constrain ourselves and make sure our programs
+will be well-behaved under all circumstances.</p><p>Take for example null references, the bane of every Java programmer&#39;s
+existence. Every time we return <code>null</code> from a method we are condemning another
+programmer — or our future selves — to deal with a much dreaded
+<code>NullPointerException</code>.</p><p>The problem is that <code>null</code>s are a sneaky way for our methods to <em>lie</em> about
+their actual behaviour. To see what I mean by that, let&#39;s look at an example:</p><pre><code data-lang="java" class="not-prose language-java">class User {
+  // For this super simple example a User just has an id and a name
+  public final int id;
+  public final String name;
 
-  public User(String name, Date birthday) {
+  public User(final int id, final String name) {
+    this.id = id;
     this.name = name;
-    this.birthday = birthday;
   }
-}</code></pre><p>A seasoned Java developer will probably be horrified by this small code snippet:
-a lot of subtle sources of bugs and runtime exceptions hide in this seemingly
-harmless piece of code. We&#39;ll come to this later, but you can already start to
-notice how the simple and immediate thing is not the best one!</p><h3><code>null</code>, or the bane of every Java programmer</h3><p>In Java, whenever we deal with objects, we have to remember that they could be
-null. So, when defining a <code>User</code> we need to stop for a second and ask ourselves
-<em>&quot;Does it really make sense for the name/date to be null&quot;?</em></p><p>Let&#39;s say in this particular case neither the name nor birthday can be missing.
-Dealing with users we will always expect those to be defined, so we need to make
-the checks up front in the class constructor.
-We don&#39;t want to store a <code>null</code> name and then have mysterious exceptions popping
-up throughout our codebase because we expected the name to never be missing.
-Remember folks: <a href="https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/">parse, don&#39;t validate!</a></p><pre><code data-lang="java" class="not-prose language-java">public class User {
-  public String name;
-  public Date birthday;
 
-  public User(String name, Date birthday) {
-    Objects.requireNonNull(name, &quot;The user&#39;s name can&#39;t be missing&quot;);
-    Objects.requireNonNull(birthday, &quot;The user&#39;s birthday can&#39;t be missing&quot;);
-    this.name = name;
-    this.birthday = birthday;
+  public static User find(int id) {
+    // ...
   }
-}</code></pre><p>Things get even worse when we use functions that can return objects: we will
-always have to remember to check that those do not return a <code>null</code> reference.</p><p>Imagine you also have a static method that can be used to load users from a
-database:</p><pre><code data-lang="java" class="not-prose language-java">public class Users {
-  public User load(String name) { ... }
-}</code></pre><p>The problem with this definition is that the function is actually
-<em>lying about its behavior</em>: it says that given a name it will return a user
-when it could also return a null reference! <code>null</code> is not a user, and if we try
-to treat it as such, the only thing that can happen is a runtime exception.</p><p>When dealing with objects we always have to be on the lookout and <em>remember</em> to
-check they are not a null reference under the hood.
-The key takeaway here lies in the word &quot;remember&quot;: the compiler is not helping
-us here so <em>we are on our own!</em> And even the most skillful Java developer
-will eventually forget a null check, allowing some sneaky bugs to enter the
-codebase.</p><h2>What if there was a different way?</h2><ul><li><p>We have to opt-in in nullability (in Java you have to opt-out with the
-explicit checks)</p></li><li><p>The compiler forces us to deal with possibly missing values, we can&#39;t forget a
-null check</p></li></ul><h2>TODO</h2><ul><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
+}</code></pre><p>The implementation of <code>find</code> is not important (and it shouldn&#39;t be!), this
+method may fetch a user from a database, an in-memory store, or somewhere else
+entirely.
+We don&#39;t want to go and dive into the implementation of every method we
+use. To me, that&#39;s where the beauty of static types lies: just by reading the
+signature of a method we can get a pretty good hunch of what to expect.</p><p>So, what is <code>find</code>&#39;s signature telling us?
+<em>&quot;Give me an int and I&#39;ll get you a <code>User</code>&quot;</em>. Great! Let&#39;s put it to good use
+and do something useful:</p><pre><code data-lang="java" class="not-prose language-java">class Main {
+  public static void main(String[] args) {
+    User user = User.load(1);
+    System.out.println(&quot;The user with id 1 has name &quot; + user.name);
+  }
+}</code></pre><p>A seasoned Java developer might already have spotted the myriad of ways in
+which this seemingly harmless snippet of code could fail: if <code>load</code> returns a
+null reference or throws a runtime exception our code will crash at runtime.
+But how am I expected to know that when the method is lying about its behaviour?
+It says that it returns a <code>User</code> when in fact it might return a null reference
+or just crash with an exception and return nothing at all!</p><p>We have to <em>remember</em> to check for null references and catch possible
+exceptions:</p><pre><code data-lang="java" class="not-prose language-java">class Main {
+  public static void main(String[] args) {
+    try {
+      User user = User.load(1);
+      if (user != null) {
+        System.out.println(&quot;The user with id 1 has name &quot; + user.name);
+      } else {
+        System.out.println(&quot;There&#39;s no user with id 1&quot;);
+      }
+    } catch {
+      System.out.println(&quot;Error loading the user with id 1&quot;);
+    }
+  }
+}</code></pre><p>The crux of the problem is that <em>nothing forced me to add any check!</em> I had to
+be diligent and remember to add those. The easy thing to do — simply accessing
+the name property of the user, disregarding any possible check — is not the
+correct one!
+It follows that forgetting to add a null check or a try-catch is bound to
+happen; it&#39;s not a matter of <em>if</em>, but <em>when</em>: developers can be in a rush,
+have tight deadlines, or simply be tired after many hours in front of a screen!</p><h3>Being explicit is good</h3><p>What if, instead of having to be always on the lookout, the language could
+make sure that no function failure could go undetected? That sounds almost too
+good to be true but as it turns out, not only is this possible, but it&#39;s also
+easier than you might expect!</p><p>Enters Gleam: a friendly, simple, and pragmatic programming language that, among
+other things, has no runtime exceptions or null pointers! Let&#39;s see how the
+example I showed you earlier in Java might look in Gleam:</p><pre><code data-lang="gleam" class="not-prose language-gleam">type User {
+  // For this super simple example a User just has an id and a name
+  User(id: Int, name: String)
+}</code></pre><p>With this definition we&#39;re creating a <code>User</code> type and saying that users only
+have two fields called &quot;id&quot; and &quot;name&quot; with types <code>Int</code> and <code>String</code>.
+We could define a couple of users like this:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn main() {
+  let rob = User(1, &quot;Rob&quot;)
+  let ben = User(2, &quot;Ben&quot;)
+}</code></pre><blockquote><p>As you might have noticed, keywords aside, this is not extremly different from
+the Java version, there&#39;s no <code>new</code> keyword to create things and you might be
+wondering where all the getters and setters have gone.
+Bear with me, we&#39;ll get to that later.</p></blockquote><p>And now onto the most important piece: the function to load users; as usual
+we don&#39;t care about the its implementation, with a quick look at its type we can
+already discover what matters most.</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn load(id: Int) -&gt; Result(User, Nil) {
+  //                 ^^ the return type of the function
+  //                    comes after this arrow
+  // ...
+}</code></pre><p>The function doesn&#39;t simply return a <code>User</code> but a special type: a <code>Result</code>.
+What does it mean? In case everything goes right the function is going to return
+a user, as expected. However, in case something goes wrong we&#39;re getting a <code>Nil</code>
+instead. So the function can still fail (and it will) but it&#39;s impossible to
+forget about it! A <code>Result</code> acts as a glaring and <em>unmistakable sign</em> that
+things might not turn out as expected.</p><p>The invaluable advantage this approach gives us is that we&#39;re no longer on our
+own when performing error checking. The compiler can now point out every single
+piece of code where things might fail that we forgot to check.
+It&#39;s like having by our side <em>a friendly programmer who never gets tired</em>; they
+can point to all of our pieces of code that, if not taken care of, might turn
+into runtime exceptions. Let&#39;s see what happens if we&#39;re not careful with the
+<code>load</code> function:</p><pre><code data-lang="gleam" class="not-prose language-gleam">// This is how you define the main in Gleam
+pub fn main() {
+  let user = load(1)
+  println(&quot;The user with id 1 has name &quot; &lt;&gt; user.name)
+  //                                            ^^^^^
+  // This field does not exist.
+  // The value being accessed has this type:
+  //
+  //     Result(User, Nil)
+  //
+  // It does not have any fields.
+}</code></pre><p>The code won&#39;t even compile! We&#39;re trying to treat a <code>Result</code> like a <code>User</code> but
+that&#39;s not possible, since a call to <code>load</code> might have failed. Compare this with
+the Java example I showed you earlier, where the compiler would gladly accept
+our code even though it could result in a runtime exception.</p><p>How can we get a user out of a <code>Result</code>, then?</p><h3>Pattern matching, or the superpower of functional programming</h3><h3>Correct made easy</h3><p>Let&#39;s take a second to appreciate this: by forcing a function to be explicit
+about the fact that it can fail we no longer have to rely on &quot;best practices&quot;
+(never return null references, don&#39;t use exceptions as a control flow mechanism,
+remember to check if objects coming from other functions are null, etc.).
+The only way to write code is already the correct one,
+<em>the easy thing to do is also the right one!</em></p><p>A beginner who&#39;s just started to learn Gleam won&#39;t see mysterious
+runtime exceptions popping up in their fun learning project just because they
+didn&#39;t know a slew of unwritten rules people are expected to know.
+An experienced Java developer won&#39;t have to waste time trying to trace back
+where that pesky null came from because a <code>NullPointerException</code> was reported in
+production.</p><h2>TODO</h2><ul><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
 immutability)</p></li><li><p>It should start dumb and then improve it to show some best practices!</p><ul><li><p>favour immutability (gives us peace of mind)</p></li><li><p>no null</p><ul><li><p>a function can lie!</p></li><li><p>the bane of every Java programmer</p></li><li><p>we have to do a lot of defensive programming</p></li><li><p>the compiler is not helping us, so we have to always be on the lookout</p></li></ul></li><li><p>no runtime exceptions as a control flow mechanism</p><ul><li><p>a lot of similarities with null</p></li><li><p>yet another distinct mechanism to deal with control flow</p></li></ul></li><li><p>As programmers, we&#39;re incredibly good at ignoring the million possible
 ways in which our software could fail and focus only on the happy path</p></li></ul></li></ul></li><li><p>The problem with best practices</p><ul><li><p>Those are... <em>practices</em>! They can be completely ignored, I&#39;ll never have
 the guarantee that the code I&#39;m using, or my colleagues are writing will
