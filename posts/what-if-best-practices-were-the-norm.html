@@ -32,11 +32,12 @@ their actual behaviour. To see what I mean by that, let&#39;s look at an example
   public static User find(int id) {
     // ...
   }
-}</code></pre><p>The implementation of <code>find</code> is not important (and it shouldn&#39;t be!), this
-method may fetch a user from a database, an in-memory store, or somewhere else
-entirely.
-We don&#39;t want to go and dive into the implementation of every method we
-use. To me, that&#39;s where the beauty of static types lies: just by reading the
+}</code></pre><p>The implementation of <code>find</code> is not important, and it shouldn&#39;t be!
+This method may fetch a user from a database, an in-memory store, or somewhere
+else entirely.
+The point is we don&#39;t want to go and dive into the implementation of every
+method we use.
+To me, that&#39;s where the beauty of static types lies: just by reading the
 signature of a method we can get a pretty good hunch of what to expect.</p><p>So, what is <code>find</code>&#39;s signature telling us?
 <em>&quot;Give me an int and I&#39;ll get you a <code>User</code>&quot;</em>. Great! Let&#39;s put it to good use
 and do something useful:</p><pre><code data-lang="java" class="not-prose language-java">class Main {
@@ -82,11 +83,11 @@ have two fields called &quot;id&quot; and &quot;name&quot; with types <code>Int<
 We could define a couple of users like this:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn main() {
   let rob = User(1, &quot;Rob&quot;)
   let ben = User(2, &quot;Ben&quot;)
-}</code></pre><blockquote><p>As you might have noticed, keywords aside, this is not extremly different from
-the Java version, there&#39;s no <code>new</code> keyword to create things and you might be
-wondering where all the getters and setters have gone.
+}</code></pre><blockquote><p>As you might have noticed, keywords aside, this is not extremely different
+from the Java version, there&#39;s no <code>new</code> keyword to create things and you might
+be wondering where all the getters and setters have gone.
 Bear with me, we&#39;ll get to that later.</p></blockquote><p>And now onto the most important piece: the function to load users; as usual
-we don&#39;t care about the its implementation, with a quick look at its type we can
+we don&#39;t care about its implementation, with a quick look at its type we can
 already discover what matters most.</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn load(id: Int) -&gt; Result(User, Nil) {
   //                 ^^ the return type of the function
   //                    comes after this arrow
@@ -99,7 +100,7 @@ forget about it! A <code>Result</code> acts as a glaring and <em>unmistakable si
 things might not turn out as expected.</p><p>The invaluable advantage this approach gives us is that we&#39;re no longer on our
 own when performing error checking. The compiler can now point out every single
 piece of code where things might fail that we forgot to check.
-It&#39;s like having by our side <em>a friendly programmer who never gets tired</em>; they
+It&#39;s like having <em>a friendly programmer by our side who never gets tired</em>; they
 can point to all of our pieces of code that, if not taken care of, might turn
 into runtime exceptions. Let&#39;s see what happens if we&#39;re not careful with the
 <code>load</code> function:</p><pre><code data-lang="gleam" class="not-prose language-gleam">// This is how you define the main in Gleam
