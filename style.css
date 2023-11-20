@@ -286,6 +286,15 @@ a:hover {
     overflow-x: scroll;
 }
 
+@media screen and (min-width: 1200px) {
+    .post pre {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
 .post pre code {
     font-family: var(--code-font-family);
     font-size: var(--code-font-size);
