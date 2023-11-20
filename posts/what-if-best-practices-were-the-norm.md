@@ -117,7 +117,7 @@ It follows that forgetting to add a null check or a try-catch is bound to
 happen; it's not a matter of _if_, but _when_: developers can be in a rush,
 have tight deadlines, or simply be tired after many hours in front of a screen!
 
-### Being explicit is good
+### Gleam to the rescue
 
 What if, instead of having to be always on the lookout, the language could
 make sure that no function failure could go undetected? That sounds almost too
@@ -182,7 +182,7 @@ into runtime exceptions. Let's see what happens if we're not careful with the
 // This is how you define the main in Gleam
 pub fn main() {
   let user = load(1)
-  println("The user with id 1 has name " <> user.name)
+  io.println("The user with id 1 has name " <> user.name)
   //                                            ^^^^^
   // This field does not exist.
   // The value being accessed has this type:
@@ -198,9 +198,72 @@ that's not possible, since a call to `load` might have failed. Compare this with
 the Java example I showed you earlier, where the compiler would gladly accept
 our code even though it could result in a runtime exception.
 
-How can we get a user out of a `Result`, then?
-
 ### Pattern matching, or the superpower of functional programming
+
+How can we get a user out of a `Result`, then? That can be achieved with
+_pattern matching._ So to get our example to compile we can do something like
+this:
+
+```gleam
+pub fn main() {
+  case load(1) {
+    Ok(user) -> io.println("The user with id 1 has name " <> user.name)
+    Error(Nil) -> io.println("There's no user with id 1")
+  }
+}
+```
+
+Pattern matching allows you to check the shape of data; in this case, we can
+take different actions based on the result of the loading function: if
+everything went smoothly we will have a user in the `Ok` branch.
+Once again, we will never forget that a user can be missing because we're forced
+to deal with the `Error` branch as well.
+But what if we wanted to deal with more complex errors? A user might be missing, or
+there could be problems with the connection to the database (if we're fetching
+users from there)... just getting a generic `Error(Nil)` won't cut it.
+
+Luckily it's extremly easy to change the code, first of all we need a new type
+to describe the possible errors that may take place:
+
+```gleam
+pub type LoadError {
+  UserNotFound
+  ConnectionError
+}
+```
+
+Now the function can return a specific error in case something goes wrong.
+
+```gleam
+pub fn load(id: Int) -> Result(User, LoadError) {
+  // ...
+}
+```
+
+Notice how the function is now saying that it will return a more specific
+`LoadError` in case something goes wrong; that can be fundamental to deal with
+different failures in different ways.
+After this refactor we will be forced by the compiler to deal with every single
+error that may occur in the function, luckily that's as simple as adding a new
+branch to our previous pattern matching:
+
+```gleam
+pub fn main() {
+  case load(1) {
+    Ok(user) -> io.println("The user with id 1 has name " <> user.name)
+    Error(UserNotFound) -> io.println("There's no user with id 1")
+    Error(ConnectionError) -> io.println("There was a connection error!")
+  }
+}
+```
+
+> Being able to deal with errors like this is incredibly powerful, we do not
+> have to add new ad-hoc contructs to the languaguage like try-catch blocks.
+> One of the design goals of Gleam is to be simple, it doesn't even have if
+> statements, it does everything through pattern matching!
+> If you're curious to learn more about Gleam's syntax Erika Rowland wrote a
+> great blog post about it,
+> [do check it out!](https://erikarow.land/notes/gleam-syntax)
 
 ### Correct made easy
 
@@ -217,6 +280,14 @@ didn't know a slew of unwritten rules people are expected to know.
 An experienced Java developer won't have to waste time trying to trace back
 where that pesky null came from because a `NullPointerException` was reported in
 production.
+
+Our programs will never crash at runtime because it's impossible for an error to
+go undetected.
+And, as I hope you might have noticed, the language doesn't have to be complex
+to give you these guarantees! On the contrary, it makes things easier: there's
+only one control flow mechanism — pattern matching — and you don't have to
+juggle between if statements and try-catch blocks to deal with all the possible
+ways a method might lie.
 
 ## TODO
 
