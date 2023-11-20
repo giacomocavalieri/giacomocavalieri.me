@@ -8,8 +8,8 @@ packages = [
   { name = "glevatar", version = "0.1.1", build_tools = ["gleam"], requirements = ["glesha", "gleam_stdlib"], otp_app = "glevatar", source = "hex", outer_checksum = "C41F79A49226C74F112D20724A945FDDBA403881CC9810345116B356297C22B4" },
   { name = "gloml", version = "0.1.3", build_tools = ["gleam"], requirements = ["gleam_stdlib", "toml"], otp_app = "gloml", source = "hex", outer_checksum = "D70229ACD487010B2D1CB57FFCCB0D2BB38CEC885DC9688D51D1020A579AC057" },
   { name = "lustre", version = "3.0.11", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "lustre", source = "hex", outer_checksum = "4B46341D9A3426023CFA21A6CFF4ED0171652A01B8905D1878099308DA2E92D2" },
-  { name = "lustre_ssg", version = "0.2.0", build_tools = ["gleam"], requirements = ["simplifile", "gleam_stdlib", "lustre"], otp_app = "lustre_ssg", source = "hex", outer_checksum = "0BA84D4069DB9CF799943E4FEC61207D59B34FD1186709ACB532FEB091D203B9" },
-  { name = "simplifile", version = "0.4.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "8F3C94B83F691CCFACD784A4D7C1F7E5A0437D93341549B908EE3B32E3477447" },
+  { name = "lustre_ssg", version = "0.2.0", build_tools = ["gleam"], requirements = ["lustre", "simplifile", "gleam_stdlib"], otp_app = "lustre_ssg", source = "hex", outer_checksum = "0BA84D4069DB9CF799943E4FEC61207D59B34FD1186709ACB532FEB091D203B9" },
+  { name = "simplifile", version = "0.1.14", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "10EA0207796F20488A3A166C50A189C9385333F3C9FAC187729DE7B9CE4ADDBC" },
   { name = "toml", version = "0.7.0", build_tools = ["mix"], requirements = [], otp_app = "toml", source = "hex", outer_checksum = "0690246A2478C1DEFD100B0C9B89B4EA280A22BE9A7B313A8A058A2408A2FA70" },
 ]
 
@@ -19,5 +19,5 @@ gleeunit = { version = "~> 0.10" }
 glevatar = { version = "~> 0.1" }
 gloml = { version = "~> 0.1" }
 lustre = { version = "~> 3.0" }
-lustre_ssg = { version = "~> 0.1" }
-simplifile = { version = "~> 0.1" }
+lustre_ssg = { version = "~> 0.2" }
+simplifile = { version = "0.1.14" }

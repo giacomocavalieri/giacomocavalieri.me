@@ -34,7 +34,7 @@ pub fn main() {
 }
 
 fn read_posts() -> List(Post) {
-  let assert Ok(paths) = simplifile.get_files(in: posts_dir)
+  let assert Ok(paths) = simplifile.list_contents(of: posts_dir)
   use file <- list.map(paths)
   let assert Ok(post) = post.read(from: posts_dir <> "/" <> file)
   post
