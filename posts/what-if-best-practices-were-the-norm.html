@@ -70,7 +70,7 @@ the name property of the user, disregarding any possible check — is not the
 correct one!
 It follows that forgetting to add a null check or a try-catch is bound to
 happen; it&#39;s not a matter of <em>if</em>, but <em>when</em>: developers can be in a rush,
-have tight deadlines, or simply be tired after many hours in front of a screen!</p><h3>Being explicit is good</h3><p>What if, instead of having to be always on the lookout, the language could
+have tight deadlines, or simply be tired after many hours in front of a screen!</p><h3>Gleam to the rescue</h3><p>What if, instead of having to be always on the lookout, the language could
 make sure that no function failure could go undetected? That sounds almost too
 good to be true but as it turns out, not only is this possible, but it&#39;s also
 easier than you might expect!</p><p>Enters Gleam: a friendly, simple, and pragmatic programming language that, among
@@ -106,7 +106,7 @@ into runtime exceptions. Let&#39;s see what happens if we&#39;re not careful wit
 <code>load</code> function:</p><pre><code data-lang="gleam" class="not-prose language-gleam">// This is how you define the main in Gleam
 pub fn main() {
   let user = load(1)
-  println(&quot;The user with id 1 has name &quot; &lt;&gt; user.name)
+  io.println(&quot;The user with id 1 has name &quot; &lt;&gt; user.name)
   //                                            ^^^^^
   // This field does not exist.
   // The value being accessed has this type:
@@ -117,7 +117,44 @@ pub fn main() {
 }</code></pre><p>The code won&#39;t even compile! We&#39;re trying to treat a <code>Result</code> like a <code>User</code> but
 that&#39;s not possible, since a call to <code>load</code> might have failed. Compare this with
 the Java example I showed you earlier, where the compiler would gladly accept
-our code even though it could result in a runtime exception.</p><p>How can we get a user out of a <code>Result</code>, then?</p><h3>Pattern matching, or the superpower of functional programming</h3><h3>Correct made easy</h3><p>Let&#39;s take a second to appreciate this: by forcing a function to be explicit
+our code even though it could result in a runtime exception.</p><h3>Pattern matching, or the superpower of functional programming</h3><p>How can we get a user out of a <code>Result</code>, then? That can be achieved with
+<em>pattern matching.</em> So to get our example to compile we can do something like
+this:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn main() {
+  case load(1) {
+    Ok(user) -&gt; io.println(&quot;The user with id 1 has name &quot; &lt;&gt; user.name)
+    Error(Nil) -&gt; io.println(&quot;There&#39;s no user with id 1&quot;)
+  }
+}</code></pre><p>Pattern matching allows you to check the shape of data; in this case, we can
+take different actions based on the result of the loading function: if
+everything went smoothly we will have a user in the <code>Ok</code> branch.
+Once again, we will never forget that a user can be missing because we&#39;re forced
+to deal with the <code>Error</code> branch as well.
+But what if we wanted to deal with more complex errors? A user might be missing, or
+there could be problems with the connection to the database (if we&#39;re fetching
+users from there)... just getting a generic <code>Error(Nil)</code> won&#39;t cut it.</p><p>Luckily it&#39;s extremly easy to change the code, first of all we need a new type
+to describe the possible errors that may take place:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub type LoadError {
+  UserNotFound
+  ConnectionError
+}</code></pre><p>Now the function can return a specific error in case something goes wrong.</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn load(id: Int) -&gt; Result(User, LoadError) {
+  // ...
+}</code></pre><p>Notice how the function is now saying that it will return a more specific
+<code>LoadError</code> in case something goes wrong; that can be fundamental to deal with
+different failures in different ways.
+After this refactor we will be forced by the compiler to deal with every single
+error that may occur in the function, luckily that&#39;s as simple as adding a new
+branch to our previous pattern matching:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn main() {
+  case load(1) {
+    Ok(user) -&gt; io.println(&quot;The user with id 1 has name &quot; &lt;&gt; user.name)
+    Error(UserNotFound) -&gt; io.println(&quot;There&#39;s no user with id 1&quot;)
+    Error(ConnectionError) -&gt; io.println(&quot;There was a connection error!&quot;)
+  }
+}</code></pre><blockquote><p>Being able to deal with errors like this is incredibly powerful, we do not
+have to add new ad-hoc contructs to the languaguage like try-catch blocks.
+One of the design goals of Gleam is to be simple, it doesn&#39;t even have if
+statements, it does everything through pattern matching!
+If you&#39;re curious to learn more about Gleam&#39;s syntax Erika Rowland wrote a
+great blog post about it,
+<a href="https://erikarow.land/notes/gleam-syntax">do check it out!</a></p></blockquote><h3>Correct made easy</h3><p>Let&#39;s take a second to appreciate this: by forcing a function to be explicit
 about the fact that it can fail we no longer have to rely on &quot;best practices&quot;
 (never return null references, don&#39;t use exceptions as a control flow mechanism,
 remember to check if objects coming from other functions are null, etc.).
@@ -127,7 +164,13 @@ runtime exceptions popping up in their fun learning project just because they
 didn&#39;t know a slew of unwritten rules people are expected to know.
 An experienced Java developer won&#39;t have to waste time trying to trace back
 where that pesky null came from because a <code>NullPointerException</code> was reported in
-production.</p><h2>TODO</h2><ul><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
+production.</p><p>Our programs will never crash at runtime because it&#39;s impossible for an error to
+go undetected.
+And, as I hope you might have noticed, the language doesn&#39;t have to be complex
+to give you these guarantees! On the contrary, it makes things easier: there&#39;s
+only one control flow mechanism — pattern matching — and you don&#39;t have to
+juggle between if statements and try-catch blocks to deal with all the possible
+ways a method might lie.</p><h2>TODO</h2><ul><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
 immutability)</p></li><li><p>It should start dumb and then improve it to show some best practices!</p><ul><li><p>favour immutability (gives us peace of mind)</p></li><li><p>no null</p><ul><li><p>a function can lie!</p></li><li><p>the bane of every Java programmer</p></li><li><p>we have to do a lot of defensive programming</p></li><li><p>the compiler is not helping us, so we have to always be on the lookout</p></li></ul></li><li><p>no runtime exceptions as a control flow mechanism</p><ul><li><p>a lot of similarities with null</p></li><li><p>yet another distinct mechanism to deal with control flow</p></li></ul></li><li><p>As programmers, we&#39;re incredibly good at ignoring the million possible
 ways in which our software could fail and focus only on the happy path</p></li></ul></li></ul></li><li><p>The problem with best practices</p><ul><li><p>Those are... <em>practices</em>! They can be completely ignored, I&#39;ll never have
 the guarantee that the code I&#39;m using, or my colleagues are writing will
