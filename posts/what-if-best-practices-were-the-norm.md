@@ -1,6 +1,6 @@
 ---
 id = "what-if-best-practices-were-the-norm"
-title = "What if best practices were actually the norm?"
+title = "What if best practices were the norm?"
 abstract = "No abstract yet"
 tags = ["gleam", "fp"]
 date = "2023-10-25"
@@ -24,106 +24,198 @@ What if the best practices I'm forcing myself to follow (with good reason, don't
 get me wrong!) were easier to adopt and put into practice? Heck, what if they
 were _the only way_ to write code and not some rule that could be ignored?
 
-_What if best practices were actually the norm?_
+_What if best practices were the norm?_
 
-## What's a best practice?
+## Lies, lies, lies
 
-Java is a powerful language and gives us a lot of room to write clean,
+Java is a powerful language that gives us a lot of room to write clean,
 expressive code.
-However, with great powers comes great responsibility and we have to learn that
+However, with great power comes great responsibility and we have to learn that
 even some of the core "features" of the language can turn into a footgun if not
 used with great care.
+That's why we need some rules to constrain ourselves and make sure our programs
+will be well-behaved under all circumstances.
 
-The best practices I'm going to cover are mostly unwritten rules that we need to
-_constrain_ Java and make sure our code will be well-behaved.
+Take for example null references, the bane of every Java programmer's
+existence. Every time we return `null` from a method we are condemning another
+programmer — or our future selves — to deal with a much dreaded
+`NullPointerException`.
 
-### A running example
-
-Imagine you're tasked to write a class to describe the users of an application,
-for now we're just focused on storing a user's name and birthday.
-
-> I know this example may sound a bit simplistic, a user will surely be way
-> more complicated in a real-world scenario.
-> Bear with me, we'll be able to learn a lot of things even from such a
-> bare-bones example.
-
-Now, a programmer who's just getting started with Java might intuitively write
-something dead simple that looks like this:
+The problem is that `null`s are a sneaky way for our methods to _lie_ about
+their actual behaviour. To see what I mean by that, let's look at an example:
 
 ```java
-public class User {
-  public String name;
-  public Date birthday;
+class User {
+  // For this super simple example a User just has an id and a name
+  public final int id;
+  public final String name;
 
-  public User(String name, Date birthday) {
+  public User(final int id, final String name) {
+    this.id = id;
     this.name = name;
-    this.birthday = birthday;
+  }
+
+  public static User find(int id) {
+    // ...
   }
 }
 ```
 
-A seasoned Java developer will probably be horrified by this small code snippet:
-a lot of subtle sources of bugs and runtime exceptions hide in this seemingly
-harmless piece of code. We'll come to this later, but you can already start to
-notice how the simple and immediate thing is not the best one!
+The implementation of `find` is not important (and it shouldn't be!), this
+method may fetch a user from a database, an in-memory store, or somewhere else
+entirely.
+We don't want to go and dive into the implementation of every method we
+use. To me, that's where the beauty of static types lies: just by reading the
+signature of a method we can get a pretty good hunch of what to expect.
 
-### `null`, or the bane of every Java programmer
-
-In Java, whenever we deal with objects, we have to remember that they could be
-null. So, when defining a `User` we need to stop for a second and ask ourselves
-_"Does it really make sense for the name/date to be null"?_
-
-Let's say in this particular case neither the name nor birthday can be missing.
-Dealing with users we will always expect those to be defined, so we need to make
-the checks up front in the class constructor.
-We don't want to store a `null` name and then have mysterious exceptions popping
-up throughout our codebase because we expected the name to never be missing.
-Remember folks: [parse, don't validate!](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)
+So, what is `find`'s signature telling us?
+_"Give me an int and I'll get you a `User`"_. Great! Let's put it to good use
+and do something useful:
 
 ```java
-public class User {
-  public String name;
-  public Date birthday;
-
-  public User(String name, Date birthday) {
-    Objects.requireNonNull(name, "The user's name can't be missing");
-    Objects.requireNonNull(birthday, "The user's birthday can't be missing");
-    this.name = name;
-    this.birthday = birthday;
+class Main {
+  public static void main(String[] args) {
+    User user = User.load(1);
+    System.out.println("The user with id 1 has name " + user.name);
   }
 }
 ```
 
-Things get even worse when we use functions that can return objects: we will
-always have to remember to check that those do not return a `null` reference.
+A seasoned Java developer might already have spotted the myriad of ways in
+which this seemingly harmless snippet of code could fail: if `load` returns a
+null reference or throws a runtime exception our code will crash at runtime.
+But how am I expected to know that when the method is lying about its behaviour?
+It says that it returns a `User` when in fact it might return a null reference
+or just crash with an exception and return nothing at all!
 
-Imagine you also have a static method that can be used to load users from a
-database:
+We have to _remember_ to check for null references and catch possible
+exceptions:
 
 ```java
-public class Users {
-  public User load(String name) { ... }
+class Main {
+  public static void main(String[] args) {
+    try {
+      User user = User.load(1);
+      if (user != null) {
+        System.out.println("The user with id 1 has name " + user.name);
+      } else {
+        System.out.println("There's no user with id 1");
+      }
+    } catch {
+      System.out.println("Error loading the user with id 1");
+    }
+  }
 }
 ```
 
-The problem with this definition is that the function is actually
-_lying about its behavior_: it says that given a name it will return a user
-when it could also return a null reference! `null` is not a user, and if we try
-to treat it as such, the only thing that can happen is a runtime exception.
+The crux of the problem is that _nothing forced me to add any check!_ I had to
+be diligent and remember to add those. The easy thing to do — simply accessing
+the name property of the user, disregarding any possible check — is not the
+correct one!
+It follows that forgetting to add a null check or a try-catch is bound to
+happen; it's not a matter of _if_, but _when_: developers can be in a rush,
+have tight deadlines, or simply be tired after many hours in front of a screen!
 
-When dealing with objects we always have to be on the lookout and _remember_ to
-check they are not a null reference under the hood.
-The key takeaway here lies in the word "remember": the compiler is not helping
-us here so _we are on our own!_ And even the most skillful Java developer
-will eventually forget a null check, allowing some sneaky bugs to enter the
-codebase.
+### Being explicit is good
 
-## What if there was a different way?
+What if, instead of having to be always on the lookout, the language could
+make sure that no function failure could go undetected? That sounds almost too
+good to be true but as it turns out, not only is this possible, but it's also
+easier than you might expect!
 
-- We have to opt-in in nullability (in Java you have to opt-out with the
-  explicit checks)
-- The compiler forces us to deal with possibly missing values, we can't forget a
-  null check
+Enters Gleam: a friendly, simple, and pragmatic programming language that, among
+other things, has no runtime exceptions or null pointers! Let's see how the
+example I showed you earlier in Java might look in Gleam:
+
+```gleam
+type User {
+  // For this super simple example a User just has an id and a name
+  User(id: Int, name: String)
+}
+```
+
+With this definition we're creating a `User` type and saying that users only
+have two fields called "id" and "name" with types `Int` and `String`.
+We could define a couple of users like this:
+
+```gleam
+pub fn main() {
+  let rob = User(1, "Rob")
+  let ben = User(2, "Ben")
+}
+```
+
+> As you might have noticed, keywords aside, this is not extremly different from
+> the Java version, there's no `new` keyword to create things and you might be
+> wondering where all the getters and setters have gone.
+> Bear with me, we'll get to that later.
+
+And now onto the most important piece: the function to load users; as usual
+we don't care about the its implementation, with a quick look at its type we can
+already discover what matters most.
+
+```gleam
+pub fn load(id: Int) -> Result(User, Nil) {
+  //                 ^^ the return type of the function
+  //                    comes after this arrow
+  // ...
+}
+```
+
+The function doesn't simply return a `User` but a special type: a `Result`.
+What does it mean? In case everything goes right the function is going to return
+a user, as expected. However, in case something goes wrong we're getting a `Nil`
+instead. So the function can still fail (and it will) but it's impossible to
+forget about it! A `Result` acts as a glaring and _unmistakable sign_ that
+things might not turn out as expected.
+
+The invaluable advantage this approach gives us is that we're no longer on our
+own when performing error checking. The compiler can now point out every single
+piece of code where things might fail that we forgot to check.
+It's like having by our side _a friendly programmer who never gets tired_; they
+can point to all of our pieces of code that, if not taken care of, might turn
+into runtime exceptions. Let's see what happens if we're not careful with the
+`load` function:
+
+```gleam
+// This is how you define the main in Gleam
+pub fn main() {
+  let user = load(1)
+  println("The user with id 1 has name " <> user.name)
+  //                                            ^^^^^
+  // This field does not exist.
+  // The value being accessed has this type:
+  //
+  //     Result(User, Nil)
+  //
+  // It does not have any fields.
+}
+```
+
+The code won't even compile! We're trying to treat a `Result` like a `User` but
+that's not possible, since a call to `load` might have failed. Compare this with
+the Java example I showed you earlier, where the compiler would gladly accept
+our code even though it could result in a runtime exception.
+
+How can we get a user out of a `Result`, then?
+
+### Pattern matching, or the superpower of functional programming
+
+### Correct made easy
+
+Let's take a second to appreciate this: by forcing a function to be explicit
+about the fact that it can fail we no longer have to rely on "best practices"
+(never return null references, don't use exceptions as a control flow mechanism,
+remember to check if objects coming from other functions are null, etc.).
+The only way to write code is already the correct one,
+_the easy thing to do is also the right one!_
+
+A beginner who's just started to learn Gleam won't see mysterious
+runtime exceptions popping up in their fun learning project just because they
+didn't know a slew of unwritten rules people are expected to know.
+An experienced Java developer won't have to waste time trying to trace back
+where that pesky null came from because a `NullPointerException` was reported in
+production.
 
 ## TODO
 
