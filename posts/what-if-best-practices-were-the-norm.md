@@ -271,25 +271,50 @@ Let's take a second to appreciate this: by forcing a function to be explicit
 about the fact that it can fail we no longer have to rely on "best practices"
 (never return null references, don't use exceptions as a control flow mechanism,
 remember to check if objects coming from other functions are null, etc.).
-The only way to write code is already the correct one,
-_the easy thing to do is also the right one!_
+_The easy thing to do is also the right one_ because that's the only way to
+write code!
 
 A beginner who's just started to learn Gleam won't see mysterious
 runtime exceptions popping up in their fun learning project just because they
 didn't know a slew of unwritten rules people are expected to know.
 An experienced Java developer won't have to waste time trying to trace back
-where that pesky null came from because a `NullPointerException` was reported in
-production.
+where that pesky `null` came from because a `NullPointerException` was reported
+in production.
 
-Our programs will never crash at runtime because it's impossible for an error to
-go undetected.
+A program won't crash at runtime because it's impossible for an error to go
+undetected.
 And, as I hope you might have noticed, the language doesn't have to be complex
 to give you these guarantees! On the contrary, it makes things easier: there's
 only one control flow mechanism — pattern matching — and you don't have to
 juggle between if statements and try-catch blocks to deal with all the possible
 ways a method might lie.
 
+## WIP: Be scared by mutable data
+
+When learning Java our teacher really drilled into us a rule of thumb to always
+follow: _always remember to make every single field of a class `final`,_
+_removing the `final` annotation should only ever be used as a last resort._
+
+The rationale behind this practice is that having immutable data structures can
+help us be more productive by making it easier to refactor and reason about
+code.
+
+It makes it incredibly harder to refactor our code and move things around: all
+of a sudden we find ourselves caught in a web of invisible dependencies threaded
+throughout every method call. The order of every single method call that takes
+as input a mutable object is important! We only have two ways out: fuck around
+and find out, hoping our tests will catch any error; painstakingly check every
+method call and make sure it doesn't change the object.
+
+This is another great example of turning a best practice into the only possible
+way to write code. If making things immutable has so many advantages let's make
+it the only possible way to do things! Gleam does exactly that: every data
+structure defined in Gleam is immutable by default.
+
 ## TODO
+
+- Rivedere la parte del pattern matching, non sono convintissimo di come è
+  scritta
 
 - What are best practices
   - Give an idea
