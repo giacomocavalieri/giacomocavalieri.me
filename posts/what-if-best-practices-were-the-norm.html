@@ -1,4 +1,4 @@
-<html lang="en"><head><title>What if best practices were the norm?</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="What if best practices were the norm?"><meta property="og:type" content="website"><meta name="image" property="og:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta property="og:description" content="No abstract yet"><meta name="description" content="No abstract yet"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="What if best practices were the norm?"><meta property="twitter:description" content="No abstract yet"><meta property="twitter:creator" content="@giacomo_cava"><meta property="twitter:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">What if best practices were the norm?</h1><nav class="breadcrumbs"><a rel="author" href="/">← home</a></nav><div class="post-subtitle"><time datetime="25-10-2023" class="post-date dt-published">2023 october 25</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><p>During my second year of university I followed an amazing course dedicated to
+<html lang="en"><head><title>What if best practices were the norm?</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="What if best practices were the norm?"><meta property="og:type" content="website"><meta name="image" property="og:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta property="og:description" content="No abstract yet"><meta name="description" content="No abstract yet"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="What if best practices were the norm?"><meta property="twitter:description" content="No abstract yet"><meta property="twitter:creator" content="@giacomo_cava"><meta property="twitter:image" content="https://gravatar.com/avatar/930095e94cf0f8aefe5d778fd84a3b62ed104feb081945c6a3b3c4ce53775379?s=440"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">What if best practices were the norm?</h1><nav class="breadcrumbs"><a rel="author" href="/" id="home">← home</a></nav><div class="post-subtitle"><time datetime="25-10-2023" class="post-date dt-published">2023 october 25</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><p>During my second year of university I followed an amazing course dedicated to
 object-oriented programming, held by one of the best professors I&#39;ve
 ever had the pleasure to meet. It focused not only on the language in itself
 — Java, in this case — but also on the <em>best practices</em> we ought to follow to
@@ -9,7 +9,7 @@ long over. As I learned new languages and grew as a developer, I&#39;ve come to
 dislike a lot of the ceremonies and self-imposed restrictions that can come with
 good object-oriented code.</p><p>What if the best practices I&#39;m forcing myself to follow (with good reason, don&#39;t
 get me wrong!) were easier to adopt and put into practice? Heck, what if they
-were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were the norm?</em></p><h2>Lies, lies, lies</h2><p>Java is a powerful language that gives us a lot of room to write clean,
+were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were the norm?</em></p><div class="post-heading h2-title"><a href="#lies-lies-lies" id="lies-lies-lies" class="clip">🔗</a><h2>Lies, lies, lies</h2></div><p>Java is a powerful language that gives us a lot of room to write clean,
 expressive code.
 However, with great power comes great responsibility and we have to learn that
 even some of the core &quot;features&quot; of the language can turn into a footgun if not
@@ -70,7 +70,7 @@ the name property of the user, disregarding any possible check — is not the
 correct one!
 It follows that forgetting to add a null check or a try-catch is bound to
 happen; it&#39;s not a matter of <em>if</em>, but <em>when</em>: developers can be in a rush,
-have tight deadlines, or simply be tired after many hours in front of a screen!</p><h3>Gleam to the rescue</h3><p>What if, instead of having to be always on the lookout, the language could
+have tight deadlines, or simply be tired after many hours in front of a screen!</p><div class="post-heading h3-title"><a href="#gleam-to-the-rescue" id="gleam-to-the-rescue" class="clip">🔗</a><h3>Gleam to the rescue</h3></div><p>What if, instead of having to be always on the lookout, the language could
 make sure that no function failure could go undetected? That sounds almost too
 good to be true but as it turns out, not only is this possible, but it&#39;s also
 easier than you might expect!</p><p>Enters Gleam: a friendly, simple, and pragmatic programming language that, among
@@ -117,7 +117,7 @@ pub fn main() {
 }</code></pre><p>The code won&#39;t even compile! We&#39;re trying to treat a <code>Result</code> like a <code>User</code> but
 that&#39;s not possible, since a call to <code>load</code> might have failed. Compare this with
 the Java example I showed you earlier, where the compiler would gladly accept
-our code even though it could result in a runtime exception.</p><h3>Pattern matching, or the superpower of functional programming</h3><p>How can we get a user out of a <code>Result</code>, then? That can be achieved with
+our code even though it could result in a runtime exception.</p><div class="post-heading h3-title"><a href="#pattern-matching-or-the-superpower-of-functional-programming" id="pattern-matching-or-the-superpower-of-functional-programming" class="clip">🔗</a><h3>Pattern matching, or the superpower of functional programming</h3></div><p>How can we get a user out of a <code>Result</code>, then? That can be achieved with
 <em>pattern matching.</em> So to get our example to compile we can do something like
 this:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn main() {
   case load(1) {
@@ -154,23 +154,36 @@ One of the design goals of Gleam is to be simple, it doesn&#39;t even have if
 statements, it does everything through pattern matching!
 If you&#39;re curious to learn more about Gleam&#39;s syntax Erika Rowland wrote a
 great blog post about it,
-<a href="https://erikarow.land/notes/gleam-syntax">do check it out!</a></p></blockquote><h3>Correct made easy</h3><p>Let&#39;s take a second to appreciate this: by forcing a function to be explicit
+<a href="https://erikarow.land/notes/gleam-syntax">do check it out!</a></p></blockquote><div class="post-heading h3-title"><a href="#correct-made-easy" id="correct-made-easy" class="clip">🔗</a><h3>Correct made easy</h3></div><p>Let&#39;s take a second to appreciate this: by forcing a function to be explicit
 about the fact that it can fail we no longer have to rely on &quot;best practices&quot;
 (never return null references, don&#39;t use exceptions as a control flow mechanism,
 remember to check if objects coming from other functions are null, etc.).
-The only way to write code is already the correct one,
-<em>the easy thing to do is also the right one!</em></p><p>A beginner who&#39;s just started to learn Gleam won&#39;t see mysterious
+<em>The easy thing to do is also the right one</em> because that&#39;s the only way to
+write code!</p><p>A beginner who&#39;s just started to learn Gleam won&#39;t see mysterious
 runtime exceptions popping up in their fun learning project just because they
 didn&#39;t know a slew of unwritten rules people are expected to know.
 An experienced Java developer won&#39;t have to waste time trying to trace back
-where that pesky null came from because a <code>NullPointerException</code> was reported in
-production.</p><p>Our programs will never crash at runtime because it&#39;s impossible for an error to
-go undetected.
+where that pesky <code>null</code> came from because a <code>NullPointerException</code> was reported
+in production.</p><p>A program won&#39;t crash at runtime because it&#39;s impossible for an error to go
+undetected.
 And, as I hope you might have noticed, the language doesn&#39;t have to be complex
 to give you these guarantees! On the contrary, it makes things easier: there&#39;s
 only one control flow mechanism — pattern matching — and you don&#39;t have to
 juggle between if statements and try-catch blocks to deal with all the possible
-ways a method might lie.</p><h2>TODO</h2><ul><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
+ways a method might lie.</p><div class="post-heading h2-title"><a href="#wip:-be-scared-by-mutable-data" id="wip:-be-scared-by-mutable-data" class="clip">🔗</a><h2>WIP: Be scared by mutable data</h2></div><p>When learning Java our teacher really drilled into us a rule of thumb to always
+follow: <em>always remember to make every single field of a class <code>final</code>,</em>
+<em>removing the <code>final</code> annotation should only ever be used as a last resort.</em></p><p>The rationale behind this practice is that having immutable data structures can
+help us be more productive by making it easier to refactor and reason about
+code.</p><p>It makes it incredibly harder to refactor our code and move things around: all
+of a sudden we find ourselves caught in a web of invisible dependencies threaded
+throughout every method call. The order of every single method call that takes
+as input a mutable object is important! We only have two ways out: fuck around
+and find out, hoping our tests will catch any error; painstakingly check every
+method call and make sure it doesn&#39;t change the object.</p><p>This is another great example of turning a best practice into the only possible
+way to write code. If making things immutable has so many advantages let&#39;s make
+it the only possible way to do things! Gleam does exactly that: every data
+structure defined in Gleam is immutable by default.</p><div class="post-heading h2-title"><a href="#todo" id="todo" class="clip">🔗</a><h2>TODO</h2></div><ul><li><p>Rivedere la parte del pattern matching, non sono convintissimo di come è
+scritta</p></li><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
 immutability)</p></li><li><p>It should start dumb and then improve it to show some best practices!</p><ul><li><p>favour immutability (gives us peace of mind)</p></li><li><p>no null</p><ul><li><p>a function can lie!</p></li><li><p>the bane of every Java programmer</p></li><li><p>we have to do a lot of defensive programming</p></li><li><p>the compiler is not helping us, so we have to always be on the lookout</p></li></ul></li><li><p>no runtime exceptions as a control flow mechanism</p><ul><li><p>a lot of similarities with null</p></li><li><p>yet another distinct mechanism to deal with control flow</p></li></ul></li><li><p>As programmers, we&#39;re incredibly good at ignoring the million possible
 ways in which our software could fail and focus only on the happy path</p></li></ul></li></ul></li><li><p>The problem with best practices</p><ul><li><p>Those are... <em>practices</em>! They can be completely ignored, I&#39;ll never have
 the guarantee that the code I&#39;m using, or my colleagues are writing will
