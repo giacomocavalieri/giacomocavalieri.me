@@ -24,6 +24,7 @@
     --background-color: #ffffff;
     --font-color: #192427;
     --main-color: #cceac3;
+    --accent-color: #e8f3e5;
     --selection-color: #dff2d9;
     --code-background-color: #dff2d940;
     --blockquote-background-color: #dff2d960;
@@ -32,10 +33,9 @@
 @media (prefers-color-scheme: dark) {
     :root {
         --background-color: #242829;
-        /*#242829;*/
         --font-color: #eeeeee;
         --main-color: #52598c;
-        /*#525A99*/
+        --accent-color: #7f83a2;
         --selection-color: #b9bfe5;
         --code-background-color: #52598c20;
         --blockquote-background-color: #52598c40;
@@ -134,7 +134,9 @@ a:not(:has(> *)) {
 a {
     text-decoration: none;
     font-weight: 700;
+}
 
+a:not(.clip) {
     /* Highlighted effect */
     background-image: linear-gradient(to right, var(--main-color), var(--main-color));
     background-size: 100% 45%;
@@ -144,7 +146,7 @@ a {
     transition-timing-function: var(--link-transition-function);
 }
 
-a:hover {
+a:not(.clip):hover {
     background-size: 100% 80%;
     transition: var(--link-transition-time);
     transition-timing-function: var(--link-transition-function);
@@ -194,17 +196,25 @@ a:hover {
 
 .post-tag {
     display: inline;
-    background-color: var(--main-color);
+    background-color: var(--accent-color);
     font-size: 0.9rem;
     border-radius: 1rem;
     padding: 0.2rem 0.5rem;
     margin-right: 0.3rem;
 }
 
+.post-tag>a {
+    background-image: none;
+}
+
 /* --- BREADCRUMBS ---------------------------------------------------------- */
 
 .breadcrumbs {
     margin-bottom: var(--line-height);
+}
+
+#home {
+    background-image: linear-gradient(to right, var(--accent-color), var(--accent-color));
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
@@ -214,7 +224,13 @@ a:hover {
 .post h2,
 .post h3,
 .post h4,
-.post h5 {
+.post h5,
+.h1-title,
+.h2-title,
+.h3-title,
+.h4-title,
+.h5-title,
+.h6-title {
     text-align: start;
 }
 
@@ -351,14 +367,33 @@ a:hover {
     }
 }
 
-.post h2 {
+.post-heading>* {
+    display: inline;
+}
+
+.h2-title {
     margin-top: 4rem;
     margin-bottom: 2rem;
 }
 
-.post h3 {
+.h3-title {
     margin-top: 2rem;
     margin-bottom: 1rem;
+}
+
+.clip {
+    margin-inline-end: 0.8rem;
+    background-image: none;
+    color: transparent;
+    text-shadow: 0 0 0 var(--font-color);
+    opacity: 70%;
+    font-size: 0.8rem;
+    transition: var(--link-transition-time);
+}
+
+.clip:hover {
+    opacity: 1;
+    transition: var(--link-transition-time);
 }
 
 /* --- CODE HIGHLIGHT ------------------------------------------------------- */

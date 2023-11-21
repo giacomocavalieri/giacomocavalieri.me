@@ -13,7 +13,7 @@ export function parse(markdown) {
       switch (node.type) {
         case "code": return Markdown.code(node.value, node.lang);
         case "emphasis": return Markdown.emphasis(fold_into_list(node.children, to_lustre_element));
-        case "heading": return Markdown.heading(node.depth, fold_into_list(node.children, to_lustre_element));
+        case "heading": return Markdown.linked_heading(node.depth, node.children[0].value);
         case "inlineCode": return Markdown.inline_code(node.value);
         case "link": return Markdown.link(node.url, fold_into_list(node.children, to_lustre_element));
         case "list": return Markdown.list(!!node.ordered, fold_into_list(node.children, to_lustre_element));

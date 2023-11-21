@@ -11,6 +11,7 @@ import lustre/element/html.{
 }
 import blog/breadcrumbs
 import blog/date.{type Date}
+import blog/id
 import extra
 import markdown
 import simplifile
@@ -124,7 +125,7 @@ fn to_date(post: Post) -> Element(a) {
 }
 
 fn to_pill(tag: String) -> Element(a) {
-  let link = a([href("/tags/" <> tag <> ".html")], [text(tag)])
+  let link = a([href("/tags/" <> id.from_string(tag) <> ".html")], [text(tag)])
   li([classes(["post-tag", "p-category"])], [link])
 }
 
