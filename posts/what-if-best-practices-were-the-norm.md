@@ -109,7 +109,7 @@ class Main {
 }
 ```
 
-The crux of the problem is that _nothing forced me to add any check!_ I had to
+The crux of the problem is that _nothing forced me to add any checks!_ I had to
 be diligent and remember to add those. The easy thing to do — simply accessing
 the name property of the user, disregarding any possible check — is not the
 correct one!
@@ -117,16 +117,16 @@ It follows that forgetting to add a null check or a try-catch is bound to
 happen; it's not a matter of _if_, but _when_: developers can be in a rush,
 have tight deadlines, or simply be tired after many hours in front of a screen!
 
-### Gleam to the rescue
+## Gleam to the rescue
 
 What if, instead of having to be always on the lookout, the language could
 make sure that no function failure could go undetected? That sounds almost too
 good to be true but as it turns out, not only is this possible, but it's also
 easier than you might expect!
 
-Enters Gleam: a friendly, simple, and pragmatic programming language that, among
-other things, has no runtime exceptions or null pointers! Let's see how the
-example I showed you earlier in Java might look in Gleam:
+Enters [Gleam](https://gleam.run): a friendly, simple, and pragmatic programming
+language that, among other things, has no runtime exceptions or null pointers!
+Let's see how the example I showed you earlier in Java might look in Gleam:
 
 ```gleam
 type User {
@@ -183,7 +183,7 @@ into runtime exceptions. Let's see what happens if we're not careful with the
 pub fn main() {
   let user = load(1)
   io.println("The user with id 1 has name " <> user.name)
-  //                                            ^^^^^
+  //                                               ^^^^^
   // This field does not exist.
   // The value being accessed has this type:
   //
@@ -198,11 +198,11 @@ that's not possible, since a call to `load` might have failed. Compare this with
 the Java example I showed you earlier, where the compiler would gladly accept
 our code even though it could result in a runtime exception.
 
-### Pattern matching, or the superpower of functional programming
+## Pattern matching, or the superpower of functional programming
 
 How can we get a user out of a `Result`, then? That can be achieved with
-_pattern matching._ So to get our example to compile we can do something like
-this:
+_pattern matching._ To get the previous broken code snippet to compile we can do
+something like this:
 
 ```gleam
 pub fn main() {
@@ -218,9 +218,10 @@ take different actions based on the result of the loading function: if
 everything went smoothly we will have a user in the `Ok` branch.
 Once again, we will never forget that a user can be missing because we're forced
 to deal with the `Error` branch as well.
-But what if we wanted to deal with more complex errors? A user might be missing, or
-there could be problems with the connection to the database (if we're fetching
-users from there)... just getting a generic `Error(Nil)` won't cut it.
+But what if we wanted to deal with more complex errors?
+A user might be missing, or there could be problems with the connection to the
+database (if we're fetching users from there)...
+just getting a generic `Error(Nil)` won't cut it.
 
 Luckily it's extremly easy to change the code, first of all we need a new type
 to describe the possible errors that may take place:
@@ -265,12 +266,13 @@ pub fn main() {
 > great blog post about it,
 > [do check it out!](https://erikarow.land/notes/gleam-syntax)
 
-### Correct made easy
+## Correct made easy
 
 Let's take a second to appreciate this: by forcing a function to be explicit
 about the fact that it can fail we no longer have to rely on "best practices"
 (never return null references, don't use exceptions as a control flow mechanism,
-remember to check if objects coming from other functions are null, etc.).
+remember to check if objects coming from other functions are null, so on and so
+forth).
 _The easy thing to do is also the right one_ because that's the only way to
 write code!
 
@@ -288,28 +290,6 @@ to give you these guarantees! On the contrary, it makes things easier: there's
 only one control flow mechanism — pattern matching — and you don't have to
 juggle between if statements and try-catch blocks to deal with all the possible
 ways a method might lie.
-
-## WIP: Be scared by mutable data
-
-When learning Java our teacher really drilled into us a rule of thumb to always
-follow: _always remember to make every single field of a class `final`,_
-_removing the `final` annotation should only ever be used as a last resort._
-
-The rationale behind this practice is that having immutable data structures can
-help us be more productive by making it easier to refactor and reason about
-code.
-
-It makes it incredibly harder to refactor our code and move things around: all
-of a sudden we find ourselves caught in a web of invisible dependencies threaded
-throughout every method call. The order of every single method call that takes
-as input a mutable object is important! We only have two ways out: fuck around
-and find out, hoping our tests will catch any error; painstakingly check every
-method call and make sure it doesn't change the object.
-
-This is another great example of turning a best practice into the only possible
-way to write code. If making things immutable has so many advantages let's make
-it the only possible way to do things! Gleam does exactly that: every data
-structure defined in Gleam is immutable by default.
 
 ## TODO
 
@@ -362,3 +342,25 @@ structure defined in Gleam is immutable by default.
       - The language shows you a single, well-defined path: it gently pushes you
         into a "pit of success", instead of dropping you in the middle of a maze
         of choices you have to painfully and carefully evaluate
+
+## WIP: Be scared by mutable data
+
+When learning Java our teacher really drilled into us a rule of thumb to always
+follow: _always remember to make every single field of a class `final`,_
+_removing the `final` annotation should only ever be used as a last resort._
+
+The rationale behind this practice is that having immutable data structures can
+help us be more productive by making it easier to refactor and reason about
+code.
+
+It makes it incredibly harder to refactor our code and move things around: all
+of a sudden we find ourselves caught in a web of invisible dependencies threaded
+throughout every method call. The order of every single method call that takes
+as input a mutable object is important! We only have two ways out: fuck around
+and find out, hoping our tests will catch any error; painstakingly check every
+method call and make sure it doesn't change the object.
+
+This is another great example of turning a best practice into the only possible
+way to write code. If making things immutable has so many advantages let's make
+it the only possible way to do things! Gleam does exactly that: every data
+structure defined in Gleam is immutable by default.
