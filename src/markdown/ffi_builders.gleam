@@ -1,4 +1,3 @@
-import gleam/string
 import lustre/attribute.{attribute, class, href, id}
 import lustre/element.{type Element}
 import lustre/element/html.{a, div}

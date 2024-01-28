@@ -72,8 +72,8 @@ fn parse_metadata(metadata: String) -> Result(Metadata, Error) {
 fn status_decoder() -> Decoder(Status) {
   fn(dynamic) {
     case dynamic.string(dynamic) {
-      Ok("hide") -> Ok(Hide)
       Ok("show") -> Ok(Show)
+      Ok("hide") | Ok(_) -> Ok(Hide)
       Error(errors) -> Error(errors)
     }
   }
@@ -104,10 +104,9 @@ fn to_preview(post: Post) -> Element(a) {
   let title = a(title_attributes, [h2([], [text(post.meta.title)])])
   let subtitle = to_subtitle(post)
   let abstract =
-    p(
-      [classes(["post-preview-abstract", "p-summary"])],
-      [text(post.meta.abstract)],
-    )
+    p([classes(["post-preview-abstract", "p-summary"])], [
+      text(post.meta.abstract),
+    ])
 
   li([classes(["post-preview", "h-entry"])], [title, subtitle, abstract])
 }
@@ -135,4 +134,11 @@ fn classes(classes: List(String)) -> Attribute(a) {
   classes
   |> list.map(fn(class) { #(class, True) })
   |> attribute.classes
+}
+
+pub fn is_shown(post: Post) -> Bool {
+  case post.meta.status {
+    Hide -> False
+    Show -> True
+  }
 }
