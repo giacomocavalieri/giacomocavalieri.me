@@ -117,7 +117,7 @@ It follows that forgetting to add a null check or a try-catch is bound to
 happen; it's not a matter of _if_, but _when_: developers can be in a rush,
 have tight deadlines, or simply be tired after many hours in front of a screen!
 
-## Gleam to the rescue
+### Gleam to the rescue
 
 What if, instead of having to be always on the lookout, the language could
 make sure that no function failure could go undetected? That sounds almost too
@@ -198,7 +198,7 @@ that's not possible, since a call to `load` might have failed. Compare this with
 the Java example I showed you earlier, where the compiler would gladly accept
 our code even though it could result in a runtime exception.
 
-## Pattern matching, or the superpower of functional programming
+### Pattern matching, or the superpower of functional programming
 
 How can we get a user out of a `Result`, then? That can be achieved with
 _pattern matching._ To get the previous broken code snippet to compile we can do
@@ -266,7 +266,7 @@ pub fn main() {
 > great blog post about it,
 > [do check it out!](https://erikarow.land/notes/gleam-syntax)
 
-## Correct made easy
+### Correct made easy
 
 Let's take a second to appreciate this: by forcing a function to be explicit
 about the fact that it can fail we no longer have to rely on "best practices"
@@ -290,6 +290,138 @@ to give you these guarantees! On the contrary, it makes things easier: there's
 only one control flow mechanism — pattern matching — and you don't have to
 juggle between if statements and try-catch blocks to deal with all the possible
 ways a method might lie.
+
+## Beware of mutable data
+
+When learning Java our teacher really drilled into us a rule of thumb to always
+follow: _always favour immutable data structures, when defining a class_
+_always make its fields `final`._
+
+This is great advice! Removing the final annotation should only be used as a
+last resort. The rationale behind this practice is that having immutable data
+structures can make it easier to refactor and reason about code.
+
+Over-relying on mutable state can quickly turn into an headache. Imagine users
+can now store their own birthday:
+
+```java
+class User {
+  public final int id;
+  public final String name;
+  public final Date birthday;
+
+  public User(final int id, final String name, final Date birthday) {
+    this.id = id;
+    this.name = name;
+    this.birthday = birthday;
+  }
+
+  // ...
+}
+```
+
+Since all the user's fields are `final` we can be sure that whoever is going to
+get a hold of a reference to a user is not going to be able to modify it:
+
+```java
+User user = User.load(1);
+user.id = 12;
+// This is a compile time error, nice!
+```
+
+Beware! We're still not completely safe from some mutability-related bugs.
+We have to remember that `Date` is a _mutable_ data structure: whoever gets a
+hold of a user might not be able to change its id or name, but can do whathever
+they want with their birthday.
+
+```java
+User user = User.load(1);
+user.birthday.setYear(1900);
+```
+
+And now, all of a sudden, we have a really old user! Since mutation can happen
+anywhere, it can be incredibly hard to trace back to the source of the problem
+and might require quite the debugging ability — and I, for one, don't have it.
+
+### A web of dependencies
+
+An even hairier problem arise when we start sharing mutable data:
+
+```java
+Date birthday = new Date(1998, 10, 11)
+User jak = new User(1, "Jak", birthday)
+User tom = new User(1, "Tom", birthday)
+//   ^^^ That's my twin!
+```
+
+We're passing around two references to a single heap-allocated object.
+Now if one of the two users tries and change its birthday the same change will
+reflect on the other one, that's some spooky action at a distance!
+
+And now since there's more places that rely and can change that same value, the
+order with which we call our functions becomes crucial:
+
+```java
+jak.isOver18() // -> true
+tom.birthday.setYear(2010);
+jak.isOver18() // -> false
+```
+
+We might end up breaking some invariants by simply moving a line of code
+around, talk about fiddly! We are caught in a web of invisible dependencies
+threaded throughout every method call: the order of every single method call
+that takes as input a mutable object is important!
+A strong testing suite can really help us giving confidence that our
+innocent-looking refactoring didn't actually break some important properties —
+easier said than done!
+
+Is there a way out? Sort of. We can make our best to encapsulate the state of
+objects and never leak references to objects we don't want others to change:
+
+```java
+class User {
+  private final Date birthday;
+
+  public User(final int id, final String name, final Date birthday) {
+    this.id = id;
+    this.name = name;
+    this.birthday = new Date(birthday);
+    //              ^^^^^^^^^^^^^^^^^^ Here we're making a defensive copy
+  }
+
+  public Date getBirthday() {
+    return new Date(this.birthday);
+    //     ^^^^^^^^^^^^^^^^^^^^^^^^ We return a copy of the user's birthday
+  }
+
+  // ...
+}
+```
+
+By storing and returning copies we're making sure that no one can put their
+hands on the user's birthday. Mutation can now happen in a single place — the
+`User` class — and can be tamed much more easily.
+
+### Making best practices the rules of the game
+
+Our naïve attempt at writing a `User` class was riddled with small problems and
+endless possible sources of bugs. Once again, we had to be careful and remember
+to always store and return copies of potentially mutable data, effectively
+making it immutable.
+
+But if making things immutable is desirable why not make it the default? That's
+exactly what Gleam does! Everything data structure is immutable, no matter what.
+
+
+
+So why shouldn't this be the norm? Why have mutable data if it's causing us so
+much pain?
+
+This is another great example of turning a best practice into the only possible
+way to write code. If making things immutable has so many advantages let's make
+it the only possible way to do things! Gleam does exactly that: every data
+structure defined in Gleam is immutable by default.
+
 
 ## TODO
 
@@ -342,25 +474,3 @@ ways a method might lie.
       - The language shows you a single, well-defined path: it gently pushes you
         into a "pit of success", instead of dropping you in the middle of a maze
         of choices you have to painfully and carefully evaluate
-
-## WIP: Be scared by mutable data
-
-When learning Java our teacher really drilled into us a rule of thumb to always
-follow: _always remember to make every single field of a class `final`,_
-_removing the `final` annotation should only ever be used as a last resort._
-
-The rationale behind this practice is that having immutable data structures can
-help us be more productive by making it easier to refactor and reason about
-code.
-
-It makes it incredibly harder to refactor our code and move things around: all
-of a sudden we find ourselves caught in a web of invisible dependencies threaded
-throughout every method call. The order of every single method call that takes
-as input a mutable object is important! We only have two ways out: fuck around
-and find out, hoping our tests will catch any error; painstakingly check every
-method call and make sure it doesn't change the object.
-
-This is another great example of turning a best practice into the only possible
-way to write code. If making things immutable has so many advantages let's make
-it the only possible way to do things! Gleam does exactly that: every data
-structure defined in Gleam is immutable by default.
