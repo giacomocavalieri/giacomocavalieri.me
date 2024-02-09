@@ -1,5 +1,5 @@
 import lustre/attribute.{
-  type Attribute, alt, attribute, class, href, id, name, rel, src,
+  type Attribute, alt, attribute, class, href, id, name, rel, src, type_,
 }
 import lustre/element.{type Element, text}
 import lustre/element/html.{
@@ -152,6 +152,14 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     meta([property("twitter:description"), content(description)]),
     meta([property("twitter:creator"), content("@giacomo_cava")]),
     meta([property("twitter:image"), content(profile_picture_source())]),
+    // <link rel="preload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin>
+    link([
+      rel("payload"),
+      href("Mona-Sans.woff2"),
+      as_("font"),
+      type_("font/woff2"),
+      crossorigin(),
+    ]),
     theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
     stylesheet("/style.css"),
     script([src(hljs_script_url)], ""),
@@ -196,4 +204,12 @@ fn lang(value: String) -> Attribute(a) {
 
 fn property(value: String) -> Attribute(a) {
   attribute("property", value)
+}
+
+fn as_(value: String) -> Attribute(a) {
+  attribute("as", value)
+}
+
+fn crossorigin() -> Attribute(a) {
+  attribute("crossorigin", "true")
 }
