@@ -1,12 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+
+@font-face {
+    font-family: "Mona Sans";
+    src:
+        url("Mona-Sans.woff2") format("woff2 supports variations"),
+        url("Mona-Sans.woff2") format("woff2-variations");
+    font-weight: 200 900;
+    font-stretch: 75% 125%;
+}
 
 :root {
     --body-vertical-padding: 3rem;
     --body-horizontal-padding: 3rem;
 
     --code-font-size: 0.9rem;
-    --code-font-family: 'Fira Code', monospace;
+    --code-font-family: "Fira Code", monospace;
 
     --h1-size: 3rem;
     --h2-size: 2rem;
@@ -19,7 +27,7 @@
     --main-content-max-size: 50rem;
 
     --link-transition-time: 0.35s;
-    --link-transition-function: cubic-bezier(.25, .1, 0, 2.05);
+    --link-transition-function: cubic-bezier(0.25, 0.1, 0, 2.05);
 
     --background-color: #ffffff;
     --font-color: #192427;
@@ -54,7 +62,6 @@
     }
 }
 
-
 ::selection {
     background: var(--selection-color);
 }
@@ -68,7 +75,7 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Mona Sans", sans-serif;
     color: var(--font-color);
 }
 
@@ -88,7 +95,12 @@ html {
 
 body {
     overflow-x: hidden;
-    padding: var(--body-vertical-padding) max(var(--body-horizontal-padding), calc(env(safe-area-inset-left) + 1rem), calc(env(safe-area-inset-right) + 1rem));
+    padding: var(--body-vertical-padding)
+        max(
+            var(--body-horizontal-padding),
+            calc(env(safe-area-inset-left) + 1rem),
+            calc(env(safe-area-inset-right) + 1rem)
+        );
     background-color: var(--background-color);
     line-height: var(--line-height);
 }
@@ -113,12 +125,12 @@ h3 {
 
 /* --- LINKS ---------------------------------------------------------------- */
 
-a>h1,
-a>h2,
-a>h3,
-a>h4,
-a>h5,
-a>h6 {
+a > h1,
+a > h2,
+a > h3,
+a > h4,
+a > h5,
+a > h6 {
     /* This is needed to disaplay nice titles with the same undeline effect
      * as normal text */
     display: inline;
@@ -138,7 +150,11 @@ a {
 
 a:not(.clip) {
     /* Highlighted effect */
-    background-image: linear-gradient(to right, var(--main-color), var(--main-color));
+    background-image: linear-gradient(
+        to right,
+        var(--main-color),
+        var(--main-color)
+    );
     background-size: 100% 45%;
     background-repeat: no-repeat;
     background-position: bottom;
@@ -203,7 +219,7 @@ a:not(.clip):hover {
     margin-right: 0.3rem;
 }
 
-.post-tag>a {
+.post-tag > a {
     background-image: none;
 }
 
@@ -214,7 +230,11 @@ a:not(.clip):hover {
 }
 
 #home {
-    background-image: linear-gradient(to right, var(--accent-color), var(--accent-color));
+    background-image: linear-gradient(
+        to right,
+        var(--accent-color),
+        var(--accent-color)
+    );
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
@@ -335,7 +355,7 @@ a:not(.clip):hover {
     margin-bottom: 1rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
-    border-left: solid .8rem var(--main-color);
+    border-left: solid 0.8rem var(--main-color);
     background-color: var(--blockquote-background-color);
 }
 
@@ -367,7 +387,7 @@ a:not(.clip):hover {
     }
 }
 
-.post-heading>* {
+.post-heading > * {
     display: inline;
 }
 
