@@ -406,14 +406,7 @@ a:not(.clip):hover {
     background-image: none;
     color: transparent;
     text-shadow: 0 0 0 var(--font-color);
-    opacity: 70%;
     font-size: 0.8rem;
-    transition: var(--link-transition-time);
-}
-
-.clip:hover {
-    opacity: 1;
-    transition: var(--link-transition-time);
 }
 
 /* --- CODE HIGHLIGHT ------------------------------------------------------- */
