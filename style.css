@@ -32,7 +32,7 @@
     --background-color: #ffffff;
     --font-color: #192427;
     --main-color: #cceac3;
-    --accent-color: #e8f3e5;
+    --accent-color: #f3faf1;
     --selection-color: #dff2d9;
     --code-background-color: #dff2d940;
     --blockquote-background-color: #dff2d960;
@@ -43,7 +43,7 @@
         --background-color: #242829;
         --font-color: #eeeeee;
         --main-color: #52598c;
-        --accent-color: #7f83a2;
+        --accent-color: #303544;
         --selection-color: #b9bfe5;
         --code-background-color: #52598c20;
         --blockquote-background-color: #52598c40;
@@ -121,6 +121,17 @@ h3 {
     max-width: var(--main-content-max-size);
     margin-left: auto;
     margin-right: auto;
+}
+
+hr {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    color: var(--blockquote-background-color);
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border: solid 1px;
+    box-shadow: none;
 }
 
 /* --- LINKS ---------------------------------------------------------------- */
@@ -229,12 +240,14 @@ a:not(.clip):hover {
     margin-bottom: var(--line-height);
 }
 
-#home {
+.breadcrumb-link {
+    /*
     background-image: linear-gradient(
         to right,
         var(--accent-color),
         var(--accent-color)
-    );
+    ) !important;
+    */
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
@@ -406,14 +419,7 @@ a:not(.clip):hover {
     background-image: none;
     color: transparent;
     text-shadow: 0 0 0 var(--font-color);
-    opacity: 70%;
     font-size: 0.8rem;
-    transition: var(--link-transition-time);
-}
-
-.clip:hover {
-    opacity: 1;
-    transition: var(--link-transition-time);
 }
 
 /* --- CODE HIGHLIGHT ------------------------------------------------------- */
