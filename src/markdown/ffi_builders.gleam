@@ -81,6 +81,10 @@ pub fn blockquote(content: List(Element(msg))) -> Element(msg) {
   html.blockquote([], content)
 }
 
+pub fn thematic_break() -> Element(msg) {
+  html.hr([])
+}
+
 pub fn error() -> Element(msg) {
   html.blockquote([], [element.text("There was an unhandled md element!")])
 }

@@ -4,7 +4,7 @@ title = "What if best practices were the norm?"
 abstract = "No abstract yet"
 tags = ["gleam", "fp"]
 date = "2023-10-25"
-status = "show"
+status = "hide"
 ---
 
 During my second year of university I followed an amazing course dedicated to
@@ -412,8 +412,6 @@ making it immutable.
 But if making things immutable is desirable why not make it the default? That's
 exactly what Gleam does! Everything data structure is immutable, no matter what.
 
-
-
 So why shouldn't this be the norm? Why have mutable data if it's causing us so
 much pain?
 
@@ -422,55 +420,54 @@ way to write code. If making things immutable has so many advantages let's make
 it the only possible way to do things! Gleam does exactly that: every data
 structure defined in Gleam is immutable by default.
 
-
 ## TODO
 
-- Rivedere la parte del pattern matching, non sono convintissimo di come è
-  scritta
+-   Rivedere la parte del pattern matching, non sono convintissimo di come è
+    scritta
 
-- What are best practices
-  - Give an idea
-  - Provide a running example
-    - User with some field (birthday, ID and name so I can also drill down on
-      immutability)
-    - It should start dumb and then improve it to show some best practices!
-      - favour immutability (gives us peace of mind)
-      - no null
-        - a function can lie!
-        - the bane of every Java programmer
-        - we have to do a lot of defensive programming
-        - the compiler is not helping us, so we have to always be on the lookout
-      - no runtime exceptions as a control flow mechanism
-        - a lot of similarities with null
-        - yet another distinct mechanism to deal with control flow
-      - As programmers, we're incredibly good at ignoring the million possible
-        ways in which our software could fail and focus only on the happy path
-  - The problem with best practices
-    - Those are... _practices_! They can be completely ignored, I'll never have
-      the guarantee that the code I'm using, or my colleagues are writing will
-      follow those
-    - Having rules that can be ignored is like having none at all, we're always
-      on the lookout
-    - Even the most skilled Java programmer will eventually forget a null check
-      and allow some sneaky bug to enter the codebase
-    - We have to be welcoming to new developers, if to be a good Java developer
-      you have to be aware of a dozen unwritten rules you're doing a horrible
-      job at making beginners productive in your language
-  - Enters Gleam
-    - Best practices become the rule of the game, the only way to write software
-      is the "good" way
-    - No need to do null checking, there's no null
-    - No exceptions, a function has to be explicit about possible failures
-      - We do everything with pattern matching, no need for special mechanisms
-        like exceptions
-    - The compiler is our greatest ally, I like to think of it as if I'm pair
-      programming with someone way smarter than me who can pinpoint every
-      possible piece of code where things could go wrong
-      - It reminds me where my code could fail and forces me to handle it,
-        so there's no way I'm forgetting to check if loading a user failed, even
-        after 20 hours in front of a screen
-    - A beginner is immediately productive and won't be able to mess up as
-      easily
-      - The language shows you a single, well-defined path: it gently pushes you
-        into a "pit of success", instead of dropping you in the middle of a maze
-        of choices you have to painfully and carefully evaluate
+-   What are best practices
+    -   Give an idea
+    -   Provide a running example
+        -   User with some field (birthday, ID and name so I can also drill down on
+            immutability)
+        -   It should start dumb and then improve it to show some best practices!
+            -   favour immutability (gives us peace of mind)
+            -   no null
+                -   a function can lie!
+                -   the bane of every Java programmer
+                -   we have to do a lot of defensive programming
+                -   the compiler is not helping us, so we have to always be on the lookout
+            -   no runtime exceptions as a control flow mechanism
+                -   a lot of similarities with null
+                -   yet another distinct mechanism to deal with control flow
+            -   As programmers, we're incredibly good at ignoring the million possible
+                ways in which our software could fail and focus only on the happy path
+    -   The problem with best practices
+        -   Those are... _practices_! They can be completely ignored, I'll never have
+            the guarantee that the code I'm using, or my colleagues are writing will
+            follow those
+        -   Having rules that can be ignored is like having none at all, we're always
+            on the lookout
+        -   Even the most skilled Java programmer will eventually forget a null check
+            and allow some sneaky bug to enter the codebase
+        -   We have to be welcoming to new developers, if to be a good Java developer
+            you have to be aware of a dozen unwritten rules you're doing a horrible
+            job at making beginners productive in your language
+    -   Enters Gleam
+        -   Best practices become the rule of the game, the only way to write software
+            is the "good" way
+        -   No need to do null checking, there's no null
+        -   No exceptions, a function has to be explicit about possible failures
+            -   We do everything with pattern matching, no need for special mechanisms
+                like exceptions
+        -   The compiler is our greatest ally, I like to think of it as if I'm pair
+            programming with someone way smarter than me who can pinpoint every
+            possible piece of code where things could go wrong
+            -   It reminds me where my code could fail and forces me to handle it,
+                so there's no way I'm forgetting to check if loading a user failed, even
+                after 20 hours in front of a screen
+        -   A beginner is immediately productive and won't be able to mess up as
+            easily
+            -   The language shows you a single, well-defined path: it gently pushes you
+                into a "pit of success", instead of dropping you in the middle of a maze
+                of choices you have to painfully and carefully evaluate
