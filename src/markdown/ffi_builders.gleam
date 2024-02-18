@@ -1,6 +1,7 @@
-import lustre/attribute.{attribute}
-import lustre/element.{Element}
-import lustre/element/html
+import lustre/attribute.{attribute, class, href, id}
+import lustre/element.{type Element}
+import lustre/element/html.{a, div}
+import blog/id
 
 pub fn code(src: String, lang: String) -> Element(msg) {
   let attributes = [
@@ -14,14 +15,34 @@ pub fn emphasis(content: List(Element(msg))) {
   html.em([], content)
 }
 
-pub fn heading(depth: Int, content: List(Element(msg))) -> Element(msg) {
+pub fn linked_heading(depth: Int, content: String) -> Element(msg) {
+  let heading = heading(depth, content)
+  let clip_id = id.from_string(content)
+  let clip =
+    a([href("#" <> clip_id), id(clip_id), class("clip")], [text("🔗")])
+
+  div([class("post-heading"), class(depth_to_class(depth))], [clip, heading])
+}
+
+fn depth_to_class(depth: Int) -> String {
   case depth {
-    1 -> html.h1([], content)
-    2 -> html.h2([], content)
-    3 -> html.h3([], content)
-    4 -> html.h4([], content)
-    5 -> html.h5([], content)
-    _ -> html.h6([], content)
+    1 -> "h1-title"
+    2 -> "h2-title"
+    3 -> "h3-title"
+    4 -> "h4-title"
+    5 -> "h5-title"
+    _ -> "h6-title"
+  }
+}
+
+fn heading(depth: Int, content: String) -> Element(msg) {
+  case depth {
+    1 -> html.h1([], [text(content)])
+    2 -> html.h2([], [text(content)])
+    3 -> html.h3([], [text(content)])
+    4 -> html.h4([], [text(content)])
+    5 -> html.h5([], [text(content)])
+    _ -> html.h6([], [text(content)])
   }
 }
 
@@ -58,6 +79,10 @@ pub fn text(content: String) -> Element(msg) {
 
 pub fn blockquote(content: List(Element(msg))) -> Element(msg) {
   html.blockquote([], content)
+}
+
+pub fn thematic_break() -> Element(msg) {
+  html.hr([])
 }
 
 pub fn error() -> Element(msg) {

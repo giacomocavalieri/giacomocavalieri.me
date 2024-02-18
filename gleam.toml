@@ -2,14 +2,15 @@ name = "giacomocavalieri"
 version = "1.0.0"
 description = "My personal blog"
 target = "javascript"
+gleam = ">= 0.32.0"
 
 [dependencies]
-gleam_stdlib = "~> 0.30"
-lustre = "~> 3.0"
-simplifile = "~> 0.1"
-lustre_ssg = "~> 0.1"
-gloml = "~> 0.1"
+gleam_stdlib = "~> 0.34"
+lustre = "~> 3.1"
+lustre_ssg = "~> 0.4"
+simplifile = "~> 1.0"
 glevatar = "~> 0.1"
+gloml = "~> 0.1"
 
 [dev-dependencies]
-gleeunit = "~> 0.10"
+gleeunit = "~> 1.0"

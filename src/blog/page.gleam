@@ -1,17 +1,17 @@
 import lustre/attribute.{
-  Attribute, alt, attribute, class, href, id, name, rel, src,
+  type Attribute, alt, attribute, class, href, id, name, rel, src, type_,
 }
-import lustre/element.{Element, text}
+import lustre/element.{type Element, text}
 import lustre/element/html.{
-  a, body, br, h1, h2, head, header, html, i, img, link, main, meta, p, span,
-  title,
+  a, body, br, div, h1, h2, head, header, html, i, img, link, main, meta, p,
+  script, span, title,
 }
 import blog/breadcrumbs
-import blog/post.{Post}
+import blog/post.{type Post}
 import glevatar
 
-/// --- HOME PAGE ---
-/// 
+// --- HOME PAGE ---------------------------------------------------------------
+
 pub fn homepage(posts: List(Post)) -> Element(a) {
   with_body(
     "Giacomo Cavalieri",
@@ -39,48 +39,45 @@ fn homepage_header() -> Element(a) {
   let subtitle = h2([id("homepage-subtitle")], [text("Hello 👋")])
 
   let title =
-    h1(
-      [id("homepage-title")],
-      [text("I'm "), span([class("p-given-name")], [text("Giacomo")])],
-    )
+    h1([id("homepage-title")], [
+      text("I'm "),
+      span([class("p-given-name")], [text("Giacomo")]),
+    ])
 
   let github_link =
-    a(
-      [href("https://github.com/giacomocavalieri"), rel("me"), class("u-url")],
-      [text("GitHub")],
-    )
+    a([href("https://github.com/giacomocavalieri"), rel("me"), class("u-url")], [
+      text("GitHub"),
+    ])
 
   let twitter_link =
-    a(
-      [href("https://twitter.com/giacomo_cava"), rel("me"), class("u-url")],
-      [text("Twitter")],
-    )
+    a([href("https://twitter.com/giacomo_cava"), rel("me"), class("u-url")], [
+      text("Twitter"),
+    ])
 
   let description =
-    p(
-      [id("homepage-description"), class("p-note")],
-      [
-        i([], [text("He/Him")]),
-        text(" • I love functional programming and learning new things"),
-        br([]),
-        text("Sharing my thoughts as I hop from one obsession to the other"),
-        br([]),
-        text("You can also find me on "),
-        github_link,
-        text(" and "),
-        twitter_link,
-        text("!"),
-      ],
-    )
+    p([id("homepage-description"), class("p-note")], [
+      i([], [text("He/Him")]),
+      text(" • I love functional programming and learning new things"),
+      br([]),
+      text("Sharing my thoughts as I hop from one obsession to the other"),
+      br([]),
+      text("You can also find me on "),
+      github_link,
+      text(" and "),
+      twitter_link,
+      text("!"),
+    ])
 
-  header(
-    [id("homepage-header"), class("h-card p-author")],
-    [profile_picture(), subtitle, title, description],
-  )
+  header([id("homepage-header"), class("h-card p-author")], [
+    profile_picture(),
+    subtitle,
+    title,
+    description,
+  ])
 }
 
-/// --- 404 PAGE ---
-/// 
+// --- 404 PAGE ---------------------------------------------------------------
+
 pub fn not_found() -> Element(a) {
   let title = h1([], [text("There's nothing here!")])
   let subtitle =
@@ -89,63 +86,86 @@ pub fn not_found() -> Element(a) {
   with_body("Not found", "There's nothing here", [main([], [title, subtitle])])
 }
 
-/// --- POST PAGE ---
-/// 
+// --- POST PAGE ---------------------------------------------------------------
+
 pub fn from_post(post: Post) -> Element(Nil) {
   with_body(post.meta.title, post.meta.abstract, [post.to_article(post)])
 }
 
-/// --- TAG PAGE ---
-/// 
+// --- TAG PAGE ----------------------------------------------------------------
+
 pub fn from_tag(tag: String, posts: List(Post)) -> Element(Nil) {
   let title =
-    h1(
-      [class("tag-title")],
-      [text("Posts tagged "), i([], [text("\"" <> tag <> "\"")])],
-    )
+    h1([class("tag-title")], [
+      text("Posts tagged "),
+      i([], [text("\"" <> tag <> "\"")]),
+    ])
   let home_link = breadcrumbs.home()
   let previews = main([], [post.to_preview_list(posts)])
   let abstract = "posts tagged \"" <> tag <> "\""
   with_body(tag, abstract, [title, home_link, previews])
 }
 
-/// --- HELPERS ---
-/// 
+// --- CV PAGE -----------------------------------------------------------------
+
+pub fn cv() -> Element(nothing) {
+  with_body("cv", "my curriculum vitae", [])
+}
+
+// --- HELPERS -----------------------------------------------------------------
+
 fn with_body(
   title: String,
   description: String,
   elements: List(Element(a)),
 ) -> Element(a) {
   let head = default_head(title, description)
-  html([lang("en")], [head, body([], elements)])
+  html([lang("en")], [
+    head,
+    body([], [div([class("limit-max-width-and-center")], elements)]),
+  ])
 }
 
+const hljs_script_url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+
+const gleam_hljs_script_url = "/highlightjs-gleam.js"
+
 fn default_head(page_title: String, description: String) -> Element(a) {
-  head(
-    [],
-    [
-      title([], page_title),
-      charset("utf-8"),
-      viewport([content("width=device-width, initial-scale=1.0")]),
-      meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
-      meta([property("og:title"), content(page_title)]),
-      meta([property("og:type"), content("website")]),
-      meta([
-        name("image"),
-        property("og:image"),
-        content(profile_picture_source()),
-      ]),
-      meta([property("og:description"), content(description)]),
-      meta([name("description"), content(description)]),
-      meta([property("twitter:card"), content("summary")]),
-      meta([property("twitter:title"), content(page_title)]),
-      meta([property("twitter:description"), content(description)]),
-      meta([property("twitter:creator"), content("@giacomo_cava")]),
-      meta([property("twitter:image"), content(profile_picture_source())]),
-      theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
-      stylesheet("/style.css"),
-    ],
-  )
+  head([], [
+    title([], page_title),
+    charset("utf-8"),
+    viewport([
+      content("width=device-width, initial-scale=1.0, viewport-fit=cover"),
+    ]),
+    meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
+    meta([property("og:title"), content(page_title)]),
+    meta([property("og:type"), content("website")]),
+    meta([
+      name("image"),
+      property("og:image"),
+      content(profile_picture_source()),
+    ]),
+    meta([property("og:description"), content(description)]),
+    meta([name("description"), content(description)]),
+    meta([property("twitter:card"), content("summary")]),
+    meta([property("twitter:title"), content(page_title)]),
+    meta([property("twitter:description"), content(description)]),
+    meta([property("twitter:creator"), content("@giacomo_cava")]),
+    meta([property("twitter:image"), content(profile_picture_source())]),
+    // <link rel="preload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin>
+    link([
+      rel("payload"),
+      href("Mona-Sans.woff2"),
+      as_("font"),
+      type_("font/woff2"),
+      crossorigin(),
+    ]),
+    theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
+    stylesheet("/style.css"),
+    script([src(hljs_script_url)], ""),
+    script([src(gleam_hljs_script_url)], ""),
+    script([], "hljs.highlightAll();"),
+  ])
 }
 
 // --- META BUILDERS ---
@@ -184,4 +204,12 @@ fn lang(value: String) -> Attribute(a) {
 
 fn property(value: String) -> Attribute(a) {
   attribute("property", value)
+}
+
+fn as_(value: String) -> Attribute(a) {
+  attribute("as", value)
+}
+
+fn crossorigin() -> Attribute(a) {
+  attribute("crossorigin", "true")
 }

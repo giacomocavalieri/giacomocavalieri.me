@@ -1,22 +1,28 @@
-import gleam/dynamic
+import gleam/dynamic.{type Decoder}
 import gleam/list
-import gleam/order.{Order}
+import gleam/order.{type Order}
 import gleam/result
 import gleam/string
 import gloml
-import lustre/attribute.{Attribute, attribute, class, href, id}
-import lustre/element.{Element, text}
+import lustre/attribute.{type Attribute, attribute, class, href, id}
+import lustre/element.{type Element, text}
 import lustre/element/html.{
   a, article, div, h1, h2, header, li, main, p, time, ul,
 }
 import blog/breadcrumbs
-import blog/date.{Date}
+import blog/date.{type Date}
+import blog/id
 import extra
 import markdown
 import simplifile
 
 pub type Post {
   Post(meta: Metadata, body: List(Element(Nil)))
+}
+
+pub type Status {
+  Hide
+  Show
 }
 
 pub type Metadata {
@@ -26,6 +32,7 @@ pub type Metadata {
     abstract: String,
     date: Date,
     tags: List(String),
+    status: Status,
   )
 }
 
@@ -48,22 +55,33 @@ pub fn read(from file: String) -> Result(Post, Error) {
 
 fn parse_metadata(metadata: String) -> Result(Metadata, Error) {
   let decoder =
-    dynamic.decode5(
+    dynamic.decode6(
       Metadata,
       dynamic.field("id", dynamic.string),
       dynamic.field("title", dynamic.string),
       dynamic.field("abstract", dynamic.string),
       dynamic.field("date", date.decoder),
       dynamic.field("tags", dynamic.list(of: dynamic.string)),
+      dynamic.field("status", status_decoder()),
     )
 
   gloml.decode(metadata, decoder)
   |> result.map_error(WrongMetadata)
 }
 
+fn status_decoder() -> Decoder(Status) {
+  fn(dynamic) {
+    case dynamic.string(dynamic) {
+      Ok("show") -> Ok(Show)
+      Ok("hide") | Ok(_) -> Ok(Hide)
+      Error(errors) -> Error(errors)
+    }
+  }
+}
+
 /// Turns a post (with html body) into an `<article>` element that can be used
 /// for a full post page.
-/// 
+///
 pub fn to_article(post: Post) -> Element(Nil) {
   let title = h1([classes(["post-title", "p-name"])], [text(post.meta.title)])
   let home_link = breadcrumbs.home()
@@ -79,16 +97,17 @@ pub fn to_preview_list(posts: List(Post)) -> Element(a) {
 
 fn to_preview(post: Post) -> Element(a) {
   let title_classes = classes(["post-preview-title", "p-name", "u-url"])
-  let title_attributes = [
-    title_classes,
-    href("/posts/" <> post.meta.id <> ".html"),
-  ]
+  let post_link = "/posts/" <> post.meta.id <> ".html"
+  let title_attributes = [title_classes, href(post_link)]
   let title = a(title_attributes, [h2([], [text(post.meta.title)])])
   let subtitle = to_subtitle(post)
+  let read_more =
+    a([class("breadcrumb-link"), href(post_link)], [text("read more →")])
   let abstract =
     p(
       [classes(["post-preview-abstract", "p-summary"])],
-      [text(post.meta.abstract)],
+      markdown.parse_no_metadata(post.meta.abstract)
+      |> list.append([read_more]),
     )
 
   li([classes(["post-preview", "h-entry"])], [title, subtitle, abstract])
@@ -107,7 +126,7 @@ fn to_date(post: Post) -> Element(a) {
 }
 
 fn to_pill(tag: String) -> Element(a) {
-  let link = a([href("/tags/" <> tag <> ".html")], [text(tag)])
+  let link = a([href("/tags/" <> id.from_string(tag) <> ".html")], [text(tag)])
   li([classes(["post-tag", "p-category"])], [link])
 }
 
@@ -117,4 +136,11 @@ fn classes(classes: List(String)) -> Attribute(a) {
   classes
   |> list.map(fn(class) { #(class, True) })
   |> attribute.classes
+}
+
+pub fn is_shown(post: Post) -> Bool {
+  case post.meta.status {
+    Hide -> False
+    Show -> True
+  }
 }

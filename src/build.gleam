@@ -1,10 +1,11 @@
 import gleam/list
-import gleam/map.{Map}
-import gleam/pair
+import gleam/dict.{type Dict}
+import gleam/option.{None, Some}
+import lustre/element.{type Element}
 import lustre/ssg
 import simplifile
 import blog/page
-import blog/post.{Post}
+import blog/post.{type Post}
 
 const out_dir = "site"
 
@@ -13,39 +14,54 @@ const assets_dir = "assets"
 const posts_dir = "posts"
 
 pub fn main() {
-  // I don't care about failing gracefully, I'll just let the world burn if
-  // something goes wrong :P
-  let posts = read_posts()
+  let all_posts = read_posts()
+  let posts = list.filter(all_posts, keeping: post.is_shown)
   let chronological_posts = list.sort(posts, by: post.compare)
-  let tagged_posts = group_by_tags(posts)
-  let indexed_posts =
-    map.from_list(list.map(posts, fn(post) { #(post.meta.id, post) }))
+
+  let tag_to_posts = group_by_tags(posts)
+  let id_to_post =
+    list.map(posts, fn(post) { #(post.meta.id, post) })
+    |> dict.from_list
 
   ssg.new(out_dir)
   |> ssg.add_static_route("/", page.homepage(chronological_posts))
   |> ssg.add_static_route("/404", page.not_found())
-  |> ssg.add_dynamic_route("/posts", indexed_posts, page.from_post)
-  |> ssg.add_dynamic_route("/tags", tagged_posts, uncurry(page.from_tag))
+  |> ssg.add_static_route("/cv", page.cv())
+  |> add_dynamic_route("/posts", id_to_post, fn(_id, p) { page.from_post(p) })
+  |> add_dynamic_route("/tags", tag_to_posts, page.from_tag)
   |> ssg.add_static_dir(assets_dir)
   |> ssg.build
 }
 
 fn read_posts() -> List(Post) {
-  let assert Ok(paths) = simplifile.list_contents(of: posts_dir)
+  let assert Ok(paths) = simplifile.read_directory(posts_dir)
   use file <- list.map(paths)
   let assert Ok(post) = post.read(from: posts_dir <> "/" <> file)
   post
 }
 
-fn group_by_tags(posts: List(Post)) -> Map(String, #(String, List(Post))) {
-  let flat_tags = fn(post: Post) { list.map(post.meta.tags, pair.new(_, post)) }
-  list.flat_map(posts, flat_tags)
-  |> list.group(by: pair.first)
-  |> map.map_values(with: fn(tag, tagged_posts) {
-    #(tag, list.map(tagged_posts, pair.second))
-  })
+fn group_by_tags(posts: List(Post)) -> Dict(String, List(Post)) {
+  use tagged_posts, post <- list.fold(over: posts, from: dict.new())
+  use tagged_posts, tag <- list.fold(over: post.meta.tags, from: tagged_posts)
+  use posts <- dict.update(in: tagged_posts, update: tag)
+  case posts {
+    Some(posts) -> [post, ..posts]
+    None -> [post]
+  }
 }
 
-fn uncurry(fun: fn(a, b) -> c) -> fn(#(a, b)) -> c {
-  fn(pair: #(a, b)) { fun(pair.0, pair.1) }
+/// The same as `ssg.add_dynamic_route` but the callback also accepts the
+/// route's name.
+///
+fn add_dynamic_route(
+  config: ssg.Config(a, b, c),
+  route_name: String,
+  routes: Dict(String, d),
+  generate: fn(String, d) -> Element(e),
+) -> ssg.Config(a, b, c) {
+  let named_routes = dict.map_values(routes, fn(name, route) { #(name, route) })
+  ssg.add_dynamic_route(config, route_name, named_routes, fn(named_route) {
+    let #(name, route) = named_route
+    generate(name, route)
+  })
 }

@@ -1,0 +1,9 @@
+{
+    "grammarly.selectors": [
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "posts/what-if-best-practices-were-the-norm.md"
+        }
+    ]
+}
