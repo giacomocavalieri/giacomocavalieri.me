@@ -140,18 +140,12 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
     meta([property("og:title"), content(page_title)]),
     meta([property("og:type"), content("website")]),
-    meta([
-      name("image"),
-      property("og:image"),
-      content(profile_picture_source()),
-    ]),
     meta([property("og:description"), content(description)]),
     meta([name("description"), content(description)]),
     meta([property("twitter:card"), content("summary")]),
     meta([property("twitter:title"), content(page_title)]),
     meta([property("twitter:description"), content(description)]),
     meta([property("twitter:creator"), content("@giacomo_cava")]),
-    meta([property("twitter:image"), content(profile_picture_source())]),
     // <link rel="preload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin>
     link([
       rel("payload"),
