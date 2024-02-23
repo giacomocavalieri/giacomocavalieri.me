@@ -1,7 +1,7 @@
 ---
 id = "what-if-best-practices-were-the-norm"
 title = "What if best practices were the norm?"
-abstract = "No abstract yet"
+abstract = "During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"
 tags = ["gleam", "fp"]
 date = "2024-02-23"
 status = "show"
