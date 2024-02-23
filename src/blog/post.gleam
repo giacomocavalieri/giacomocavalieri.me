@@ -43,7 +43,7 @@ pub type Error {
 }
 
 pub fn compare(one: Post, other: Post) -> Order {
-  date.compare(one.meta.date, other.meta.date)
+  date.compare(other.meta.date, one.meta.date)
 }
 
 pub fn read(from file: String) -> Result(Post, Error) {
