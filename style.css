@@ -211,7 +211,7 @@ a:not(.clip):hover {
 }
 
 #posts-previews .post-preview:not(:last-child) {
-    margin-bottom: var(--h1-size);
+    margin-bottom: calc(1.5 * var(--h1-size));
 }
 
 /* --- TAGS ----------------------------------------------------------------- */
