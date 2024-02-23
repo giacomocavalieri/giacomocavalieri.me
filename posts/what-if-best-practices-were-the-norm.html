@@ -1,0 +1,260 @@
+<!DOCTYPE html><html lang="en"><head><title>What if best practices were the norm?</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="What if best practices were the norm?"><meta property="og:type" content="website"><meta property="og:description" content="No abstract yet"><meta name="description" content="No abstract yet"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="What if best practices were the norm?"><meta property="twitter:description" content="No abstract yet"><meta property="twitter:creator" content="@giacomo_cava"><link rel="payload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin="true"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">What if best practices were the norm?</h1><nav class="breadcrumbs"><a rel="author" href="/" class="breadcrumb-link">← home</a></nav><div class="post-subtitle"><time datetime="23-02-2024" class="post-date dt-published">2024 february 23</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><p>During my second year of university I followed an amazing course dedicated to
+object-oriented programming, held by one of the best professors I&#39;ve
+ever had the pleasure to meet. It focused not only on the language in itself
+— Java, in this case — but also on the <em>best practices</em> we ought to follow to
+make code easier to refactor and reason about.
+To me, a freshman who only knew C, that felt almost like magic and I quickly
+fell in love with Java.</p><p>Quite a few years have passed since then, and my honeymoon phase with Java is
+long over. As I learned new languages and grew as a developer, I&#39;ve come to
+dislike a lot of the ceremonies and self-imposed restrictions that can come with
+good object-oriented code.</p><p>What if the best practices I&#39;m forcing myself to follow (with good reason, don&#39;t
+get me wrong!) were easier to adopt and put into practice? Heck, what if they
+were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were the norm?</em></p><div class="post-heading h2-title"><a href="#lies-lies-lies" id="lies-lies-lies" class="clip">🔗</a><h2>Lies, lies, lies</h2></div><p>Java is a powerful language that gives us a lot of room to write clean,
+expressive code.
+However, with great power comes great responsibility and we have to learn that
+even some of the core &quot;features&quot; of the language can turn into a footgun if not
+used with great care.
+That&#39;s why we need some rules to constrain ourselves and make sure our programs
+will be well-behaved under all circumstances.</p><p>Take for example null references, the bane of every Java programmer&#39;s
+existence. Every time we return <code>null</code> from a method we are condemning another
+programmer — or our future selves — to deal with a much dreaded
+<code>NullPointerException</code>.</p><p>The problem is that <code>null</code>s are a sneaky way for our methods to <em>lie</em> about
+their actual behaviour. To see what I mean by that, let&#39;s look at an example:</p><pre><code data-lang="java" class="not-prose language-java">class User {
+  // For this super simple example a User just has an id and a name
+  public final int id;
+  public final String name;
+
+  public User(final int id, final String name) {
+    this.id = id;
+    this.name = name;
+  }
+
+  public static User find(int id) {
+    // ...
+  }
+}</code></pre><p>The implementation of <code>find</code> is not important, and it shouldn&#39;t be!
+This method may fetch a user from a database, an in-memory store, or somewhere
+else entirely.
+The point is we don&#39;t want to go and dive into the implementation of every
+method we use.
+To me, that&#39;s where the beauty of static types lies: just by reading the
+signature of a method we can get a pretty good hunch of what to expect.</p><p>So, what is <code>find</code>&#39;s signature telling us?
+<em>&quot;Give me an int and I&#39;ll get you a <code>User</code>&quot;</em>. Great! Let&#39;s put it to good use
+and do something useful:</p><pre><code data-lang="java" class="not-prose language-java">class Main {
+  public static void main(String[] args) {
+    User user = User.load(1);
+    System.out.println(&quot;The user with id 1 has name &quot; + user.name);
+  }
+}</code></pre><p>A seasoned Java developer might already have spotted the myriad of ways in
+which this seemingly harmless snippet of code could fail: if <code>load</code> returns a
+null reference or throws a runtime exception our code will crash at runtime.
+But how am I expected to know that when the method is lying about its behaviour?
+It says that it returns a <code>User</code> when in fact it might return a null reference
+or just crash with an exception and return nothing at all!</p><p>We have to <em>remember</em> to check for null references and catch possible
+exceptions:</p><pre><code data-lang="java" class="not-prose language-java">class Main {
+  public static void main(String[] args) {
+    try {
+      User user = User.load(1);
+      if (user != null) {
+        System.out.println(&quot;The user with id 1 has name &quot; + user.name);
+      } else {
+        System.out.println(&quot;There&#39;s no user with id 1&quot;);
+      }
+    } catch {
+      System.out.println(&quot;Error loading the user with id 1&quot;);
+    }
+  }
+}</code></pre><p>The crux of the problem is that <em>nothing forced me to add any checks!</em> I had to
+be diligent and remember to add those. The easy thing to do — simply accessing
+the name property of the user, disregarding any possible check — is not the
+correct one!
+It follows that forgetting to add a null check or a try-catch is bound to
+happen; it&#39;s not a matter of <em>if</em>, but <em>when</em>: developers can be in a rush,
+have tight deadlines, or simply be tired after many hours in front of a screen!</p><div class="post-heading h3-title"><a href="#gleam-to-the-rescue" id="gleam-to-the-rescue" class="clip">🔗</a><h3>Gleam to the rescue</h3></div><p>What if, instead of having to be always on the lookout, the language could
+make sure that no function failure could go undetected? That sounds almost too
+good to be true but as it turns out, not only is this possible, but it&#39;s also
+easier than you might expect!</p><p>Enters <a href="https://gleam.run">Gleam</a>: a friendly, simple, and pragmatic programming
+language that, among other things, has no runtime exceptions or null pointers!
+Let&#39;s see how the example I showed you earlier in Java might look in Gleam:</p><pre><code data-lang="gleam" class="not-prose language-gleam">type User {
+  // For this super simple example a User just has an id and a name
+  User(id: Int, name: String)
+}</code></pre><p>With this definition we&#39;re creating a <code>User</code> type and saying that users only
+have two fields called &quot;id&quot; and &quot;name&quot; with types <code>Int</code> and <code>String</code>.
+We could define a couple of users like this:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn main() {
+  let rob = User(1, &quot;Rob&quot;)
+  let ben = User(2, &quot;Ben&quot;)
+}</code></pre><blockquote><p>As you might have noticed, keywords aside, this is not extremely different
+from the Java version, there&#39;s no <code>new</code> keyword to create things and you might
+be wondering where all the getters and setters have gone.
+Bear with me, we&#39;ll get to that later.</p></blockquote><p>And now onto the most important piece: the function to load users; as usual
+we don&#39;t care about its implementation, with a quick look at its type we can
+already discover what matters most.</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn load(id: Int) -&gt; Result(User, Nil) {
+  //                 ^^ the return type of the function
+  //                    comes after this arrow
+  // ...
+}</code></pre><p>The function doesn&#39;t simply return a <code>User</code> but a special type: a <code>Result</code>.
+What does it mean? In case everything goes right the function is going to return
+a user, as expected. However, in case something goes wrong we&#39;re getting a <code>Nil</code>
+instead. So the function can still fail (and it will) but it&#39;s impossible to
+forget about it! A <code>Result</code> acts as a glaring and <em>unmistakable sign</em> that
+things might not turn out as expected.</p><p>The invaluable advantage this approach gives us is that we&#39;re no longer on our
+own when performing error checking. The compiler can now point out every single
+piece of code where things might fail that we forgot to check.
+It&#39;s like having <em>a friendly programmer by our side who never gets tired</em>; they
+can point to all of our pieces of code that, if not taken care of, might turn
+into runtime exceptions. Let&#39;s see what happens if we&#39;re not careful with the
+<code>load</code> function:</p><pre><code data-lang="gleam" class="not-prose language-gleam">// This is how you define the main in Gleam
+pub fn main() {
+  let user = load(1)
+  io.println(&quot;The user with id 1 has name &quot; &lt;&gt; user.name)
+  //                                               ^^^^^
+  // This field does not exist.
+  // The value being accessed has this type:
+  //
+  //     Result(User, Nil)
+  //
+  // It does not have any fields.
+}</code></pre><p>The code won&#39;t even compile! We&#39;re trying to treat a <code>Result</code> like a <code>User</code> but
+that&#39;s not possible, since a call to <code>load</code> might have failed. Compare this with
+the Java example I showed you earlier, where the compiler would gladly accept
+our code even though it could result in a runtime exception.</p><div class="post-heading h3-title"><a href="#pattern-matching-or-the-superpower-of-functional-programming" id="pattern-matching-or-the-superpower-of-functional-programming" class="clip">🔗</a><h3>Pattern matching, or the superpower of functional programming</h3></div><p>How can we get a user out of a <code>Result</code>, then? That can be achieved with
+<em>pattern matching.</em> To get the previous broken code snippet to compile we can do
+something like this:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn main() {
+  case load(1) {
+    Ok(user) -&gt; io.println(&quot;The user with id 1 has name &quot; &lt;&gt; user.name)
+    Error(Nil) -&gt; io.println(&quot;There&#39;s no user with id 1&quot;)
+  }
+}</code></pre><p>Pattern matching allows you to check the shape of data; in this case, we can
+take different actions based on the result of the loading function: if
+everything went smoothly we will have a user in the <code>Ok</code> branch.
+Once again, we will never forget that a user can be missing because we&#39;re forced
+to deal with the <code>Error</code> branch as well.
+But what if we wanted to deal with more complex errors?
+A user might be missing, or there could be problems with the connection to the
+database (if we&#39;re fetching users from there)...
+just getting a generic <code>Error(Nil)</code> won&#39;t cut it.</p><p>Luckily it&#39;s extremly easy to change the code, first of all we need a new type
+to describe the possible errors that may take place:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub type LoadError {
+  UserNotFound
+  ConnectionError
+}</code></pre><p>Now the function can return a specific error in case something goes wrong.</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn load(id: Int) -&gt; Result(User, LoadError) {
+  // ...
+}</code></pre><p>Notice how the function is now saying that it will return a more specific
+<code>LoadError</code> in case something goes wrong; that can be fundamental to deal with
+different failures in different ways.
+After this refactor we will be forced by the compiler to deal with every single
+error that may occur in the function, luckily that&#39;s as simple as adding a new
+branch to our previous pattern matching:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn main() {
+  case load(1) {
+    Ok(user) -&gt; io.println(&quot;The user with id 1 has name &quot; &lt;&gt; user.name)
+    Error(UserNotFound) -&gt; io.println(&quot;There&#39;s no user with id 1&quot;)
+    Error(ConnectionError) -&gt; io.println(&quot;There was a connection error!&quot;)
+  }
+}</code></pre><blockquote><p>Being able to deal with errors like this is incredibly powerful, we do not
+have to add new ad-hoc contructs to the languaguage like try-catch blocks.
+One of the design goals of Gleam is to be simple, it doesn&#39;t even have if
+statements, it does everything through pattern matching!
+If you&#39;re curious to learn more about Gleam&#39;s syntax Erika Rowland wrote a
+great blog post about it,
+<a href="https://erikarow.land/notes/gleam-syntax">do check it out!</a></p></blockquote><div class="post-heading h3-title"><a href="#correct-made-easy" id="correct-made-easy" class="clip">🔗</a><h3>Correct made easy</h3></div><p>Let&#39;s take a second to appreciate this: by forcing a function to be explicit
+about the fact that it can fail we no longer have to rely on &quot;best practices&quot;
+(never return null references, don&#39;t use exceptions as a control flow mechanism,
+remember to check if objects coming from other functions are null, so on and so
+forth).
+<em>The easy thing to do is also the right one</em> because that&#39;s the only way to
+write code!</p><p>A beginner who&#39;s just started to learn Gleam won&#39;t see mysterious
+runtime exceptions popping up in their fun learning project just because they
+didn&#39;t know a slew of unwritten rules people are expected to know.
+An experienced Java developer won&#39;t have to waste time trying to trace back
+where that pesky <code>null</code> came from because a <code>NullPointerException</code> was reported
+in production.</p><p>A program won&#39;t crash at runtime because it&#39;s impossible for an error to go
+undetected.
+And, as I hope you might have noticed, the language doesn&#39;t have to be complex
+to give you these guarantees! On the contrary, it makes things easier: there&#39;s
+only one control flow mechanism — pattern matching — and you don&#39;t have to
+juggle between if statements and try-catch blocks to deal with all the possible
+ways a method might lie.</p><div class="post-heading h2-title"><a href="#beware-of-mutable-data" id="beware-of-mutable-data" class="clip">🔗</a><h2>Beware of mutable data</h2></div><p>When learning Java our teacher really drilled into us a rule of thumb to always
+follow: <em>always favour immutable data structures, when defining a class</em>
+<em>always make its fields <code>final</code>.</em></p><p>This is great advice! Removing the final annotation should only be used as a
+last resort. The rationale behind this practice is that having immutable data
+structures can make it easier to refactor and reason about code.</p><p>Over-relying on mutable state can quickly turn into an headache. Imagine users
+can now store their own birthday:</p><pre><code data-lang="java" class="not-prose language-java">class User {
+  public final int id;
+  public final String name;
+  public final Date birthday;
+
+  public User(final int id, final String name, final Date birthday) {
+    this.id = id;
+    this.name = name;
+    this.birthday = birthday;
+  }
+
+  // ...
+}</code></pre><p>Since all the user&#39;s fields are <code>final</code> we can be sure that whoever is going to
+get a hold of a reference to a user is not going to be able to modify it:</p><pre><code data-lang="java" class="not-prose language-java">User user = User.load(1);
+user.id = 12;
+// This is a compile time error, nice!</code></pre><p>Beware! We&#39;re still not completely safe from some mutability-related bugs.
+We have to remember that <code>Date</code> is a <em>mutable</em> data structure: whoever gets a
+hold of a user might not be able to change its id or name, but can do whathever
+they want with their birthday.</p><pre><code data-lang="java" class="not-prose language-java">User user = User.load(1);
+user.birthday.setYear(1900);</code></pre><p>And now, all of a sudden, we have a really old user! Since mutation can happen
+anywhere, it can be incredibly hard to trace back to the source of the problem
+and might require quite the debugging ability — and I, for one, don&#39;t have it.</p><div class="post-heading h3-title"><a href="#a-web-of-dependencies" id="a-web-of-dependencies" class="clip">🔗</a><h3>A web of dependencies</h3></div><p>An even hairier problem arise when we start sharing mutable data:</p><pre><code data-lang="java" class="not-prose language-java">Date birthday = new Date(1998, 10, 11)
+User jak = new User(1, &quot;Jak&quot;, birthday)
+User tom = new User(1, &quot;Tom&quot;, birthday)
+//   ^^^ That&#39;s my twin!</code></pre><p>We&#39;re passing around two references to a single heap-allocated object.
+Now if one of the two users tries and change its birthday the same change will
+reflect on the other one, that&#39;s some spooky action at a distance!</p><p>And now since there&#39;s more places that rely and can change that same value, the
+order with which we call our functions becomes crucial:</p><pre><code data-lang="java" class="not-prose language-java">jak.isOver18() // -&gt; true
+tom.birthday.setYear(2010);
+jak.isOver18() // -&gt; false</code></pre><p>We might end up breaking some invariants by simply moving a line of code
+around, talk about fiddly! We are caught in a web of invisible dependencies
+threaded throughout every method call: the order of every single method call
+that takes as input a mutable object is important!
+A strong testing suite can really help us giving confidence that our
+innocent-looking refactoring didn&#39;t actually break some important properties —
+easier said than done!</p><p>Is there a way out? Sort of. We can make our best to encapsulate the state of
+objects and never leak references to objects we don&#39;t want others to change:</p><pre><code data-lang="java" class="not-prose language-java">class User {
+  private final Date birthday;
+
+  public User(final int id, final String name, final Date birthday) {
+    this.id = id;
+    this.name = name;
+    this.birthday = new Date(birthday);
+    //              ^^^^^^^^^^^^^^^^^^ Here we&#39;re making a defensive copy
+  }
+
+  public Date getBirthday() {
+    return new Date(this.birthday);
+    //     ^^^^^^^^^^^^^^^^^^^^^^^^ We return a copy of the user&#39;s birthday
+  }
+
+  // ...
+}</code></pre><p>By storing and returning copies we&#39;re making sure that no one can put their
+hands on the user&#39;s birthday. Mutation can now happen in a single place — the
+<code>User</code> class — and can be tamed much more easily.</p><div class="post-heading h3-title"><a href="#making-best-practices-the-rules-of-the-game" id="making-best-practices-the-rules-of-the-game" class="clip">🔗</a><h3>Making best practices the rules of the game</h3></div><p>Our naïve attempt at writing a <code>User</code> class was riddled with small problems and
+endless possible sources of bugs. Once again, we had to be careful and remember
+to always store and return copies of potentially mutable data, effectively
+making it immutable.</p><p>But if making things immutable is desirable why not make it the default? That&#39;s
+exactly what Gleam does! Everything data structure is immutable, no matter what.</p><p>So why shouldn&#39;t this be the norm? Why have mutable data if it&#39;s causing us so
+much pain?</p><p>This is another great example of turning a best practice into the only possible
+way to write code. If making things immutable has so many advantages let&#39;s make
+it the only possible way to do things! Gleam does exactly that: every data
+structure defined in Gleam is immutable by default.</p><div class="post-heading h2-title"><a href="#todo" id="todo" class="clip">🔗</a><h2>TODO</h2></div><ul><li><p>Rivedere la parte del pattern matching, non sono convintissimo di come è
+scritta</p></li><li><p>What are best practices</p><ul><li><p>Give an idea</p></li><li><p>Provide a running example</p><ul><li><p>User with some field (birthday, ID and name so I can also drill down on
+immutability)</p></li><li><p>It should start dumb and then improve it to show some best practices!</p><ul><li><p>favour immutability (gives us peace of mind)</p></li><li><p>no null</p><ul><li><p>a function can lie!</p></li><li><p>the bane of every Java programmer</p></li><li><p>we have to do a lot of defensive programming</p></li><li><p>the compiler is not helping us, so we have to always be on the lookout</p></li></ul></li><li><p>no runtime exceptions as a control flow mechanism</p><ul><li><p>a lot of similarities with null</p></li><li><p>yet another distinct mechanism to deal with control flow</p></li></ul></li><li><p>As programmers, we&#39;re incredibly good at ignoring the million possible
+ways in which our software could fail and focus only on the happy path</p></li></ul></li></ul></li><li><p>The problem with best practices</p><ul><li><p>Those are... <em>practices</em>! They can be completely ignored, I&#39;ll never have
+the guarantee that the code I&#39;m using, or my colleagues are writing will
+follow those</p></li><li><p>Having rules that can be ignored is like having none at all, we&#39;re always
+on the lookout</p></li><li><p>Even the most skilled Java programmer will eventually forget a null check
+and allow some sneaky bug to enter the codebase</p></li><li><p>We have to be welcoming to new developers, if to be a good Java developer
+you have to be aware of a dozen unwritten rules you&#39;re doing a horrible
+job at making beginners productive in your language</p></li></ul></li><li><p>Enters Gleam</p><ul><li><p>Best practices become the rule of the game, the only way to write software
+is the &quot;good&quot; way</p></li><li><p>No need to do null checking, there&#39;s no null</p></li><li><p>No exceptions, a function has to be explicit about possible failures</p><ul><li><p>We do everything with pattern matching, no need for special mechanisms
+like exceptions</p></li></ul></li><li><p>The compiler is our greatest ally, I like to think of it as if I&#39;m pair
+programming with someone way smarter than me who can pinpoint every
+possible piece of code where things could go wrong</p><ul><li><p>It reminds me where my code could fail and forces me to handle it,
+so there&#39;s no way I&#39;m forgetting to check if loading a user failed, even
+after 20 hours in front of a screen</p></li></ul></li><li><p>A beginner is immediately productive and won&#39;t be able to mess up as
+easily</p><ul><li><p>The language shows you a single, well-defined path: it gently pushes you
+into a &quot;pit of success&quot;, instead of dropping you in the middle of a maze
+of choices you have to painfully and carefully evaluate</p></li></ul></li></ul></li></ul></li></ul></main></article></div></body></html>
