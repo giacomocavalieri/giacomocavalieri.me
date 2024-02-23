@@ -3,8 +3,8 @@ id = "what-if-best-practices-were-the-norm"
 title = "What if best practices were the norm?"
 abstract = "No abstract yet"
 tags = ["gleam", "fp"]
-date = "2023-10-25"
-status = "hide"
+date = "2024-02-23"
+status = "show"
 ---
 
 During my second year of university I followed an amazing course dedicated to
