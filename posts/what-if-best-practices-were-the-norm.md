@@ -3,9 +3,14 @@ id = "what-if-best-practices-were-the-norm"
 title = "What if best practices were the norm?"
 abstract = "During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"
 tags = ["gleam", "fp"]
-date = "2024-02-23"
+date = "2024-02-26"
 status = "show"
 ---
+
+> For my Italian speakers, there's also a
+> [video recording](https://youtu.be/PpasgrDsKis?si=Tq_zt3jJ_KGH1lsv)
+> of a talk I did about the same topic.
+> If you prefer listening to stuff you might enjoy it!
 
 During my second year of university I followed an amazing course dedicated to
 object-oriented programming, held by one of the best professors I've
@@ -31,7 +36,7 @@ _What if best practices were the norm?_
 Java is a powerful language that gives us a lot of room to write clean,
 expressive code.
 However, with great power comes great responsibility and we have to learn that
-even some of the core "features" of the language can turn into a footgun if not
+even some of the core features of the language can turn into a footgun if not
 used with great care.
 That's why we need some rules to constrain ourselves and make sure our programs
 will be well-behaved under all circumstances.
@@ -114,7 +119,7 @@ be diligent and remember to add those. The easy thing to do — simply accessing
 the name property of the user, disregarding any possible check — is not the
 correct one!
 It follows that forgetting to add a null check or a try-catch is bound to
-happen; it's not a matter of _if_, but _when_: developers can be in a rush,
+happen; it's not a matter of _if_, but _when:_ developers can be in a rush,
 have tight deadlines, or simply be tired after many hours in front of a screen!
 
 ### Gleam to the rescue
@@ -405,69 +410,178 @@ hands on the user's birthday. Mutation can now happen in a single place — the
 ### Making best practices the rules of the game
 
 Our naïve attempt at writing a `User` class was riddled with small problems and
-endless possible sources of bugs. Once again, we had to be careful and remember
-to always store and return copies of potentially mutable data, effectively
-making it immutable.
+endless possible sources of bugs. Once again, we had to
+_be careful and remember_ to always store and return copies of potentially
+mutable data, effectively making it immutable.
 
-But if making things immutable is desirable why not make it the default? That's
-exactly what Gleam does! Everything data structure is immutable, no matter what.
-
-So why shouldn't this be the norm? Why have mutable data if it's causing us so
-much pain?
-
+_If making things immutable is desirable why not make it the default?_
 This is another great example of turning a best practice into the only possible
 way to write code. If making things immutable has so many advantages let's make
-it the only possible way to do things! Gleam does exactly that: every data
-structure defined in Gleam is immutable by default.
+it the only possible way to do things! Every data structure defined in Gleam is
+immutable by default:
 
-## TODO
+```gleam
+let birthday = Date(1998, 10, 11)
+let jak = User(1, "Jak", birthday)
+let tom = User(1, "Tom", birthday)
+```
 
--   Rivedere la parte del pattern matching, non sono convintissimo di come è
-    scritta
+Is it safe to share the same `birthday` here, or are we bound to run into the
+same issues we found in the corresponding Java version? Since everything is
+immutable we can answer with peace of mind: _yes, it's safe!_
+Let's appreciate how we now have one less thing to constantly worry about.
 
--   What are best practices
-    -   Give an idea
-    -   Provide a running example
-        -   User with some field (birthday, ID and name so I can also drill down on
-            immutability)
-        -   It should start dumb and then improve it to show some best practices!
-            -   favour immutability (gives us peace of mind)
-            -   no null
-                -   a function can lie!
-                -   the bane of every Java programmer
-                -   we have to do a lot of defensive programming
-                -   the compiler is not helping us, so we have to always be on the lookout
-            -   no runtime exceptions as a control flow mechanism
-                -   a lot of similarities with null
-                -   yet another distinct mechanism to deal with control flow
-            -   As programmers, we're incredibly good at ignoring the million possible
-                ways in which our software could fail and focus only on the happy path
-    -   The problem with best practices
-        -   Those are... _practices_! They can be completely ignored, I'll never have
-            the guarantee that the code I'm using, or my colleagues are writing will
-            follow those
-        -   Having rules that can be ignored is like having none at all, we're always
-            on the lookout
-        -   Even the most skilled Java programmer will eventually forget a null check
-            and allow some sneaky bug to enter the codebase
-        -   We have to be welcoming to new developers, if to be a good Java developer
-            you have to be aware of a dozen unwritten rules you're doing a horrible
-            job at making beginners productive in your language
-    -   Enters Gleam
-        -   Best practices become the rule of the game, the only way to write software
-            is the "good" way
-        -   No need to do null checking, there's no null
-        -   No exceptions, a function has to be explicit about possible failures
-            -   We do everything with pattern matching, no need for special mechanisms
-                like exceptions
-        -   The compiler is our greatest ally, I like to think of it as if I'm pair
-            programming with someone way smarter than me who can pinpoint every
-            possible piece of code where things could go wrong
-            -   It reminds me where my code could fail and forces me to handle it,
-                so there's no way I'm forgetting to check if loading a user failed, even
-                after 20 hours in front of a screen
-        -   A beginner is immediately productive and won't be able to mess up as
-            easily
-            -   The language shows you a single, well-defined path: it gently pushes you
-                into a "pit of success", instead of dropping you in the middle of a maze
-                of choices you have to painfully and carefully evaluate
+> _"But how can I do anything useful if I can't mutate data?"_ I hear you cry.
+> You're right, you can't write a program the same way you would if you could
+> mutate data; you can't even have a `for` loop — after all, even increasing a
+> loop counter counts as mutation and that's not allowed.
+>
+> It can require some getting used to at first but trust me, it's absolutely
+> possible to write useful programs even if you can't mutate stuff.
+> For now I'll just focus on the advantages this approach gives us and
+> I'm not going to explaing _how_ to program with immutable data. That might be
+> worthy of a blog post of its own in the future.
+
+## The art of code formatting
+
+Learning a programming language is only a small part of the picture, though.
+As developers, we also have to rely on a variety of tool: linters, formatters,
+build tools, and the list could go on.
+For this blog post I'll focus on my favourite one: formatters.
+
+### Consistency is key
+
+I've never understood people who claim that programming is boring. Personal
+taste, creativity and imagination play such an important role in coding that if
+you ask a thousand developers to implement the same algorithm you'll probably
+get a thousand of different answers.
+
+That's the beauty of programming — and what made me fall in love with it in the
+first place. However, it can also turn into an endless source of teeth grinding
+when working with other developers: we all have different tastes and everyone
+will push for their own style to be adopted. Take this small snippet of code,
+there's probably a million different ways it could be formatted:
+
+```gleam
+case user {
+  User(_id, "Giacomo", _birthday) -> io.println("Hello, Giacomo")
+  User(_) -> io.println("Wait, who are you?")
+}
+```
+
+What if we want to vertically align the `case`'s arrows?
+
+```gleam
+case user {
+  User(_id, "Giacomo", _birthday) -> io.println("Hello, Giacomo")
+  User(_)                         -> io.println("Wait, who are you?")
+}
+```
+
+Mmh or maybe we could separate each `case` branch with a newline to make code
+breathe a bit better:
+
+```gleam
+case user {
+  User(_id, "Giacomo", _birthday) -> io.println("Hello, Giacomo")
+
+  User(_) -> io.println("Wait, who are you?")
+}
+```
+
+We could even decide to put what comes after the arrow on its own line:
+
+```gleam
+case user {
+  User(_id, "Giacomo", _birthday) ->
+    io.println("Hello, Giacomo")
+
+  User(_) ->
+    io.println("Wait, who are you?")
+}
+```
+
+I could go on for days adding small tweaks to the look of this bit of code.
+And it can be quite a fun exercise! Finding the best looking possible solution
+is really satisfying after all — and I love doing that from time to time.
+
+The point is that we want to avoid these kind of inconsitencies in style at all
+costs when working with other people: imagine having a codebase where sometimes
+things get indented with two spaces, and sometimes with four! So, in order to
+enforce a single style we rely on formatters: a nifty tool take ingests your
+code and spits it out it in a pretty format with consistent style.
+
+> I can't express how much I love formatters, most of my contributions to the
+> Gleam compiler are in its formatter and I even wrote a pretty printing package
+> in Gleam, if you're curious to learn how formatting works I can recommend
+> reading [its docs](https://hexdocs.pm/glam/), it's full of examples!
+
+### Finding the perfect style
+
+Formatters usually come with some levers you can pull to tweak the final look
+of your code: decide how many spaces the indentation is, wether to remove
+trailing commas, vertically align arrows and variables...
+the possibilities are endless.
+
+Back in my university days I remember doing a group project with three friends
+in Scala. We decided to use [scalafmt](https://scalameta.org/scalafmt/), a
+formatter that comes with more than 70 (I started counting and then got
+tired) such levers. I had the greatest fun reading through the documentation
+and discovering all choices I could make; needless to say, we spent
+_way too much time_ trying to agree on the final style.
+
+### No bikeshedding allowed here
+
+Sometimes having too much freedom can be counter productive. Having a
+configurable formatter can have some drawbacks: first of all you'll have to
+take your time to decide the formatter configuration, decision fatigue anyone?
+And then what happens if the configuration doesn't fit one's tastes? Knowing
+that it can be changed will inevitably lead to someone proposing to change it!
+What's worse is that different projects will most likely have different styles.
+
+Gleam does something really cool in my opinion: the language comes with a
+built-in formatter with _zero configuration._ Loosing the ability to tweak the
+output of the formatter has some nice consequences: first of all, it's
+impossible to lose time bikeshedding. All choices about the look of Gleam code
+are taken by the language, developers won't ever have to worry about it (and
+if the formatter is good enough, will probably never feel this is a limitation).
+
+What's most important is that every single Gleam project
+_will have a nice and familiar look._ Once again, there's one less thing to
+worry about!
+
+## TL;DR
+
+Writing code is hard, _writing good code is even harder._ That's why, when
+learning a new programming language like Java, we also have to learn a slew of
+"best practices". That might require a lot of effort and discipline, but will
+help us avoid a lot of common pitfalls that countless other developers have
+fallen into before us.
+
+The problem with best practices is that those are... well, just practices.
+Nothing is forcing us to follow those, and having a rule that can be ignored is
+like having no rule at all! To cite just one example: null pointers and
+unchecked exceptions are the bane of every Java programmer. We know how tricky
+those are and strive to avoid using those, yet everyone will have encountered
+the dreaded `NullPointerException` at least once in their Java programming
+carreer.
+As programmers we're _incredibly good at ignoring the million possible ways in which our code can fail_ and will eventually forget a null check or a `try`.
+
+A language like Gleam takes a radically different approach by making best
+practices the norm. `null` is bad? _Get rid of it._
+Exceptions are a pain to deal with? _Make sure the compiler helps us out._
+Mutability leads to brittle code that's harder to refactor? _Make everything immutable._
+Having a configurable formatter leads to bikeshedding and decision fatigue? _Get rid of the configuration._
+
+The language only shows you a single, well-defined path: it gently pushes you
+into a _pit of succes,_ instead of dropping you in the middle of a maze of
+choices and unwritten rules.
+
+A beginner will find a welcoming language where it's harder to mess up simple
+stuff while the experienced developer will enjoy the productivity and peace of
+mind of not having to worry about a million different pitfalls.
+
+---
+
+Phew, that was quite long! I hope you enjoyed this article as much as I've
+enjoyed writing it. I hope you'll be around for the next one!
