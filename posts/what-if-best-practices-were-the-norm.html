@@ -15,7 +15,7 @@ get me wrong!) were easier to adopt and put into practice? Heck, what if they
 were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were the norm?</em></p><div class="post-heading h2-title"><a href="#lies-lies-lies" id="lies-lies-lies" class="clip">🔗</a><h2>Lies, lies, lies</h2></div><p>Java is a powerful language that gives us a lot of room to write clean,
 expressive code.
 However, with great power comes great responsibility and we have to learn that
-even some of the core &quot;features&quot; of the language can turn into a footgun if not
+even some of the core features of the language can turn into a footgun if not
 used with great care.
 That&#39;s why we need some rules to constrain ourselves and make sure our programs
 will be well-behaved under all circumstances.</p><p>Take for example null references, the bane of every Java programmer&#39;s
@@ -262,11 +262,31 @@ you ask a thousand developers to implement the same algorithm you&#39;ll probabl
 get a thousand of different answers.</p><p>That&#39;s the beauty of programming — and what made me fall in love with it in the
 first place. However, it can also turn into an endless source of teeth grinding
 when working with other developers: we all have different tastes and everyone
-will push for their own style to be adopted.</p><p>When working in a team we want to avoid inconsitencies in style at all costs:
-imagine having a codebase where sometimes things get indented with two spaces,
-and sometimes with four! So, in order to enforce a single style we rely on
-formatters: a nifty tool take ingests your code and spits it out it in a pretty
-format with consistent style.</p><blockquote><p>I can&#39;t express how much I love formatters, most of my contributions to the
+will push for their own style to be adopted. Take this small snippet of code,
+there&#39;s probably a million different ways it could be formatted:</p><pre><code data-lang="gleam" class="not-prose language-gleam">case user {
+  User(_id, &quot;Giacomo&quot;, _birthday) -&gt; io.println(&quot;Hello, Giacomo&quot;)
+  User(_) -&gt; io.println(&quot;Wait, who are you?&quot;)
+}</code></pre><p>What if we want to vertically align the <code>case</code>&#39;s arrows?</p><pre><code data-lang="gleam" class="not-prose language-gleam">case user {
+  User(_id, &quot;Giacomo&quot;, _birthday) -&gt; io.println(&quot;Hello, Giacomo&quot;)
+  User(_)                         -&gt; io.println(&quot;Wait, who are you?&quot;)
+}</code></pre><p>Mmh or maybe we could separate each <code>case</code> branch with a newline to make code
+breath a bit better:</p><pre><code data-lang="gleam" class="not-prose language-gleam">case user {
+  User(_id, &quot;Giacomo&quot;, _birthday) -&gt; io.println(&quot;Hello, Giacomo&quot;)
+
+  User(_) -&gt; io.println(&quot;Wait, who are you?&quot;)
+}</code></pre><p>We could even decide to put what comes after the arrow on its own line:</p><pre><code data-lang="gleam" class="not-prose language-gleam">case user {
+  User(_id, &quot;Giacomo&quot;, _birthday) -&gt;
+    io.println(&quot;Hello, Giacomo&quot;)
+
+  User(_) -&gt;
+    io.println(&quot;Wait, who are you?&quot;)
+}</code></pre><p>I could go on for days adding small tweaks to the look of this bit of code.
+And it can be quite a fun exercise! Finding the best looking possible solution
+is really satisfying after all — and I love doing that from time to time.</p><p>The point is that we want to avoid these kind of inconsitencies in style at all
+costs when working with other people: imagine having a codebase where sometimes
+things get indented with two spaces, and sometimes with four! So, in order to
+enforce a single style we rely on formatters: a nifty tool take ingests your
+code and spits it out it in a pretty format with consistent style.</p><blockquote><p>I can&#39;t express how much I love formatters, most of my contributions to the
 Gleam compiler are in its formatter and I even wrote a pretty printing package
 in Gleam, if you&#39;re curious to learn how formatting works I can recommend
 reading <a href="https://hexdocs.pm/glam/">its docs</a>, it&#39;s full of examples!</p></blockquote><div class="post-heading h3-title"><a href="#finding-the-perfect-style" id="finding-the-perfect-style" class="clip">🔗</a><h3>Finding the perfect style</h3></div><p>Formatters usually come with some levers you can pull to tweak the final look
@@ -277,16 +297,17 @@ in Scala. We decided to use <a href="https://scalameta.org/scalafmt/">scalafmt</
 formatter that comes with more than 70 (I started counting and then got
 tired) such levers. I had the greatest fun reading through the documentation
 and discovering all choices I could make; needless to say, we spent
-<em>way too much time</em> trying to agree on the final style.</p><div class="post-heading h3-title"><a href="#no-bikeshedding-allowed-here" id="no-bikeshedding-allowed-here" class="clip">🔗</a><h3>No bikeshedding allowed here</h3></div><p>Sometimes having too much freedom can be counter productive. Having a formatter
-allow the programmer to customise the final look of the code has some
-disadvantages:</p><ul><li><p>You&#39;ll inevitably have to make some choices! Decision fatigue anyone?</p></li><li><p>What if the aggreed upon configuration doesn&#39;t fit one&#39;s taste? Knowing that
-it can be changed will inevitably lead to someone proposing to change it!</p></li><li><p>The style might be consistent project-wise but other projects might use
-different configurations</p></li></ul><p>Gleam does something really cool in my opinion: the language comes with a
+<em>way too much time</em> trying to agree on the final style.</p><div class="post-heading h3-title"><a href="#no-bikeshedding-allowed-here" id="no-bikeshedding-allowed-here" class="clip">🔗</a><h3>No bikeshedding allowed here</h3></div><p>Sometimes having too much freedom can be counter productive. Having a
+configurable formatter can have some drawbacks: first of all you&#39;ll have to
+take your time to decide the formatter configuration, decision fatigue anyone?
+And then what happens if the configuration doesn&#39;t fit one&#39;s tastes? Knowing
+that it can be changed will inevitably lead to someone proposing to change it!
+What&#39;s worse is that different projects will most likely have different styles.</p><p>Gleam does something really cool in my opinion: the language comes with a
 built-in formatter with <em>zero configuration.</em> Loosing the ability to tweak the
 output of the formatter has some nice consequences: first of all, it&#39;s
-impossible to loose time bikeshedding. All choices about the look of Gleam code
+impossible to lose time bikeshedding. All choices about the look of Gleam code
 are taken by the language, developers won&#39;t ever have to worry about it (and
-if the formatter is good enough will probably never feel this is a limitation).</p><p>What&#39;s most important is that every single Gleam project
+if the formatter is good enough, will probably never feel this is a limitation).</p><p>What&#39;s most important is that every single Gleam project
 <em>will have a nice and familiar look.</em> Once again, there&#39;s one less thing to
 worry about!</p><div class="post-heading h2-title"><a href="#tl;dr" id="tl;dr" class="clip">🔗</a><h2>TL;DR</h2></div><p>Writing code is hard, <em>writing good code is even harder.</em> That&#39;s why, when
 learning a new programming language like Java, we also have to learn a slew of
@@ -307,5 +328,5 @@ Having a configurable formatter leads to bikeshedding and decision fatigue? <em>
 into a <em>pit of succes,</em> instead of dropping you in the middle of a maze of
 choices and unwritten rules.</p><p>A beginner will find a welcoming language where it&#39;s harder to mess up simple
 stuff while the experienced developer will enjoy the productivity and peace of
-mind  of not having to worry about a million different pitfalls.</p><hr><p>Phew, that was quite long! I hope you enjoyed this article as much as I&#39;ve
+mind of not having to worry about a million different pitfalls.</p><hr><p>Phew, that was quite long! I hope you enjoyed this article as much as I&#39;ve
 enjoyed writing it. I hope you&#39;ll be around for the next one!</p></main></article></div></body></html>
