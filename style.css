@@ -7,6 +7,7 @@
         url("Mona-Sans.woff2") format("woff2-variations");
     font-weight: 200 900;
     font-stretch: 75% 125%;
+    font-variation-settings: "ital" 3;
 }
 
 :root {
@@ -89,6 +90,10 @@ dl {
 html {
     overflow-x: hidden;
     -webkit-text-size-adjust: 100%;
+}
+
+em {
+    font-variation-settings: "ital" 3;
 }
 
 /* --- BODY AND BASE ELEMENTS STYLING --------------------------------------- */
