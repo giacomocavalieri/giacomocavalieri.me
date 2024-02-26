@@ -60,13 +60,13 @@ class User {
     this.name = name;
   }
 
-  public static User find(int id) {
+  public static User load(int id) {
     // ...
   }
 }
 ```
 
-The implementation of `find` is not important, and it shouldn't be!
+The implementation of `load` is not important, and it shouldn't be!
 This method may fetch a user from a database, an in-memory store, or somewhere
 else entirely.
 The point is we don't want to go and dive into the implementation of every
@@ -74,7 +74,7 @@ method we use.
 To me, that's where the beauty of static types lies: just by reading the
 signature of a method we can get a pretty good hunch of what to expect.
 
-So, what is `find`'s signature telling us?
+So, what is `load`'s signature telling us?
 _"Give me an int and I'll get you a `User`"_. Great! Let's put it to good use
 and do something useful:
 
