@@ -439,7 +439,7 @@ Let's appreciate how we now have one less thing to constantly worry about.
 > It can require some getting used to at first but trust me, it's absolutely
 > possible to write useful programs even if you can't mutate stuff.
 > For now I'll just focus on the advantages this approach gives us and
-> I'm not going to explaing _how_ to program with immutable data. That might be
+> I'm not going to explain _how_ to program with immutable data. That might be
 > worthy of a blog post of its own in the future.
 
 ## The art of code formatting
