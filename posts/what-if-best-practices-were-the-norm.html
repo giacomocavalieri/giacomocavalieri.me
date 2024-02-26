@@ -72,7 +72,7 @@ be diligent and remember to add those. The easy thing to do — simply accessing
 the name property of the user, disregarding any possible check — is not the
 correct one!
 It follows that forgetting to add a null check or a try-catch is bound to
-happen; it&#39;s not a matter of <em>if</em>, but <em>when</em>: developers can be in a rush,
+happen; it&#39;s not a matter of <em>if</em>, but <em>when:</em> developers can be in a rush,
 have tight deadlines, or simply be tired after many hours in front of a screen!</p><div class="post-heading h3-title"><a href="#gleam-to-the-rescue" id="gleam-to-the-rescue" class="clip">🔗</a><h3>Gleam to the rescue</h3></div><p>What if, instead of having to be always on the lookout, the language could
 make sure that no function failure could go undetected? That sounds almost too
 good to be true but as it turns out, not only is this possible, but it&#39;s also
@@ -270,7 +270,7 @@ there&#39;s probably a million different ways it could be formatted:</p><pre><co
   User(_id, &quot;Giacomo&quot;, _birthday) -&gt; io.println(&quot;Hello, Giacomo&quot;)
   User(_)                         -&gt; io.println(&quot;Wait, who are you?&quot;)
 }</code></pre><p>Mmh or maybe we could separate each <code>case</code> branch with a newline to make code
-breath a bit better:</p><pre><code data-lang="gleam" class="not-prose language-gleam">case user {
+breathe a bit better:</p><pre><code data-lang="gleam" class="not-prose language-gleam">case user {
   User(_id, &quot;Giacomo&quot;, _birthday) -&gt; io.println(&quot;Hello, Giacomo&quot;)
 
   User(_) -&gt; io.println(&quot;Wait, who are you?&quot;)
