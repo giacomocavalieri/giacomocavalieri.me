@@ -32,16 +32,16 @@ their actual behaviour. To see what I mean by that, let&#39;s look at an example
     this.name = name;
   }
 
-  public static User find(int id) {
+  public static User load(int id) {
     // ...
   }
-}</code></pre><p>The implementation of <code>find</code> is not important, and it shouldn&#39;t be!
+}</code></pre><p>The implementation of <code>load</code> is not important, and it shouldn&#39;t be!
 This method may fetch a user from a database, an in-memory store, or somewhere
 else entirely.
 The point is we don&#39;t want to go and dive into the implementation of every
 method we use.
 To me, that&#39;s where the beauty of static types lies: just by reading the
-signature of a method we can get a pretty good hunch of what to expect.</p><p>So, what is <code>find</code>&#39;s signature telling us?
+signature of a method we can get a pretty good hunch of what to expect.</p><p>So, what is <code>load</code>&#39;s signature telling us?
 <em>&quot;Give me an int and I&#39;ll get you a <code>User</code>&quot;</em>. Great! Let&#39;s put it to good use
 and do something useful:</p><pre><code data-lang="java" class="not-prose language-java">class Main {
   public static void main(String[] args) {
