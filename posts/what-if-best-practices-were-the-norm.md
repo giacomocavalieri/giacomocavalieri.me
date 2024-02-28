@@ -296,6 +296,37 @@ only one control flow mechanism — pattern matching — and you don't have to
 juggle between if statements and try-catch blocks to deal with all the possible
 ways a method might lie.
 
+> __Addendum: what about `Optional`?__
+>
+> After posting this online I received some great feedback: people pointed that
+> one could use Java's `Optional` to help avoid `null`s. That's a good point!
+> `Optional` is a life saver and I always rely on it when writing Java code.
+> My point still stands: _deciding to use it is a best practice_,
+> it's not the only possible way to write Java code that deals with missing
+> values.
+>
+> It can only give us some safety if we're diligent and use it properly,
+> remember this is still perfectly valid Java code:
+> ```java
+> public static Optional<User> load(int id) {
+>   return null;
+>   // Optional is an object after all!
+> }
+> ```
+>
+> To add to the point, it's not that beginner friendly: I've been a teaching
+> assistant for a couple of years now, and I've lost count of the number of
+> students trying to do this:
+> ```java
+> Optional.of(someObject)
+> ```
+> Can you spot the bug? If `someObject` is `null` this will still result in a
+> `NullPointerException`! These are bright students and have been taught that
+> the proper way to do that is using `Optional.ofNullable`, they've even been
+> shown examples doing it.
+> But _there's only so many rules that one can remember to apply off the top their head_
+> and this is such an easy mistake that I see it regularly in students' code.
+
 ## Beware of mutable data
 
 When learning Java our teacher really drilled into us a rule of thumb to always
