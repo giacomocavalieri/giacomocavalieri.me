@@ -175,7 +175,23 @@ And, as I hope you might have noticed, the language doesn&#39;t have to be compl
 to give you these guarantees! On the contrary, it makes things easier: there&#39;s
 only one control flow mechanism — pattern matching — and you don&#39;t have to
 juggle between if statements and try-catch blocks to deal with all the possible
-ways a method might lie.</p><div class="post-heading h2-title"><a href="#beware-of-mutable-data" id="beware-of-mutable-data" class="clip">🔗</a><h2>Beware of mutable data</h2></div><p>When learning Java our teacher really drilled into us a rule of thumb to always
+ways a method might lie.</p><blockquote><p><strong>Addendum: what about <code>Optional</code>?</strong></p><p>After posting this online I received some great feedback: people pointed that
+one could use Java&#39;s <code>Optional</code> to help avoid <code>null</code>s. That&#39;s a good point!
+<code>Optional</code> is a life saver and I always rely on it when writing Java code.
+My point still stands: <em>deciding to use it is a best practice</em>,
+it&#39;s not the only possible way to write Java code that deals with missing
+values.</p><p>It can only give us some safety if we&#39;re diligent and use it properly,
+remember this is still perfectly valid Java code:</p><pre><code data-lang="java" class="not-prose language-java">public static Optional&lt;User&gt; load(int id) {
+  return null;
+  // Optional is an object after all!
+}</code></pre><p>To add to the point, it&#39;s not that beginner friendly: I&#39;ve been a teaching
+assistant for a couple of years now, and I&#39;ve lost count of the number of
+students trying to do this:</p><pre><code data-lang="java" class="not-prose language-java">Optional.of(someObject)</code></pre><p>Can you spot the bug? If <code>someObject</code> is <code>null</code> this will still result in a
+<code>NullPointerException</code>! These are bright students and have been taught that
+the proper way to do that is using <code>Optional.ofNullable</code>, they&#39;ve even been
+shown examples doing it.
+But <em>there&#39;s only so many rules that one can remember to apply off the top their head</em>
+and this is such an easy mistake that I see it regularly in students&#39; code.</p></blockquote><div class="post-heading h2-title"><a href="#beware-of-mutable-data" id="beware-of-mutable-data" class="clip">🔗</a><h2>Beware of mutable data</h2></div><p>When learning Java our teacher really drilled into us a rule of thumb to always
 follow: <em>always favour immutable data structures, when defining a class</em>
 <em>always make its fields <code>final</code>.</em></p><p>This is great advice! Removing the final annotation should only be used as a
 last resort. The rationale behind this practice is that having immutable data
