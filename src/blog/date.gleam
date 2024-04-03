@@ -124,7 +124,7 @@ pub fn decoder(from value: Dynamic) -> Result(Date, List(dynamic.DecodeError)) {
       use month <- result.try(int.parse(month))
       use month <- result.try(month_from_int(month))
       use day <- result.try(int.parse(day))
-      Ok(Date(year, month, day))
+      Ok(Date(year: year, month: month, day: day))
     }
     _ -> Error(Nil)
   }
