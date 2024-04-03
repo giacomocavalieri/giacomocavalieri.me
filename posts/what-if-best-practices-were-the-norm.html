@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><title>What if best practices were the norm?</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="What if best practices were the norm?"><meta property="og:type" content="website"><meta property="og:description" content="During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"><meta name="description" content="During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="What if best practices were the norm?"><meta property="twitter:description" content="During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"><meta property="twitter:creator" content="@giacomo_cava"><link rel="payload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin="true"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">What if best practices were the norm?</h1><nav class="breadcrumbs"><a rel="author" href="/" class="breadcrumb-link">← home</a></nav><div class="post-subtitle"><time datetime="26-02-2024" class="post-date dt-published">2024 february 26</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><blockquote><p>For my Italian speakers, there&#39;s also a
+<!DOCTYPE html><html lang="en"><head><title>What if best practices were the norm?</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="What if best practices were the norm?"><meta property="og:type" content="website"><meta property="og:description" content="During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"><meta name="description" content="During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="What if best practices were the norm?"><meta property="twitter:description" content="During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"><meta property="twitter:creator" content="@giacomo_cava"><link rel="payload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin="true"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">What if best practices were the norm?</h1><nav class="breadcrumbs"><a rel="author" href="/" class="breadcrumb-link">← home</a></nav><div class="post-subtitle"><time datetime="2024-02-26" class="post-date dt-published">26 february 2024</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content"><blockquote><p>For my Italian speakers, there&#39;s also a
 <a href="https://youtu.be/PpasgrDsKis?si=Tq_zt3jJ_KGH1lsv">video recording</a>
 of a talk I did about the same topic.
 If you prefer listening to stuff you might enjoy it!</p></blockquote><p>During my second year of university I followed an amazing course dedicated to
@@ -32,16 +32,16 @@ their actual behaviour. To see what I mean by that, let&#39;s look at an example
     this.name = name;
   }
 
-  public static User find(int id) {
+  public static User load(int id) {
     // ...
   }
-}</code></pre><p>The implementation of <code>find</code> is not important, and it shouldn&#39;t be!
+}</code></pre><p>The implementation of <code>load</code> is not important, and it shouldn&#39;t be!
 This method may fetch a user from a database, an in-memory store, or somewhere
 else entirely.
 The point is we don&#39;t want to go and dive into the implementation of every
 method we use.
 To me, that&#39;s where the beauty of static types lies: just by reading the
-signature of a method we can get a pretty good hunch of what to expect.</p><p>So, what is <code>find</code>&#39;s signature telling us?
+signature of a method we can get a pretty good hunch of what to expect.</p><p>So, what is <code>load</code>&#39;s signature telling us?
 <em>&quot;Give me an int and I&#39;ll get you a <code>User</code>&quot;</em>. Great! Let&#39;s put it to good use
 and do something useful:</p><pre><code data-lang="java" class="not-prose language-java">class Main {
   public static void main(String[] args) {
@@ -175,7 +175,23 @@ And, as I hope you might have noticed, the language doesn&#39;t have to be compl
 to give you these guarantees! On the contrary, it makes things easier: there&#39;s
 only one control flow mechanism — pattern matching — and you don&#39;t have to
 juggle between if statements and try-catch blocks to deal with all the possible
-ways a method might lie.</p><div class="post-heading h2-title"><a href="#beware-of-mutable-data" id="beware-of-mutable-data" class="clip">🔗</a><h2>Beware of mutable data</h2></div><p>When learning Java our teacher really drilled into us a rule of thumb to always
+ways a method might lie.</p><blockquote><p><strong>Addendum: what about <code>Optional</code>?</strong></p><p>After posting this online I received some great feedback: people pointed that
+one could use Java&#39;s <code>Optional</code> to help avoid <code>null</code>s. That&#39;s a good point!
+<code>Optional</code> is a life saver and I always rely on it when writing Java code.
+My point still stands: <em>deciding to use it is a best practice</em>,
+it&#39;s not the only possible way to write Java code that deals with missing
+values.</p><p>It can only give us some safety if we&#39;re diligent and use it properly,
+remember this is still perfectly valid Java code:</p><pre><code data-lang="java" class="not-prose language-java">public static Optional&lt;User&gt; load(int id) {
+  return null;
+  // Optional is an object after all!
+}</code></pre><p>To add to the point, it&#39;s not that beginner friendly: I&#39;ve been a teaching
+assistant for a couple of years now, and I&#39;ve lost count of the number of
+students trying to do this:</p><pre><code data-lang="java" class="not-prose language-java">Optional.of(someObject)</code></pre><p>Can you spot the bug? If <code>someObject</code> is <code>null</code> this will still result in a
+<code>NullPointerException</code>! These are bright students and have been taught that
+the proper way to do that is using <code>Optional.ofNullable</code>, they&#39;ve even been
+shown examples doing it.
+But <em>there&#39;s only so many rules that one can remember to apply off the top their head</em>
+and this is such an easy mistake that I see it regularly in students&#39; code.</p></blockquote><div class="post-heading h2-title"><a href="#beware-of-mutable-data" id="beware-of-mutable-data" class="clip">🔗</a><h2>Beware of mutable data</h2></div><p>When learning Java our teacher really drilled into us a rule of thumb to always
 follow: <em>always favour immutable data structures, when defining a class</em>
 <em>always make its fields <code>final</code>.</em></p><p>This is great advice! Removing the final annotation should only be used as a
 last resort. The rationale behind this practice is that having immutable data
@@ -252,7 +268,7 @@ mutate data; you can&#39;t even have a <code>for</code> loop — after all, even
 loop counter counts as mutation and that&#39;s not allowed.</p><p>It can require some getting used to at first but trust me, it&#39;s absolutely
 possible to write useful programs even if you can&#39;t mutate stuff.
 For now I&#39;ll just focus on the advantages this approach gives us and
-I&#39;m not going to explaing <em>how</em> to program with immutable data. That might be
+I&#39;m not going to explain <em>how</em> to program with immutable data. That might be
 worthy of a blog post of its own in the future.</p></blockquote><div class="post-heading h2-title"><a href="#the-art-of-code-formatting" id="the-art-of-code-formatting" class="clip">🔗</a><h2>The art of code formatting</h2></div><p>Learning a programming language is only a small part of the picture, though.
 As developers, we also have to rely on a variety of tool: linters, formatters,
 build tools, and the list could go on.
