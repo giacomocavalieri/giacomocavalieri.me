@@ -1,11 +1,11 @@
-import gleam/list
+import blog/page
+import blog/post.{type Post}
 import gleam/dict.{type Dict}
+import gleam/list
 import gleam/option.{None, Some}
 import lustre/element.{type Element}
 import lustre/ssg
 import simplifile
-import blog/page
-import blog/post.{type Post}
 
 const out_dir = "site"
 
@@ -18,6 +18,7 @@ pub fn main() {
   let posts = list.filter(all_posts, keeping: post.is_shown)
   let chronological_posts = list.sort(posts, by: post.compare)
 
+  let uses_post = read_post("uses.md")
   let tag_to_posts = group_by_tags(posts)
   let id_to_post =
     list.map(posts, fn(post) { #(post.meta.id, post) })
@@ -27,10 +28,16 @@ pub fn main() {
   |> ssg.add_static_route("/", page.homepage(chronological_posts))
   |> ssg.add_static_route("/404", page.not_found())
   |> ssg.add_static_route("/cv", page.cv())
+  |> ssg.add_static_route("/uses", page.from_post(uses_post))
   |> add_dynamic_route("/posts", id_to_post, fn(_id, p) { page.from_post(p) })
   |> add_dynamic_route("/tags", tag_to_posts, page.from_tag)
   |> ssg.add_static_dir(assets_dir)
   |> ssg.build
+}
+
+fn read_post(named name: String) -> Post {
+  let assert Ok(post) = post.read(from: posts_dir <> "/" <> name)
+  post
 }
 
 fn read_posts() -> List(Post) {

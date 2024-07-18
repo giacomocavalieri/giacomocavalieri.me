@@ -39,10 +39,10 @@ pub fn to_datetime(date: Date) -> String {
   [
     int.to_string(year),
     month_to_int(month)
-    |> int.to_string
-    |> string.pad_left(to: 2, with: "0"),
+      |> int.to_string
+      |> string.pad_left(to: 2, with: "0"),
     int.to_string(day)
-    |> string.pad_left(to: 2, with: "0"),
+      |> string.pad_left(to: 2, with: "0"),
   ]
   |> string.join("-")
 }
@@ -124,7 +124,7 @@ pub fn decoder(from value: Dynamic) -> Result(Date, List(dynamic.DecodeError)) {
       use month <- result.try(int.parse(month))
       use month <- result.try(month_from_int(month))
       use day <- result.try(int.parse(day))
-      Ok(Date(year, month, day))
+      Ok(Date(year: year, month: month, day: day))
     }
     _ -> Error(Nil)
   }
