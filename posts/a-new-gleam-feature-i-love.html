@@ -133,8 +133,8 @@ The code I showed you earlier could be written like this:</p><pre><code data-lan
   // This is the same as writing:
   //   Day(day: day, month: month, year: year)
 }</code></pre><p>This syntax trick helps you pass variables with the same name as a labelled
-argument, avoiding writing the same thing twice while still getting all the
-benefits of explicitly using labels.</p><p>Using the shorthand syntax is pretty nice when building records, but I think it
+argument, so you don&#39;t have to write the same thing twice while still getting
+all the benefits of explicitly using labels.</p><p>Using the shorthand syntax is pretty nice when building records, but I think it
 really shines when destructuring them.
 In my codebase I also have a small function to turn a <code>Date</code> back into a string
 to display it in the blog post page:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
