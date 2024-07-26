@@ -1,19 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
-/*
-This was way too slanted
-@font-face {
-font-family: "Mona Sans";
-src:
-    url("Mona-Sans.woff2") format("woff2 supports variations"),
-    url("Mona-Sans.woff2") format("woff2-variations");
-font-weight: 200 900;
-font-stretch: 75% 125%;
-font-variation-settings: "ital" 3;
-}
-*/
-
 :root {
     --body-vertical-padding: 3rem;
     --body-horizontal-padding: 3rem;
@@ -40,7 +27,7 @@ font-variation-settings: "ital" 3;
     --accent-color: #f3faf1;
     --selection-color: #dff2d9;
     --code-background-color: #dff2d940;
-    --blockquote-background-color: #dff2d960;
+    --blockquote-background-color: #dff2d970;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -166,11 +153,7 @@ a {
 
 a:not(.clip) {
     /* Highlighted effect */
-    background-image: linear-gradient(
-        to right,
-        var(--main-color),
-        var(--main-color)
-    );
+    background-image: linear-gradient(to right, var(--main-color), var(--main-color));
     background-size: 100% 45%;
     background-repeat: no-repeat;
     background-position: bottom;
@@ -246,13 +229,6 @@ a:not(.clip):hover {
 }
 
 .breadcrumb-link {
-    /*
-    background-image: linear-gradient(
-        to right,
-        var(--accent-color),
-        var(--accent-color)
-    ) !important;
-    */
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
@@ -338,6 +314,13 @@ a:not(.clip):hover {
 
     background-color: var(--code-background-color);
     overflow-x: scroll;
+}
+
+.post blockquote pre {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 @media screen and (min-width: 1200px) {
