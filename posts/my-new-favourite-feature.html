@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><title>My new favourite feature</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="My new favourite feature"><meta property="og:type" content="website"><meta property="og:description" content="Things I use, because why not?"><meta name="description" content="Things I use, because why not?"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="My new favourite feature"><meta property="twitter:description" content="Things I use, because why not?"><meta property="twitter:creator" content="@giacomo_cava"><link rel="payload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin="true"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">My new favourite feature</h1><nav class="breadcrumbs"><a rel="author" href="/" class="breadcrumb-link">← home</a></nav><div class="post-subtitle"><time datetime="2024-07-26" class="post-date dt-published">26 july 2024</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li><li class="post-tag p-category"><a href="/tags/labels.html">labels</a></li></ul></div></header><main class="post-body e-content"><p><a href="https://gleam.run">Gleam</a> is a functional &quot;friendly language for building
+systems that scale&quot;. But if I had to describe it with a single word it would be
+<em>simple.</em></p><p>Here&#39;s what Gleam looks like:</p><pre><code data-lang="gleam" class="not-prose language-gleam">import gleam/io
+
+pub type Month {
+  Jan
+  Feb
+  Mar
+//^^^ These are called _constructors_ because you can
+//    use them to create values of the type Month.
+//    I&#39;ll be omitting the other ones for brevity...
+}
+
+pub fn month_to_string(month: Month) -&gt; String {
+  case month {
+    Jan -&gt; &quot;January&quot;
+    Feb -&gt; &quot;February&quot;
+    Mar -&gt; &quot;March&quot;
+  }
+}
+
+pub fn main() {
+  Jan
+  |&gt; month_to_string
+  |&gt; io.println
+}</code></pre><p>If you already know other programming languages like Java, C# or Rust, this
+example might have a familiar look to it: a
+<a href="https://tour.gleam.run/data-types/custom-types/"><code>type</code></a> looks like an <code>enum</code>,
+<a href="https://tour.gleam.run/flow-control/case-expressions/"><code>case</code></a> is a lot like a
+(more powerful) <code>switch</code> statement, and that pipe operator
+<a href="https://tour.gleam.run/functions/pipelines/"><code>|&gt;</code></a> is a nifty piece of syntax
+sugar to make chains of function calls less clunky.</p><blockquote><p>What would the code above look like without <code>|&gt;</code>?</p><pre><code data-lang="gleam" class="not-prose language-gleam">Jan |&gt; month_to_string |&gt; io.println
+// Is the same as writing:
+io.println(month_to_string(Jan))</code></pre></blockquote><p>The cool thing about a type constructor is that it can hold arbitrary data
+inside it, so you can use types to define more complex data structures than
+simple enumerations of things:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub type Date {
+  Date(year: Int, month: Month, day: Int)
+//^^^^ The Date type has a single constructor
+//     that is also called date.
+}
+
+pub fn my_birthday() -&gt; Date {
+  // Now when you use a constructor you have to
+  // supply all of its arguments.
+  Date(year: 1998, month: October, day: 11)
+}</code></pre><div class="post-heading h2-title"><a href="#new-features-what-are-those?" id="new-features-what-are-those?" class="clip">🔗</a><h2>New features, what are those?</h2></div><p>Gleam has a very small number of powerful and expressive features.
+One could probably go through the entire <a href="https://tour.gleam.run">language tour</a>
+in a couple of days and learn all there is to the language.</p><p><em>This is intentional!</em> Gleam&#39;s simplicity is also one of its key features;
+as clichè as it may sound, sometimes less is more.
+As <a href="https://www.youtube.com/watch?v=rFejpH_tAHM">Rob Pike puts it</a>
+<em>&quot;Simplicity is complicated but the clarity is worth the fight.&quot;</em></p></main></article></div></body></html>
