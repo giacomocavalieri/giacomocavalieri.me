@@ -1,13 +1,20 @@
 <!DOCTYPE html><html lang="en"><head><title>My new favourite feature</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta property="og:site_name" content="Giacomo Cavalieri's blog"><meta property="og:title" content="My new favourite feature"><meta property="og:type" content="website"><meta property="og:description" content="Things I use, because why not?"><meta name="description" content="Things I use, because why not?"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="My new favourite feature"><meta property="twitter:description" content="Things I use, because why not?"><meta property="twitter:creator" content="@giacomo_cava"><link rel="payload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin="true"><meta name="theme-color" content="#cceac3" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry"><header><h1 class="post-title p-name">My new favourite feature</h1><nav class="breadcrumbs"><a rel="author" href="/" class="breadcrumb-link">← home</a></nav><div class="post-subtitle"><time datetime="2024-07-26" class="post-date dt-published">26 july 2024</time><ul class="post-tags"><li class="post-tag p-category"><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category"><a href="/tags/gleam.html">gleam</a></li><li class="post-tag p-category"><a href="/tags/labels.html">labels</a></li></ul></div></header><main class="post-body e-content"><p><a href="https://gleam.run">Gleam</a> is a functional &quot;friendly language for building
 systems that scale&quot;. But if I had to describe it with a single word it would be
-<em>simple.</em></p><p>Here&#39;s what Gleam looks like:</p><pre><code data-lang="gleam" class="not-prose language-gleam">import gleam/io
+<em>simple.</em>
+Given the small number of features, one could probably go through the entire
+<a href="https://tour.gleam.run">language tour</a> in a couple of days and learn all there
+is to the language.
+This is intentional! Gleam&#39;s simplicity is also one of its key features;
+as clichè as it may sound, sometimes less is more.
+As <a href="https://www.youtube.com/watch?v=rFejpH_tAHM">Rob Pike puts it</a>
+<em>&quot;Simplicity is complicated but the clarity is worth the fight.&quot;</em></p><p>Here&#39;s what Gleam looks like:</p><pre><code data-lang="gleam" class="not-prose language-gleam">import gleam/io
 
 pub type Month {
   Jan
   Feb
   Mar
 //^^^ These are called _constructors_ because you can
-//    use them to create values of the type Month.
+//    use them to create values of the `Month` type.
 //    I&#39;ll be omitting the other ones for brevity...
 }
 
@@ -25,10 +32,10 @@ pub fn main() {
   |&gt; io.println
 }</code></pre><p>If you already know other programming languages like Java, C# or Rust, this
 example might have a familiar look to it: a
-<a href="https://tour.gleam.run/data-types/custom-types/"><code>type</code></a> looks like an <code>enum</code>,
-<a href="https://tour.gleam.run/flow-control/case-expressions/"><code>case</code></a> is a lot like a
-(more powerful) <code>switch</code> statement, and that pipe operator
-<a href="https://tour.gleam.run/functions/pipelines/"><code>|&gt;</code></a> is a nifty piece of syntax
+<a href="https://tour.gleam.run/data-types/custom-types/">type</a> looks like an <code>enum</code>,
+<a href="https://tour.gleam.run/flow-control/case-expressions/">case</a> is a lot like a
+<code>switch</code> statement (albeit more powerful), and that pipe operator
+<a href="https://tour.gleam.run/functions/pipelines/">|&gt;</a> is a nifty piece of syntax
 sugar to make chains of function calls less clunky.</p><blockquote><p>What would the code above look like without <code>|&gt;</code>?</p><pre><code data-lang="gleam" class="not-prose language-gleam">Jan |&gt; month_to_string |&gt; io.println
 // Is the same as writing:
 io.println(month_to_string(Jan))</code></pre></blockquote><p>The cool thing about a type constructor is that it can hold arbitrary data
@@ -42,10 +49,44 @@ simple enumerations of things:</p><pre><code data-lang="gleam" class="not-prose 
 pub fn my_birthday() -&gt; Date {
   // Now when you use a constructor you have to
   // supply all of its arguments.
-  Date(year: 1998, month: October, day: 11)
-}</code></pre><div class="post-heading h2-title"><a href="#new-features-what-are-those?" id="new-features-what-are-those?" class="clip">🔗</a><h2>New features, what are those?</h2></div><p>Gleam has a very small number of powerful and expressive features.
-One could probably go through the entire <a href="https://tour.gleam.run">language tour</a>
-in a couple of days and learn all there is to the language.</p><p><em>This is intentional!</em> Gleam&#39;s simplicity is also one of its key features;
-as clichè as it may sound, sometimes less is more.
-As <a href="https://www.youtube.com/watch?v=rFejpH_tAHM">Rob Pike puts it</a>
-<em>&quot;Simplicity is complicated but the clarity is worth the fight.&quot;</em></p></main></article></div></body></html>
+  Date(1998, Oct, 11)
+
+  // You can even explicitly use labels:
+  Date(year: 1998, month: Oct, day: 11)
+
+  // When using labels, you can supply arguments in
+  // the order that makes the most sense to you:
+  Date(day: 11, month: Oct, year: 1998)
+}</code></pre><div class="post-heading h2-title"><a href="#the-problem" id="the-problem" class="clip">🔗</a><h2>The problem</h2></div><p>A great deal of care is needed to keep the language small; a new feature must
+solve some real pain points we&#39;re currently facing without overlapping with
+existing ones.</p><p>The most glaring example for people who are getting started with their Gleam
+journey is the absence of <code>if</code> expressions.
+To control the flow of execution you can already use <code>case</code>, so there&#39;s no need
+to introduce <em>a different way to do the same thing.</em></p><pre><code data-lang="gleam" class="not-prose language-gleam">case is_admin(user) {
+  True -&gt; admin_page()
+  False -&gt; error_401()
+}</code></pre><blockquote><p>This also has the nice side effect of making it easier to refactor your code
+once you inevitably want to stop using booleans:</p><pre><code data-lang="gleam" class="not-prose language-gleam">// Imagine we want to start dealing with
+// kinds of user instead of just admins...
+case user_role(user) {
+  Admin -&gt; admin_page()
+  Moderator -&gt; moderator_page()
+  _ -&gt; error_401()
+}</code></pre></blockquote><p>Consider the <code>Date</code> type I showed you earlier.
+I actually use that for my own personal blog
+(yeah <a href="https://giacomocavalieri.me/posts/look-i-made-this-with-gleam">it&#39;s written in Gleam!</a>)
+to sort posts based on their date.
+Posts are just markdown files with an additional header with some data so what
+I did to parse dates looked like this:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn read_date(date_string: String) -&gt; Date {
+  case string.split(date_string, on: &quot;-&quot;) {
+    [day, month, year] -&gt; {
+//   ^^^^^^^^^^^^^^^^ These are just strings so I need to first
+//                    convert those to the appropriate types.
+      let day = string_to_int(day)
+      let month = string_to_month(month)
+      let year = string_to_int(year)
+      Date(day, month, year)
+    }
+    _ -&gt; panic as &quot;The post has an invalid date, go fix it!&quot;
+  }
+}</code></pre></main></article></div></body></html>
