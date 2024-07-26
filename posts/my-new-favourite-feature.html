@@ -57,12 +57,13 @@ pub fn my_birthday() -&gt; Date {
   // When using labels, you can supply arguments in
   // the order that makes the most sense to you:
   Date(day: 11, month: Oct, year: 1998)
-}</code></pre><div class="post-heading h2-title"><a href="#new-features?-what-are-those?" id="new-features?-what-are-those?" class="clip">🔗</a><h2>New features? What are those?</h2></div><p>A great deal of care is needed to keep the language small: a new feature must
-solve some real pain points we&#39;re currently facing without overlapping with
-existing ones.</p><p>The most glaring example for people who are getting started with their Gleam
+}</code></pre><div class="post-heading h2-title"><a href="#new-features?-what-are-those?" id="new-features?-what-are-those?" class="clip">🔗</a><h2>New features? What are those?</h2></div><p>A great deal of care is needed to keep Gleam small: a new feature must solve
+some real pain points we&#39;re currently facing without overlapping with existing
+ones.
+The most glaring example for people who are getting started with their Gleam
 journey is the absence of <code>if</code> expressions.
-To control the flow of execution you can already use <code>case</code>, so there&#39;s no need
-to introduce <em>a different way to do the same thing:</em></p><pre><code data-lang="gleam" class="not-prose language-gleam">case is_admin(user) {
+To control the flow of execution Gleam uses <code>case</code>, so there&#39;s no need to
+introduce <em>a different way to do the same thing:</em></p><pre><code data-lang="gleam" class="not-prose language-gleam">case is_admin(user) {
   True -&gt; admin_page()
   False -&gt; error_401()
 }</code></pre><blockquote><p>This also has the nice side effect of making it easier to refactor your code
@@ -120,8 +121,8 @@ pub fn read_date(date_string: String) -&gt; Date {
 couldn&#39;t be bothered writing the labels explicitly, and the labelled code
 doesn&#39;t look particularly nice.
 <em>&quot;I don&#39;t really need labels here, I know I&#39;m passing arguments in the right order&quot;</em>
-are the last famous words.</p><div class="post-heading h2-title"><a href="#the-solution" id="the-solution" class="clip">🔗</a><h2>The solution</h2></div><p>The label shorthand syntax aims to solve this exact problem and make using
-labels less clunky.
+are the last famous words.</p><div class="post-heading h2-title"><a href="#the-solution" id="the-solution" class="clip">🔗</a><h2>The solution</h2></div><p>The label shorthand syntax aims to solve this exact problem by making it easier
+to use labelled arguments.
 The code I showed you earlier could be written like this:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn read_date(date_string: String) -&gt; Date {
   // ...
   let day = string_to_int(day_string)
