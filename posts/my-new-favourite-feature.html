@@ -155,17 +155,23 @@ wrong, it&#39;s because in Italy the standard format I&#39;m used to is <code>dd
 }</code></pre><p>Now the variable <code>day</code> is going to have the value of the <code>day</code> field, no matter
 the order of the arguments.
 I don&#39;t know about you, but having to write all the labels twice is a bit too
-cerimonious for me, so I convince myself I know what I&#39;m doing and don&#39;t write
-the labels down.</p><blockquote><p>I could also somehow manage this problem by choosing shorter varaible names:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
+cerimonious for me, so what usually happens is I trick myself into believing I
+don&#39;t need to write the labels down (and always end up regretting it).</p><blockquote><p>I could also somehow manage this problem by choosing shorter variable names:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(day: d, month: m, year: y) = date
   int_to_string(d) &lt;&gt; &quot;-&quot; &lt;&gt; month_to_string(m) &lt;&gt; &quot;-&quot; &lt;&gt; int_to_string(y)
 }</code></pre><p>Using labels is nice but having to compromise on giving good names to
 variables for the sake of brevity isn&#39;t really my kind of jam.</p></blockquote><p>Label shorthands once again come in handy here:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(day:, month:, year:) = date
+  // This is the same as writing
+  //   Date(day: day, month: month, year: year)
 
   int_to_string(day)
   &lt;&gt; &quot;-&quot;
   &lt;&gt; month_to_string(month)
   &lt;&gt; &quot;-&quot;
   &lt;&gt; int_to_string(year)
-}</code></pre></main></article></div></body></html>
+}</code></pre><p>So now you can get the best of both worlds: use labels to avoid inadvertently
+swapping arguments, and still use nice descriptive names for your variables.</p><hr><p>This might not be a flashy feature that gets people talking about a language,
+but it&#39;s a great way to make labelled arguments easier to use and help me (and
+hopefully others) avoid hours of head-scratching due to pesky position-related
+bugs.</p></main></article></div></body></html>
