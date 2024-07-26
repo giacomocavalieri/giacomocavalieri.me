@@ -164,10 +164,8 @@ to type the same thing twice all the times.</p></blockquote><p>Label shorthands 
   //   Date(day: day, month: month, year: year)
 
   int_to_string(day)
-  &lt;&gt; &quot;-&quot;
-  &lt;&gt; month_to_string(month)
-  &lt;&gt; &quot;-&quot;
-  &lt;&gt; int_to_string(year)
+  &lt;&gt; &quot;-&quot; &lt;&gt; month_to_string(month)
+  &lt;&gt; &quot;-&quot; &lt;&gt; int_to_string(year)
 }</code></pre><p>So now you can get the best of both worlds: use labels to avoid inadvertently
 swapping arguments, and still use nice descriptive names for your variables.</p><hr><p>This might not be a flashy feature that gets people talking about a language,
 but it&#39;s a great way to make labelled arguments easier to use and to help me
