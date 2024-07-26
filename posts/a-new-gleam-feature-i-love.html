@@ -92,7 +92,8 @@ dates looked like this:</p><pre><code data-lang="gleam" class="not-prose languag
 }</code></pre><p>Can you spot the bug? Me neither!
 I just noticed it when a couple of weeks ago I wrote a new blog post and it was
 not properly sorted.
-The problem is that I&#39;ve got the order of the arguments to date wrong:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub type Date {
+The problem is that I&#39;ve inadvertenly got the position of the <code>Date</code> arguments
+wrong:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub type Date {
   Date(year: Int, month: Month, day: Int)
 }
 
@@ -131,37 +132,33 @@ The code I showed you earlier could be written like this:</p><pre><code data-lan
   Date(day:, month:, year:)
   // This is the same as writing:
   //   Day(day: day, month: month, year: year)
-}</code></pre><p>Using the shorthand syntax is pretty nice when building records, but I think it
+}</code></pre><p>This syntax trick helps you pass variables with the same name as a labelled
+argument, avoiding writing the same thing twice while still getting all the
+benefits of explicitly using labels.</p><p>Using the shorthand syntax is pretty nice when building records, but I think it
 really shines when destructuring them.
 In my codebase I also have a small function to turn a <code>Date</code> back into a string
 to display it in the blog post page:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
-  let Date(day, month, year) = date
+  let Date(d, m, y) = date
 
-  int_to_string(day)
-  &lt;&gt; &quot;-&quot;
-  &lt;&gt; month_to_string(month)
-  &lt;&gt; &quot;-&quot;
-  &lt;&gt; int_to_string(year)
+  int_to_string(y)
+  &lt;&gt; &quot;-&quot; &lt;&gt; month_to_string(m)
+  &lt;&gt; &quot;-&quot; &lt;&gt; int_to_string(d)
   // &lt;&gt; is used to join strings together!
-}</code></pre><p>The line <code>Day(day, month, year) = date</code> brings into scope three variables <code>day</code>,
-<code>month</code> and <code>year</code> binding them to the first, second and third argument used to
-build the given date.
-The issue with this code is that, once again, we&#39;re getting the order of
-arguments wrong: <code>day</code> should be the third one, not the first one!
-So what is happening here is that the variable <code>day</code> is going to end up having
-the value of the <code>year</code> field.</p><blockquote><p>If you&#39;re wondering why I&#39;m always getting the order of arguments of <code>Date</code>
+}</code></pre><p>The line <code>Day(d, m, y) = date</code> creates three variables <code>d</code>, <code>m</code> and <code>y</code> binding
+them to the first, second and third argument used to build the given date.</p><p>Once again, we&#39;re relying on the order of the <code>Date</code>&#39;s arguments, assuming the
+day is the first one, followed by month and year. However, I&#39;ve made the same
+mistake twice: the first field of a date is the year and not the day!</p><blockquote><p>If you&#39;re wondering why I&#39;m always getting the order of arguments of <code>Date</code>
 wrong, it&#39;s because in Italy the standard format I&#39;m used to is <code>dd-mm-yyyy</code>.</p></blockquote><p>Once again, this problem could have been solved by using labels:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
+  let Date(day: d, month: m, year: y) = date
+  // ...
+}</code></pre><p>Now the variable <code>d</code> is going to have the value of the <code>day</code> field, no matter
+the order of the arguments.</p><blockquote><p>I used single letter variables just to show you an example, in reality what
+I&#39;d write is even more repetitive as I don&#39;t really like abbreviations and
+want my variables to have the same name as the labels they correspond to:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(day: day, month: month, year: year) = date
   // ...
-}</code></pre><p>Now the variable <code>day</code> is going to have the value of the <code>day</code> field, no matter
-the order of the arguments.
-I don&#39;t know about you, but having to write all the labels twice is a bit too
-cerimonious for me, so what usually happens is I trick myself into believing I
-don&#39;t need to write the labels down (and always end up regretting it).</p><blockquote><p>I could also somehow manage this problem by choosing shorter variable names:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
-  let Date(day: d, month: m, year: y) = date
-  int_to_string(d) &lt;&gt; &quot;-&quot; &lt;&gt; month_to_string(m) &lt;&gt; &quot;-&quot; &lt;&gt; int_to_string(y)
-}</code></pre><p>Using labels is nice but having to compromise on giving good names to
-variables for the sake of brevity isn&#39;t really my kind of jam.</p></blockquote><p>Label shorthands once again come in handy here:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
+}</code></pre><p>Doing the right thing, that is using labels, is not really pleasant as I have
+to type the same thing twice all the times.</p></blockquote><p>Label shorthands once again come in handy here:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(day:, month:, year:) = date
   // This is the same as writing
   //   Date(day: day, month: month, year: year)
@@ -173,6 +170,6 @@ variables for the sake of brevity isn&#39;t really my kind of jam.</p></blockquo
   &lt;&gt; int_to_string(year)
 }</code></pre><p>So now you can get the best of both worlds: use labels to avoid inadvertently
 swapping arguments, and still use nice descriptive names for your variables.</p><hr><p>This might not be a flashy feature that gets people talking about a language,
-but it&#39;s a great way to make labelled arguments easier to use and help me (and
-hopefully others) avoid hours of head-scratching due to pesky position-related
-bugs.</p></main></article></div></body></html>
+but it&#39;s a great way to make labelled arguments easier to use and to help me
+(and hopefully others) avoid hours of head-scratching due to pesky
+position-related bugs.</p></main></article></div></body></html>
