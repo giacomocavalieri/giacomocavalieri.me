@@ -38,9 +38,9 @@ example might have a familiar look to it: a
 <a href="https://tour.gleam.run/functions/pipelines/">|&gt;</a> is a nifty piece of syntax
 sugar to make chains of function calls less clunky.</p><blockquote><p>What would the code above look like without <code>|&gt;</code>?</p><pre><code data-lang="gleam" class="not-prose language-gleam">Jan |&gt; month_to_string |&gt; io.println
 // Is the same as writing:
-io.println(month_to_string(Jan))</code></pre></blockquote><p>The cool thing about a type constructor is that it can hold arbitrary data
-inside it, so you can use types to define more complex data structures than
-simple enumerations of things:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub type Date {
+io.println(month_to_string(Jan))</code></pre></blockquote><p>The cool thing about constructors is that they can also hold arbitrary data,
+so you can use types to define data structures that are more complex than simple
+enumerations of things:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub type Date {
   Date(year: Int, month: Month, day: Int)
 //^^^^ The Date type has a single constructor
 //     that is also called date.
