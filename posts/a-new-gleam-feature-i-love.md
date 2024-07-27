@@ -222,10 +222,8 @@ to display it in the blog post page:
 pub fn format_date(date: Date) -> String {
   let Date(d, m, y) = date
 
-  int_to_string(y)
-  <> "-" <> month_to_string(m)
-  <> "-" <> int_to_string(d)
-  // <> is used to join strings together!
+  [int_to_string(d), month_to_string(m), int_to_string(y)]
+  |> string.join(with: "-")
 }
 ```
 
@@ -273,9 +271,8 @@ pub fn format_date(date: Date) -> String {
   // This is the same as writing
   //   Date(day: day, month: month, year: year)
 
-  int_to_string(day)
-  <> "-" <> month_to_string(month)
-  <> "-" <> int_to_string(year)
+  [int_to_string(day), month_to_string(month), int_to_string(year)]
+  |> string.join(with: "-")
 }
 ```
 
