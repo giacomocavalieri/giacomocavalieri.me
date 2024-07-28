@@ -304,27 +304,27 @@ a:not(.clip):hover {
 .post pre {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
-    margin-left: -100%;
-    margin-right: -100%;
-
     padding-top: 2rem;
     padding-bottom: 2rem;
-    padding-left: 100%;
-    padding-right: 100%;
+
+    position: relative;
+    left: calc(-1 * var(--body-horizontal-padding));
+    padding-left: var(--body-horizontal-padding);
+    width: calc(100vw - var(--body-horizontal-padding));
 
     background-color: var(--code-background-color);
     overflow-x: scroll;
 }
 
 .post blockquote pre {
-    padding-left: 2rem !important;
-    padding-right: 2rem !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    position: unset;
+    width: unset;
 }
 
 @media screen and (min-width: 1200px) {
     .post pre {
+        width: unset;
+        position: unset;
         padding-left: 2rem;
         padding-right: 2rem;
         margin-left: 0;
