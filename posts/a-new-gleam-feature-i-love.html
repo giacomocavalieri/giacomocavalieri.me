@@ -140,10 +140,8 @@ In my codebase I also have a small function to turn a <code>Date</code> back int
 to display it in the blog post page:</p><pre><code data-lang="gleam" class="not-prose language-gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(d, m, y) = date
 
-  int_to_string(y)
-  &lt;&gt; &quot;-&quot; &lt;&gt; month_to_string(m)
-  &lt;&gt; &quot;-&quot; &lt;&gt; int_to_string(d)
-  // &lt;&gt; is used to join strings together!
+  [int_to_string(d), month_to_string(m), int_to_string(y)]
+  |&gt; string.join(with: &quot;-&quot;)
 }</code></pre><p>The line <code>Day(d, m, y) = date</code> creates three variables <code>d</code>, <code>m</code> and <code>y</code> binding
 them to the first, second and third argument used to build the given date.</p><p>Once again, we&#39;re relying on the order of the <code>Date</code>&#39;s arguments, assuming the
 day is the first one, followed by month and year. However, I&#39;ve made the same
@@ -163,9 +161,8 @@ to type the same thing twice all the times.</p></blockquote><p>Label shorthands 
   // This is the same as writing
   //   Date(day: day, month: month, year: year)
 
-  int_to_string(day)
-  &lt;&gt; &quot;-&quot; &lt;&gt; month_to_string(month)
-  &lt;&gt; &quot;-&quot; &lt;&gt; int_to_string(year)
+  [int_to_string(day), month_to_string(month), int_to_string(year)]
+  |&gt; string.join(with: &quot;-&quot;)
 }</code></pre><p>So now you can get the best of both worlds: use labels to avoid inadvertently
 swapping arguments, and still use nice descriptive names for your variables.</p><hr><p>This might not be a flashy feature that gets people talking about a language,
 but it&#39;s a great way to make labelled arguments easier to use and to help me
