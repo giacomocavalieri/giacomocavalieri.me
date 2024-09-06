@@ -1,3 +1,6 @@
+import blog/breadcrumbs
+import blog/post.{type Post}
+import glevatar
 import lustre/attribute.{
   type Attribute, alt, attribute, class, href, id, name, rel, src, type_,
 }
@@ -6,9 +9,6 @@ import lustre/element/html.{
   a, body, br, div, h1, h2, head, header, html, i, img, link, main, meta, p,
   script, span, title,
 }
-import blog/breadcrumbs
-import blog/post.{type Post}
-import glevatar
 
 // --- HOME PAGE ---------------------------------------------------------------
 
@@ -137,6 +137,12 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     viewport([
       content("width=device-width, initial-scale=1.0, viewport-fit=cover"),
     ]),
+    link([
+      rel("alternate"),
+      type_("application/rss+xml"),
+      attribute.title("giacomocavalieri.me posts feed"),
+      href("https://giacomocavalieri.me/feed.xml"),
+    ]),
     meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
     meta([property("og:title"), content(page_title)]),
     meta([property("og:type"), content("website")]),
@@ -146,7 +152,6 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     meta([property("twitter:title"), content(page_title)]),
     meta([property("twitter:description"), content(description)]),
     meta([property("twitter:creator"), content("@giacomo_cava")]),
-    // <link rel="preload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossorigin>
     link([
       rel("payload"),
       href("Mona-Sans.woff2"),

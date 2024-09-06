@@ -1,3 +1,6 @@
+import blog/breadcrumbs
+import blog/id
+import extra
 import gleam/dynamic.{type Decoder}
 import gleam/list
 import gleam/order.{type Order}
@@ -9,11 +12,8 @@ import lustre/element.{type Element, text}
 import lustre/element/html.{
   a, article, div, h1, h2, header, li, main, p, time, ul,
 }
-import blog/breadcrumbs
-import blog/date.{type Date}
-import blog/id
-import extra
 import markdown
+import rada/date.{type Date}
 import simplifile
 
 pub type Post {
@@ -60,13 +60,23 @@ fn parse_metadata(metadata: String) -> Result(Metadata, Error) {
       dynamic.field("id", dynamic.string),
       dynamic.field("title", dynamic.string),
       dynamic.field("abstract", dynamic.string),
-      dynamic.field("date", date.decoder),
+      dynamic.field("date", date_decoder()),
       dynamic.field("tags", dynamic.list(of: dynamic.string)),
       dynamic.field("status", status_decoder()),
     )
 
   gloml.decode(metadata, decoder)
   |> result.map_error(WrongMetadata)
+}
+
+fn date_decoder() -> Decoder(Date) {
+  fn(data) {
+    use string <- result.then(dynamic.string(data))
+    case date.from_iso_string(string) {
+      Ok(date) -> Ok(date)
+      Error(_) -> Error([])
+    }
+  }
 }
 
 fn status_decoder() -> Decoder(Status) {
@@ -107,7 +117,7 @@ fn to_preview(post: Post) -> Element(a) {
     p(
       [classes(["post-preview-abstract", "p-summary"])],
       markdown.parse_no_metadata(post.meta.abstract)
-      |> list.append([read_more]),
+        |> list.append([read_more]),
     )
 
   li([classes(["post-preview", "h-entry"])], [title, subtitle, abstract])
@@ -120,9 +130,11 @@ fn to_subtitle(post: Post) -> Element(a) {
 }
 
 fn to_date(post: Post) -> Element(a) {
-  let datetime = attribute("datetime", date.to_datetime(post.meta.date))
+  let date = post.meta.date
+  let datetime = attribute("datetime", date.format(date, "yyyy-MM-dd"))
+
   let time_attributes = [classes(["post-date", "dt-published"]), datetime]
-  time(time_attributes, [text(date.to_string(post.meta.date))])
+  time(time_attributes, [text(date.format(date, "d MMMM yyyy"))])
 }
 
 fn to_pill(tag: String) -> Element(a) {
