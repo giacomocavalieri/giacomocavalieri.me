@@ -50,7 +50,7 @@ fn read_posts() -> List(Post) {
 fn group_by_tags(posts: List(Post)) -> Dict(String, List(Post)) {
   use tagged_posts, post <- list.fold(over: posts, from: dict.new())
   use tagged_posts, tag <- list.fold(over: post.meta.tags, from: tagged_posts)
-  use posts <- dict.update(in: tagged_posts, update: tag)
+  use posts <- dict.upsert(in: tagged_posts, update: tag)
   case posts {
     Some(posts) -> [post, ..posts]
     None -> [post]
