@@ -1,5 +1,6 @@
 import blog/page
 import blog/post.{type Post}
+import blog/rss
 import gleam/dict.{type Dict}
 import gleam/list
 import gleam/option.{None, Some}
@@ -28,7 +29,7 @@ pub fn main() {
   |> ssg.add_static_route("/404", page.not_found())
   |> ssg.add_static_route("/cv", page.cv())
   |> ssg.add_static_route("/uses", page.from_post(read_post("uses.md")))
-  |> ssg.add_static_xml("/feed", page.cv())
+  |> ssg.add_static_xml("/feed", rss.feed_from_posts(posts))
   |> add_dynamic_route("/posts", id_to_post, fn(_id, p) { page.from_post(p) })
   |> add_dynamic_route("/tags", tag_to_posts, page.from_tag)
   |> ssg.add_static_dir(assets_dir)
