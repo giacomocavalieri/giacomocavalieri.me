@@ -13,12 +13,12 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v4
       - name: setup beam
-        uses: erlef/setup-beam@v1.16.0
+        uses: erlef/setup-beam@v1
         with:
-          otp-version: "26.0.2"
-          gleam-version: "1.4.0"
+          otp-version: "27.1.2"
+          gleam-version: "1.6.3"
+          elixir-version: "1.18.0"
           rebar3-version: "3"
-          elixir-version: "1.15"
       - name: setup node
         uses: actions/setup-node@v3
         with:
