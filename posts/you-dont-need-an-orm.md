@@ -7,6 +7,8 @@ date = "2025-01-03"
 status = "show"
 ---
 
+## One does not simply talk to a database
+
 For the last five months I've been working on a really cool project called
 [squirrel](https://github.com/giacomocavalieri/squirrel): a package to do type
 safe SQL in Gleam.
@@ -14,7 +16,7 @@ safe SQL in Gleam.
 ## Type safe?
 
 Gleam is a statically typed language, everything must have a type and the
-compiler, like a tireless and very thorough pair programmer, will make sure we
+compiler —like a tireless and very thorough pair programmer— will make sure we
 don't mix things up when coding.
 
 Data that comes from the outside world, untyped by nature, is usually given the
