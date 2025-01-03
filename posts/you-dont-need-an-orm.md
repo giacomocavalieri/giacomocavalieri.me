@@ -1,13 +1,11 @@
 ---
-id = ""
-title = ""
+id = "you-dont-an-orm"
+title = "You don't need an ORM"
 abstract = ""
-tags = []
-date = ""
-status = "hide"
+tags = ["gleam", "orm", "squirrel", "sql"]
+date = "2025-01-03"
+status = "show"
 ---
-
-# asd
 
 For the last five months I've been working on a really cool project called
 [squirrel](https://github.com/giacomocavalieri/squirrel): a package to do type
