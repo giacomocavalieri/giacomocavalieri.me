@@ -1,7 +1,7 @@
+import blog/id
 import lustre/attribute.{attribute, class, href, id}
 import lustre/element.{type Element}
 import lustre/element/html.{a, div}
-import blog/id
 
 pub fn code(src: String, lang: String) -> Element(msg) {
   let attributes = [
@@ -18,10 +18,8 @@ pub fn emphasis(content: List(Element(msg))) {
 pub fn linked_heading(depth: Int, content: String) -> Element(msg) {
   let heading = heading(depth, content)
   let clip_id = id.from_string(content)
-  let clip =
-    a([href("#" <> clip_id), id(clip_id), class("clip")], [text("🔗")])
-
-  div([class("post-heading"), class(depth_to_class(depth))], [clip, heading])
+  let clip = a([href("#" <> clip_id), id(clip_id), class("clip")], [heading])
+  div([class("post-heading"), class(depth_to_class(depth))], [clip])
 }
 
 fn depth_to_class(depth: Int) -> String {
