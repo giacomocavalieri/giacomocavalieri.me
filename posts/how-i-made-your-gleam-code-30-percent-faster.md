@@ -1,7 +1,7 @@
 ---
 id = "how-i-made-your-gleam-code-30-percent-faster"
 title = "How I made your Gleam code 30% faster"
-abstract = "A new version of Gleam is right around the corner and it's ... . So how did I do this?"
+abstract = "A new version of Gleam is right around the corner and TODO! . So how did I do this?"
 tags = ["gleam", "decision-trees", "pattern-matching", "js"]
 date = "2025-05-07"
 status = "show"
@@ -72,8 +72,6 @@ languages using a `switch` or an `if-else` conditional. And if you look at the
 generated JavaScript code that's exactly what this is!
 
 ```js
-import * as $io from "./gleam/io.mjs";
-
 export function greet(name) {
   if (name === "Lucy") {
     return $io.println("Welcome back Lucy!!");
@@ -107,8 +105,6 @@ What is this compiled down to in Gleam? Again it's pretty regular looking
 JavaScript:
 
 ```js
-import * as $io from "./gleam/io.mjs";
-
 export function greet(name) {
   if (name.startsWith("L")) {
     return $io.println("I like your name!");
