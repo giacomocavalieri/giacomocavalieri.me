@@ -1,16 +1,19 @@
 import blog/post
+import extra
+import gleam/int
 import gleam/list
 import gleam/order
+import gleam/string
+import gleam/time/calendar
 import lustre/attribute
 
 import lustre/element.{type Element, advanced, element, text}
-import rada/date
 
 pub fn feed_from_posts(posts: List(post.Post)) -> Element(msg) {
   let assert Ok(latest_date) =
     list.map(posts, fn(post) { post.meta.date })
     |> list.reduce(fn(one, other) {
-      case date.compare(one, other) {
+      case extra.date_compare(one, other) {
         order.Gt | order.Eq -> one
         order.Lt -> other
       }
@@ -40,8 +43,28 @@ fn to_feed_item(post: post.Post) -> Element(msg) {
   ])
 }
 
-fn to_rss_date_string(date: date.Date) -> String {
-  date.format(date, "E, dd MMM yyyy") <> " 00:00:00 GMT"
+fn to_rss_date_string(date: calendar.Date) -> String {
+  let calendar.Date(year:, month:, day:) = date
+
+  let day = int.to_string(day) |> string.pad_start(to: 2, with: "0")
+  let year = int.to_string(year)
+
+  let month = case month {
+    calendar.April -> "Apr"
+    calendar.August -> "Aug"
+    calendar.December -> "Dec"
+    calendar.February -> "Feb"
+    calendar.January -> "Jan"
+    calendar.July -> "Jul"
+    calendar.June -> "Jun"
+    calendar.March -> "Mar"
+    calendar.May -> "May"
+    calendar.November -> "Nov"
+    calendar.October -> "Oct"
+    calendar.September -> "Sep"
+  }
+
+  day <> " " <> month <> " " <> year <> " 00:00:00 GMT"
 }
 
 fn link(url: String) -> Element(msg) {
