@@ -7,7 +7,7 @@ import gleam/string
 import gleam/time/calendar
 import lustre/attribute
 
-import lustre/element.{type Element, advanced, element, text}
+import lustre/element.{type Element, element, text}
 
 pub fn feed_from_posts(posts: List(post.Post)) -> Element(msg) {
   let assert Ok(latest_date) =
@@ -68,5 +68,5 @@ fn to_rss_date_string(date: calendar.Date) -> String {
 }
 
 fn link(url: String) -> Element(msg) {
-  advanced("", "link", [], [text(url)], False, False)
+  element.unsafe_raw_html("", "link", [], url)
 }
