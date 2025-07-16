@@ -3,7 +3,7 @@ id = "look-i-made-this-with-gleam"
 title = "Look! I made this with Gleam ✨"
 abstract = "I love functional programming and getting caught in rabbit holes; the thing I love most, though, is sharing what I learn with my friends. What better way to pester even more people than setting up a personal blog?"
 tags = ["gleam", "lustre"]
-date = "2024-02-18"
+date = 2024-02-18
 status = "show"
 ---
 

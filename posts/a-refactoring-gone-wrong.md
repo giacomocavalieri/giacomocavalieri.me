@@ -3,7 +3,7 @@ id = "a-refactoring-gone-wrong"
 title = "A refactoring gone wrong"
 abstract = "Think of an abstract"
 tags = ["java", "gleam"]
-date = "2024-05-16"
+date = 2024-05-16
 status = "hide"
 ---
 

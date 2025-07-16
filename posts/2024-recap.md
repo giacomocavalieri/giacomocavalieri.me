@@ -3,7 +3,7 @@ id = "goodbye-2024"
 title = "Goodbye, 2024"
 abstract = "I'm not great at doing end-of-year introspection; but this has been such a fun year and I wanted to share a bit of what I did on the internet"
 tags = ["end-of-year"]
-date = "2024-12-30"
+date = 2024-12-30
 status = "show"
 ---
 

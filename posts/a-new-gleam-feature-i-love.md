@@ -3,7 +3,7 @@ id = "a-new-gleam-feature-i-love"
 title = "A new Gleam feature I love"
 abstract = "A new Gleam release is right around the corner and it will come with a new feature I absolutely love: _label shorthands._ It might not be as flashy as other features but I wanted to implement it for the longest time and think it will really help me write better code. Here's what it's all about."
 tags = ["gleam", "dx", "fp"]
-date = "2024-07-26"
+date = 2024-07-26
 status = "show"
 ---
 

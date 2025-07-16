@@ -3,7 +3,7 @@ id = "uses"
 title = "/uses"
 abstract = "Things I use, because why not?"
 tags = []
-date = "2024-07-18"
+date = 2024-07-18
 status = "show"
 ---
 

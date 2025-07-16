@@ -3,7 +3,7 @@ id = "what-if-best-practices-were-the-norm"
 title = "What if best practices were the norm?"
 abstract = "During my second year of university I followed a course dedicated to object-oriented programming and quickly fell in love with Java. My honeymoon phase with it is long over and I've come to dislike a lot of the ceremonies and self-imposed restrictions that can come with good object-oriented code. So _what if the best practices I'm forcing myself to follow were easier to adopt and put into practice?_"
 tags = ["gleam", "fp"]
-date = "2024-02-26"
+date = 2024-02-26
 status = "show"
 ---
 
@@ -296,7 +296,7 @@ only one control flow mechanism — pattern matching — and you don't have to
 juggle between if statements and try-catch blocks to deal with all the possible
 ways a method might lie.
 
-> __Addendum: what about `Optional`?__
+> **Addendum: what about `Optional`?**
 >
 > After posting this online I received some great feedback: people pointed that
 > one could use Java's `Optional` to help avoid `null`s. That's a good point!
@@ -307,6 +307,7 @@ ways a method might lie.
 >
 > It can only give us some safety if we're diligent and use it properly,
 > remember this is still perfectly valid Java code:
+>
 > ```java
 > public static Optional<User> load(int id) {
 >   return null;
@@ -317,9 +318,11 @@ ways a method might lie.
 > To add to the point, it's not that beginner friendly: I've been a teaching
 > assistant for a couple of years now, and I've lost count of the number of
 > students trying to do this:
+>
 > ```java
 > Optional.of(someObject)
 > ```
+>
 > Can you spot the bug? If `someObject` is `null` this will still result in a
 > `NullPointerException`! These are bright students and have been taught that
 > the proper way to do that is using `Optional.ofNullable`, they've even been
