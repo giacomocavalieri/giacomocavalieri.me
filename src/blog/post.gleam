@@ -67,7 +67,7 @@ fn parse_metadata(metadata: String) -> Result(Metadata, Error) {
 
   use month <- result.try(
     calendar.month_from_int(date.month)
-    |> result.replace_error(WrongMetadataField("date")),
+    |> result.replace_error(WrongMetadataField("month")),
   )
   let date = Date(year: date.year, month:, day: date.day)
 
