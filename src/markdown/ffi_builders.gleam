@@ -11,6 +11,10 @@ pub fn code(src: String, lang: String) -> Element(msg) {
   html.pre([], [html.code(attributes, [element.text(src)])])
 }
 
+pub fn img(src: String, alt: String) {
+  html.img([attribute.src(src), attribute.alt(alt)])
+}
+
 pub fn emphasis(content: List(Element(msg))) {
   html.em([], content)
 }

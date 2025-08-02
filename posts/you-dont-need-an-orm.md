@@ -3,7 +3,7 @@ id = "you-do-not-need-an-orm"
 title = "You don't need an ORM"
 abstract = ""
 tags = ["gleam", "orm", "squirrel", "sql"]
-date = "2025-01-03"
+date = 2025-08-02
 status = "show"
 ---
 
