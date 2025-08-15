@@ -49,10 +49,17 @@ fn homepage_header() -> Element(a) {
       text("GitHub"),
     ])
 
-  let twitter_link =
-    a([href("https://twitter.com/giacomo_cava"), rel("me"), class("u-url")], [
-      text("Twitter"),
-    ])
+  let bluesky_link =
+    a(
+      [
+        href("https://bsky.app/profile/giacomocavalieri.me"),
+        rel("me"),
+        class("u-url"),
+      ],
+      [
+        text("Bluesky"),
+      ],
+    )
 
   let description =
     p([id("homepage-description"), class("p-note")], [
@@ -64,7 +71,7 @@ fn homepage_header() -> Element(a) {
       text("You can also find me on "),
       github_link,
       text(" and "),
-      twitter_link,
+      bluesky_link,
       text("!"),
     ])
 
