@@ -1,9 +1,9 @@
 ---
 id = "uses"
 title = "/uses"
-abstract = "Things I use, because why not?"
+abstract = "Things I use, from hardware, to note taking, and of course software!"
 tags = []
-date = 2024-07-18
+date = 2025-08-15
 status = "show"
 ---
 
@@ -15,16 +15,19 @@ status = "show"
 
 ### Writing stuff
 
+- _Pilot Custom 823 - Demo Brown,_ my main driver, I love the nib and the clear
+  body. Never had a single problem with it in many many years! Right now I'm
+  using her with a classic _Pilot Blue_ ink, I really like the way it shades
+- _Pelikan M200 - Pastel green,_ loaded with the beautiful
+  _Pilot Iroshizuku shin-ryoku_ green ink
 - _Pilot Metropolitan,_ my first fountain pen, it holds a special place in my
   heart and it's still great to jot things down
-- _Pilot Custom 823 - Demo Brown,_ My main driver, I love the nib and the clear
-  body. Never had a single problem with it in many many years!
-- _Noodler's bulletproof black ink,_ a great cheap black ink I used all the time
-  to take notes at university.
 
 ## Software
 
 - [_Zed_](https://zed.dev)
+- [_Jujutsu,_](https://jj-vcs.github.io/jj/latest/) I'm slowly getting the hang
+  of how it works and the DX has been really nice so far
 - [_Rectangle_](https://rectangleapp.com)
 - [_Delta,_](https://github.com/dandavison/delta) I use this to show pretty
   git diffs on the command line, a real life saver
