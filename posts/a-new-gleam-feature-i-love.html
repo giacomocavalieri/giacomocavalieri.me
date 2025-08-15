@@ -58,7 +58,7 @@ pub fn my_birthday() -&gt; Date {
   // When using labels, you can supply arguments in
   // the order that makes the most sense to you:
   Date(day: 11, month: Oct, year: 1998)
-}</code></pre><div class="post-heading h2-title"><a class="clip" href="#new-features?-what-are-those?" id="new-features?-what-are-those?">🔗</a><h2>New features? What are those?</h2></div><p>A great deal of care is needed to keep Gleam small: a new feature must solve
+}</code></pre><div class="post-heading h2-title"><a class="clip" href="#new-features?-what-are-those?" id="new-features?-what-are-those?"><h2>New features? What are those?</h2></a></div><p>A great deal of care is needed to keep Gleam small: a new feature must solve
 some real pain points we&#39;re currently facing without overlapping with existing
 ones.
 The most glaring example for people who are getting started with their Gleam
@@ -75,7 +75,7 @@ case user_role(user) {
   Moderator -&gt; moderator_page()
   _ -&gt; error_401()
 }</code></pre></blockquote><p>So now we get to my new favourite feature being added to the language: in the
-upcoming 1.4 release Gleam is going to support a new <em>label shorthand syntax.</em></p><div class="post-heading h2-title"><a class="clip" href="#the-problem" id="the-problem">🔗</a><h2>The problem</h2></div><p>Consider the <code>Date</code> type I showed you earlier.
+upcoming 1.4 release Gleam is going to support a new <em>label shorthand syntax.</em></p><div class="post-heading h2-title"><a class="clip" href="#the-problem" id="the-problem"><h2>The problem</h2></a></div><p>Consider the <code>Date</code> type I showed you earlier.
 I actually use that for my own personal blog
 (yeah <a href="https://giacomocavalieri.me/posts/look-i-made-this-with-gleam">it&#39;s written in Gleam!</a>)
 to sort posts based on their date.
@@ -123,7 +123,7 @@ pub fn read_date(date_string: String) -&gt; Date {
 couldn&#39;t be bothered writing the labels explicitly, and the labelled code
 doesn&#39;t look particularly nice.
 <em>&quot;I don&#39;t really need labels here, I know I&#39;m passing arguments in the right order&quot;</em>
-are the last famous words.</p><div class="post-heading h2-title"><a class="clip" href="#the-solution" id="the-solution">🔗</a><h2>The solution</h2></div><p>The label shorthand syntax aims to solve this exact problem by making it easier
+are the last famous words.</p><div class="post-heading h2-title"><a class="clip" href="#the-solution" id="the-solution"><h2>The solution</h2></a></div><p>The label shorthand syntax aims to solve this exact problem by making it easier
 to use labelled arguments.
 The code I showed you earlier could be written like this:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn read_date(date_string: String) -&gt; Date {
   // ...
