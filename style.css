@@ -380,6 +380,14 @@ a:not(.clip):hover {
     margin-bottom: 1rem;
 }
 
+.clip {
+    margin-inline-end: 0.8rem;
+    background-image: none;
+    color: transparent;
+    text-shadow: 0 0 0 var(--font-color);
+    font-size: 0.8rem;
+}
+
 /* --- CODE HIGHLIGHT ------------------------------------------------------- */
 
 .hljs-number {

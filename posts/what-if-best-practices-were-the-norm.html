@@ -13,7 +13,7 @@ long over. As I learned new languages and grew as a developer, I&#39;ve come to
 dislike a lot of the ceremonies and self-imposed restrictions that can come with
 good object-oriented code.</p><p>What if the best practices I&#39;m forcing myself to follow (with good reason, don&#39;t
 get me wrong!) were easier to adopt and put into practice? Heck, what if they
-were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were the norm?</em></p><div class="post-heading h2-title"><a class="clip" href="#lies-lies-lies" id="lies-lies-lies"><h2>Lies, lies, lies</h2></a></div><p>Java is a powerful language that gives us a lot of room to write clean,
+were <em>the only way</em> to write code and not some rule that could be ignored?</p><p><em>What if best practices were the norm?</em></p><div class="post-heading h2-title"><a class="clip" href="#lies-lies-lies" id="lies-lies-lies">🔗</a><h2>Lies, lies, lies</h2></div><p>Java is a powerful language that gives us a lot of room to write clean,
 expressive code.
 However, with great power comes great responsibility and we have to learn that
 even some of the core features of the language can turn into a footgun if not
@@ -74,7 +74,7 @@ the name property of the user, disregarding any possible check — is not the
 correct one!
 It follows that forgetting to add a null check or a try-catch is bound to
 happen; it&#39;s not a matter of <em>if</em>, but <em>when:</em> developers can be in a rush,
-have tight deadlines, or simply be tired after many hours in front of a screen!</p><div class="post-heading h3-title"><a class="clip" href="#gleam-to-the-rescue" id="gleam-to-the-rescue"><h3>Gleam to the rescue</h3></a></div><p>What if, instead of having to be always on the lookout, the language could
+have tight deadlines, or simply be tired after many hours in front of a screen!</p><div class="post-heading h3-title"><a class="clip" href="#gleam-to-the-rescue" id="gleam-to-the-rescue">🔗</a><h3>Gleam to the rescue</h3></div><p>What if, instead of having to be always on the lookout, the language could
 make sure that no function failure could go undetected? That sounds almost too
 good to be true but as it turns out, not only is this possible, but it&#39;s also
 easier than you might expect!</p><p>Enters <a href="https://gleam.run">Gleam</a>: a friendly, simple, and pragmatic programming
@@ -121,7 +121,7 @@ pub fn main() {
 }</code></pre><p>The code won&#39;t even compile! We&#39;re trying to treat a <code>Result</code> like a <code>User</code> but
 that&#39;s not possible, since a call to <code>load</code> might have failed. Compare this with
 the Java example I showed you earlier, where the compiler would gladly accept
-our code even though it could result in a runtime exception.</p><div class="post-heading h3-title"><a class="clip" href="#pattern-matching-or-the-superpower-of-functional-programming" id="pattern-matching-or-the-superpower-of-functional-programming"><h3>Pattern matching, or the superpower of functional programming</h3></a></div><p>How can we get a user out of a <code>Result</code>, then? That can be achieved with
+our code even though it could result in a runtime exception.</p><div class="post-heading h3-title"><a class="clip" href="#pattern-matching-or-the-superpower-of-functional-programming" id="pattern-matching-or-the-superpower-of-functional-programming">🔗</a><h3>Pattern matching, or the superpower of functional programming</h3></div><p>How can we get a user out of a <code>Result</code>, then? That can be achieved with
 <em>pattern matching.</em> To get the previous broken code snippet to compile we can do
 something like this:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn main() {
   case load(1) {
@@ -159,7 +159,7 @@ One of the design goals of Gleam is to be simple, it doesn&#39;t even have if
 statements, it does everything through pattern matching!
 If you&#39;re curious to learn more about Gleam&#39;s syntax Erika Rowland wrote a
 great blog post about it,
-<a href="https://erikarow.land/notes/gleam-syntax">do check it out!</a></p></blockquote><div class="post-heading h3-title"><a class="clip" href="#correct-made-easy" id="correct-made-easy"><h3>Correct made easy</h3></a></div><p>Let&#39;s take a second to appreciate this: by forcing a function to be explicit
+<a href="https://erikarow.land/notes/gleam-syntax">do check it out!</a></p></blockquote><div class="post-heading h3-title"><a class="clip" href="#correct-made-easy" id="correct-made-easy">🔗</a><h3>Correct made easy</h3></div><p>Let&#39;s take a second to appreciate this: by forcing a function to be explicit
 about the fact that it can fail we no longer have to rely on &quot;best practices&quot;
 (never return null references, don&#39;t use exceptions as a control flow mechanism,
 remember to check if objects coming from other functions are null, so on and so
@@ -192,7 +192,7 @@ students trying to do this:</p><pre><code class="not-prose language-java" data-l
 the proper way to do that is using <code>Optional.ofNullable</code>, they&#39;ve even been
 shown examples doing it.
 But <em>there&#39;s only so many rules that one can remember to apply off the top their head</em>
-and this is such an easy mistake that I see it regularly in students&#39; code.</p></blockquote><div class="post-heading h2-title"><a class="clip" href="#beware-of-mutable-data" id="beware-of-mutable-data"><h2>Beware of mutable data</h2></a></div><p>When learning Java our teacher really drilled into us a rule of thumb to always
+and this is such an easy mistake that I see it regularly in students&#39; code.</p></blockquote><div class="post-heading h2-title"><a class="clip" href="#beware-of-mutable-data" id="beware-of-mutable-data">🔗</a><h2>Beware of mutable data</h2></div><p>When learning Java our teacher really drilled into us a rule of thumb to always
 follow: <em>always favour immutable data structures, when defining a class</em>
 <em>always make its fields <code>final</code>.</em></p><p>This is great advice! Removing the final annotation should only be used as a
 last resort. The rationale behind this practice is that having immutable data
@@ -218,7 +218,7 @@ hold of a user might not be able to change its id or name, but can do whathever
 they want with their birthday.</p><pre><code class="not-prose language-java" data-lang="java">User user = User.load(1);
 user.birthday.setYear(1900);</code></pre><p>And now, all of a sudden, we have a really old user! Since mutation can happen
 anywhere, it can be incredibly hard to trace back to the source of the problem
-and might require quite the debugging ability — and I, for one, don&#39;t have it.</p><div class="post-heading h3-title"><a class="clip" href="#a-web-of-dependencies" id="a-web-of-dependencies"><h3>A web of dependencies</h3></a></div><p>An even hairier problem arise when we start sharing mutable data:</p><pre><code class="not-prose language-java" data-lang="java">Date birthday = new Date(1998, 10, 11)
+and might require quite the debugging ability — and I, for one, don&#39;t have it.</p><div class="post-heading h3-title"><a class="clip" href="#a-web-of-dependencies" id="a-web-of-dependencies">🔗</a><h3>A web of dependencies</h3></div><p>An even hairier problem arise when we start sharing mutable data:</p><pre><code class="not-prose language-java" data-lang="java">Date birthday = new Date(1998, 10, 11)
 User jak = new User(1, &quot;Jak&quot;, birthday)
 User tom = new User(1, &quot;Tom&quot;, birthday)
 //   ^^^ That&#39;s my twin!</code></pre><p>We&#39;re passing around two references to a single heap-allocated object.
@@ -251,7 +251,7 @@ objects and never leak references to objects we don&#39;t want others to change:
   // ...
 }</code></pre><p>By storing and returning copies we&#39;re making sure that no one can put their
 hands on the user&#39;s birthday. Mutation can now happen in a single place — the
-<code>User</code> class — and can be tamed much more easily.</p><div class="post-heading h3-title"><a class="clip" href="#making-best-practices-the-rules-of-the-game" id="making-best-practices-the-rules-of-the-game"><h3>Making best practices the rules of the game</h3></a></div><p>Our naïve attempt at writing a <code>User</code> class was riddled with small problems and
+<code>User</code> class — and can be tamed much more easily.</p><div class="post-heading h3-title"><a class="clip" href="#making-best-practices-the-rules-of-the-game" id="making-best-practices-the-rules-of-the-game">🔗</a><h3>Making best practices the rules of the game</h3></div><p>Our naïve attempt at writing a <code>User</code> class was riddled with small problems and
 endless possible sources of bugs. Once again, we had to
 <em>be careful and remember</em> to always store and return copies of potentially
 mutable data, effectively making it immutable.</p><p><em>If making things immutable is desirable why not make it the default?</em>
@@ -270,10 +270,10 @@ loop counter counts as mutation and that&#39;s not allowed.</p><p>It can require
 possible to write useful programs even if you can&#39;t mutate stuff.
 For now I&#39;ll just focus on the advantages this approach gives us and
 I&#39;m not going to explain <em>how</em> to program with immutable data. That might be
-worthy of a blog post of its own in the future.</p></blockquote><div class="post-heading h2-title"><a class="clip" href="#the-art-of-code-formatting" id="the-art-of-code-formatting"><h2>The art of code formatting</h2></a></div><p>Learning a programming language is only a small part of the picture, though.
+worthy of a blog post of its own in the future.</p></blockquote><div class="post-heading h2-title"><a class="clip" href="#the-art-of-code-formatting" id="the-art-of-code-formatting">🔗</a><h2>The art of code formatting</h2></div><p>Learning a programming language is only a small part of the picture, though.
 As developers, we also have to rely on a variety of tool: linters, formatters,
 build tools, and the list could go on.
-For this blog post I&#39;ll focus on my favourite one: formatters.</p><div class="post-heading h3-title"><a class="clip" href="#consistency-is-key" id="consistency-is-key"><h3>Consistency is key</h3></a></div><p>I&#39;ve never understood people who claim that programming is boring. Personal
+For this blog post I&#39;ll focus on my favourite one: formatters.</p><div class="post-heading h3-title"><a class="clip" href="#consistency-is-key" id="consistency-is-key">🔗</a><h3>Consistency is key</h3></div><p>I&#39;ve never understood people who claim that programming is boring. Personal
 taste, creativity and imagination play such an important role in coding that if
 you ask a thousand developers to implement the same algorithm you&#39;ll probably
 get a thousand of different answers.</p><p>That&#39;s the beauty of programming — and what made me fall in love with it in the
@@ -306,7 +306,7 @@ enforce a single style we rely on formatters: a nifty tool take ingests your
 code and spits it out it in a pretty format with consistent style.</p><blockquote><p>I can&#39;t express how much I love formatters, most of my contributions to the
 Gleam compiler are in its formatter and I even wrote a pretty printing package
 in Gleam, if you&#39;re curious to learn how formatting works I can recommend
-reading <a href="https://hexdocs.pm/glam/">its docs</a>, it&#39;s full of examples!</p></blockquote><div class="post-heading h3-title"><a class="clip" href="#finding-the-perfect-style" id="finding-the-perfect-style"><h3>Finding the perfect style</h3></a></div><p>Formatters usually come with some levers you can pull to tweak the final look
+reading <a href="https://hexdocs.pm/glam/">its docs</a>, it&#39;s full of examples!</p></blockquote><div class="post-heading h3-title"><a class="clip" href="#finding-the-perfect-style" id="finding-the-perfect-style">🔗</a><h3>Finding the perfect style</h3></div><p>Formatters usually come with some levers you can pull to tweak the final look
 of your code: decide how many spaces the indentation is, wether to remove
 trailing commas, vertically align arrows and variables...
 the possibilities are endless.</p><p>Back in my university days I remember doing a group project with three friends
@@ -314,7 +314,7 @@ in Scala. We decided to use <a href="https://scalameta.org/scalafmt/">scalafmt</
 formatter that comes with more than 70 (I started counting and then got
 tired) such levers. I had the greatest fun reading through the documentation
 and discovering all choices I could make; needless to say, we spent
-<em>way too much time</em> trying to agree on the final style.</p><div class="post-heading h3-title"><a class="clip" href="#no-bikeshedding-allowed-here" id="no-bikeshedding-allowed-here"><h3>No bikeshedding allowed here</h3></a></div><p>Sometimes having too much freedom can be counter productive. Having a
+<em>way too much time</em> trying to agree on the final style.</p><div class="post-heading h3-title"><a class="clip" href="#no-bikeshedding-allowed-here" id="no-bikeshedding-allowed-here">🔗</a><h3>No bikeshedding allowed here</h3></div><p>Sometimes having too much freedom can be counter productive. Having a
 configurable formatter can have some drawbacks: first of all you&#39;ll have to
 take your time to decide the formatter configuration, decision fatigue anyone?
 And then what happens if the configuration doesn&#39;t fit one&#39;s tastes? Knowing
@@ -326,7 +326,7 @@ impossible to lose time bikeshedding. All choices about the look of Gleam code
 are taken by the language, developers won&#39;t ever have to worry about it (and
 if the formatter is good enough, will probably never feel this is a limitation).</p><p>What&#39;s most important is that every single Gleam project
 <em>will have a nice and familiar look.</em> Once again, there&#39;s one less thing to
-worry about!</p><div class="post-heading h2-title"><a class="clip" href="#tl;dr" id="tl;dr"><h2>TL;DR</h2></a></div><p>Writing code is hard, <em>writing good code is even harder.</em> That&#39;s why, when
+worry about!</p><div class="post-heading h2-title"><a class="clip" href="#tl;dr" id="tl;dr">🔗</a><h2>TL;DR</h2></div><p>Writing code is hard, <em>writing good code is even harder.</em> That&#39;s why, when
 learning a new programming language like Java, we also have to learn a slew of
 &quot;best practices&quot;. That might require a lot of effort and discipline, but will
 help us avoid a lot of common pitfalls that countless other developers have
