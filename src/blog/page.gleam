@@ -1,14 +1,10 @@
 import blog/breadcrumbs
 import blog/post.{type Post}
 import glevatar
-import lustre/attribute.{
-  type Attribute, alt, attribute, class, href, id, name, rel, src, type_,
-}
-import lustre/element.{type Element, text}
-import lustre/element/html.{
-  a, body, br, div, h1, h2, head, header, html, i, img, link, main, meta, p,
-  script, span, title,
-}
+import jot_extra
+import lustre/attribute.{type Attribute, attribute} as attr
+import lustre/element.{type Element}
+import lustre/element/html
 
 // --- HOME PAGE ---------------------------------------------------------------
 
@@ -16,7 +12,7 @@ pub fn homepage(posts: List(Post)) -> Element(a) {
   with_body(
     "Giacomo Cavalieri",
     "A personal blog where I share my thoughts as I jump from one obsession to the other",
-    [homepage_header(), main([], [post.to_preview_list(posts)])],
+    [homepage_header(), html.main([], [post.to_preview_list(posts)])],
   )
 }
 
@@ -27,90 +23,76 @@ fn profile_picture_source() -> String {
 }
 
 fn profile_picture() -> Element(a) {
-  img([
-    id("homepage-profile-picture"),
-    class("u-photo"),
-    alt(""),
-    src(profile_picture_source()),
+  html.img([
+    attr.id("homepage-profile-picture"),
+    attr.class("u-photo"),
+    attr.alt(""),
+    attr.src(profile_picture_source()),
   ])
 }
 
 fn homepage_header() -> Element(a) {
-  let subtitle = h2([id("homepage-subtitle")], [text("Hello 👋")])
-
-  let title =
-    h1([id("homepage-title")], [
-      text("I'm "),
-      span([class("p-given-name")], [text("Giacomo")]),
+  let me_link = fn(link, name) {
+    html.a([attr.href(link), attr.rel("me"), attr.class("u-url")], [
+      html.text(name),
     ])
+  }
 
-  let github_link =
-    a([href("https://github.com/giacomocavalieri"), rel("me"), class("u-url")], [
-      text("GitHub"),
-    ])
-
-  let bluesky_link =
-    a(
-      [
-        href("https://bsky.app/profile/giacomocavalieri.me"),
-        rel("me"),
-        class("u-url"),
-      ],
-      [
-        text("Bluesky"),
-      ],
-    )
-
-  let description =
-    p([id("homepage-description"), class("p-note")], [
-      i([], [text("He/Him")]),
-      text(" • I love functional programming and learning new things"),
-      br([]),
-      text("Sharing my thoughts as I hop from one obsession to the other"),
-      br([]),
-      text("You can also find me on "),
-      github_link,
-      text(" and "),
-      bluesky_link,
-      text("!"),
-    ])
-
-  header([id("homepage-header"), class("h-card p-author")], [
+  html.header([attr.id("homepage-header"), attr.class("h-card p-author")], [
     profile_picture(),
-    subtitle,
-    title,
-    description,
+    html.h2([attr.id("homepage-subtitle")], [html.text("Hello 👋")]),
+    html.h1([attr.id("homepage-title")], [
+      html.text("I'm "),
+      html.span([attr.class("p-given-name")], [html.text("Giacomo")]),
+    ]),
+    html.p([attr.id("homepage-description"), attr.class("p-note")], [
+      html.i([], [html.text("He/Him")]),
+      html.text(" • I love functional programming and learning new things"),
+      html.br([]),
+      html.text("Sharing my thoughts as I hop from one obsession to the other"),
+      html.br([]),
+      html.text("You can also find me on "),
+      me_link("https://github.com/giacomocavalieri", "GitHub"),
+      html.text(" and "),
+      me_link("https://bsky.app/profile/giacomocavalieri.me", "Bluesky"),
+      html.text("!"),
+    ]),
   ])
 }
 
 // --- 404 PAGE ---------------------------------------------------------------
 
 pub fn not_found() -> Element(a) {
-  let title = h1([], [text("There's nothing here!")])
-  let subtitle =
-    p([], [text("Go back to the "), a([href("/")], [text("home page")])])
-
-  with_body("Not found", "There's nothing here", [main([], [title, subtitle])])
+  with_body("Not found", "There's nothing here", [
+    html.main([], [
+      html.h1([], [html.text("There's nothing here!")]),
+      html.p([], [
+        html.text("Go back to the "),
+        html.a([attr.href("/")], [html.text("home page")]),
+      ]),
+    ]),
+  ])
 }
 
 // --- POST PAGE ---------------------------------------------------------------
 
 pub fn from_post(post: Post) -> Element(Nil) {
-  with_body(post.meta.title, post.meta.abstract, [post.to_article(post)])
+  with_body(post.meta.title, jot_extra.to_string(post.meta.abstract), [
+    post.to_article(post),
+  ])
 }
 
 // --- TAG PAGE ----------------------------------------------------------------
 
 pub fn from_tag(tag: String, posts: List(Post)) -> Element(Nil) {
-  let title =
-    h1([class("tag-title")], [
-      text("Posts tagged "),
-      i([], [text("\"" <> tag <> "\"")]),
-    ])
-  let home_link = breadcrumbs.home()
-  let previews = main([], [post.to_preview_list(posts)])
-  let abstract = "posts tagged \"" <> tag <> "\""
-  with_body(tag, abstract, [title, home_link, previews])
+  with_body(tag, "posts tagged \"" <> tag <> "\"", [
+    html.h1([attr.class("tag-title")], [
+      html.text("Posts tagged "),
+      html.i([], [html.text("\"" <> tag <> "\"")]),
+    ]),
+    breadcrumbs.home(),
+    html.main([], [post.to_preview_list(posts)]),
+  ])
 }
 
 // --- CV PAGE -----------------------------------------------------------------
@@ -126,10 +108,11 @@ fn with_body(
   description: String,
   elements: List(Element(a)),
 ) -> Element(a) {
-  let head = default_head(title, description)
-  html([lang("en")], [
-    head,
-    body([], [div([class("limit-max-width-and-center")], elements)]),
+  html.html([lang("en")], [
+    default_head(title, description),
+    html.body([], [
+      html.div([attr.class("limit-max-width-and-center")], elements),
+    ]),
   ])
 }
 
@@ -138,46 +121,46 @@ const hljs_script_url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.
 const gleam_hljs_script_url = "/highlightjs-gleam.js"
 
 fn default_head(page_title: String, description: String) -> Element(a) {
-  head([], [
-    title([], page_title),
+  html.head([], [
+    html.title([], page_title),
     charset("utf-8"),
     viewport([
       content("width=device-width, initial-scale=1.0, viewport-fit=cover"),
     ]),
-    link([
-      rel("alternate"),
-      type_("application/rss+xml"),
-      attribute.title("giacomocavalieri.me posts feed"),
-      href("https://giacomocavalieri.me/feed.xml"),
+    html.link([
+      attr.rel("alternate"),
+      attr.type_("application/rss+xml"),
+      attr.title("giacomocavalieri.me posts feed"),
+      attr.href("https://giacomocavalieri.me/feed.xml"),
     ]),
-    meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
-    meta([property("og:title"), content(page_title)]),
-    meta([property("og:type"), content("website")]),
-    meta([property("og:description"), content(description)]),
-    meta([name("description"), content(description)]),
-    meta([property("twitter:card"), content("summary")]),
-    meta([property("twitter:title"), content(page_title)]),
-    meta([property("twitter:description"), content(description)]),
-    meta([property("twitter:creator"), content("@giacomo_cava")]),
-    link([
-      rel("payload"),
-      href("Mona-Sans.woff2"),
+    html.meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
+    html.meta([property("og:title"), content(page_title)]),
+    html.meta([property("og:type"), content("website")]),
+    html.meta([property("og:description"), content(description)]),
+    html.meta([attr.name("description"), content(description)]),
+    html.meta([property("twitter:card"), content("summary")]),
+    html.meta([property("twitter:title"), content(page_title)]),
+    html.meta([property("twitter:description"), content(description)]),
+    html.meta([property("twitter:creator"), content("@giacomo_cava")]),
+    html.link([
+      attr.rel("payload"),
+      attr.href("Mona-Sans.woff2"),
       as_("font"),
-      type_("font/woff2"),
+      attr.type_("font/woff2"),
       crossorigin(),
     ]),
     theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
     stylesheet("/style.css"),
-    script([src(hljs_script_url)], ""),
-    script([src(gleam_hljs_script_url)], ""),
-    script([], "hljs.highlightAll();"),
+    html.script([attr.src(hljs_script_url)], ""),
+    html.script([attr.src(gleam_hljs_script_url)], ""),
+    html.script([], "hljs.highlightAll();"),
   ])
 }
 
 // --- META BUILDERS ---
 
 fn meta_named(meta_name: String, attributes: List(Attribute(a))) -> Element(a) {
-  meta([name(meta_name), ..attributes])
+  html.meta([attr.name(meta_name), ..attributes])
 }
 
 fn viewport(attributes: List(Attribute(a))) -> Element(a) {
@@ -189,11 +172,11 @@ fn theme_color(attributes: List(Attribute(a))) -> Element(a) {
 }
 
 fn stylesheet(file: String) -> Element(a) {
-  link([rel("stylesheet"), href(file)])
+  html.link([attr.rel("stylesheet"), attr.href(file)])
 }
 
 fn charset(value: String) -> Element(a) {
-  meta([attribute("charset", value)])
+  html.meta([attribute("charset", value)])
 }
 
 fn content(value: String) -> Attribute(a) {

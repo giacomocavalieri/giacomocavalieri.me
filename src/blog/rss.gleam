@@ -1,33 +1,34 @@
 import blog/post
-import extra
 import gleam/int
 import gleam/list
 import gleam/order
 import gleam/string
 import gleam/time/calendar
-import lustre/attribute
-
-import lustre/element.{type Element, element, text}
+import jot_extra
+import lustre/attribute as attr
+import lustre/element.{type Element, element}
+import lustre/element/html
 
 pub fn feed_from_posts(posts: List(post.Post)) -> Element(msg) {
-  let assert Ok(latest_date) =
-    list.map(posts, fn(post) { post.meta.date })
-    |> list.reduce(fn(one, other) {
-      case extra.date_compare(one, other) {
+  let assert Ok(latest_post) =
+    list.reduce(posts, fn(one, other) {
+      case post.compare(one, other) {
         order.Gt | order.Eq -> one
         order.Lt -> other
       }
     })
 
-  element("rss", [attribute.attribute("version", "2.0")], [
+  element("rss", [attr.attribute("version", "2.0")], [
     element("channel", [], [
-      element("title", [], [text("giacomocavalieri.me posts feed")]),
+      element("title", [], [html.text("giacomocavalieri.me posts feed")]),
       link("https://giacomocavalieri.me"),
       element("description", [], [
-        text("All the posts from my personal blog about programming."),
+        html.text("All the posts from my personal blog about programming."),
       ]),
-      element("language", [], [text("en")]),
-      element("pubDate", [], [text(to_rss_date_string(latest_date))]),
+      element("language", [], [html.text("en")]),
+      element("pubDate", [], [
+        html.text(to_rss_date_string(latest_post.meta.date)),
+      ]),
       ..list.map(posts, to_feed_item)
     ]),
   ])
@@ -35,11 +36,13 @@ pub fn feed_from_posts(posts: List(post.Post)) -> Element(msg) {
 
 fn to_feed_item(post: post.Post) -> Element(msg) {
   element("item", [], [
-    element("title", [], [text(post.meta.title)]),
+    element("title", [], [html.text(post.meta.title)]),
     link("https://giacomocavalieri.me/posts/" <> post.meta.id <> ".html"),
-    element("description", [], [text(post.meta.abstract)]),
-    element("author", [], [text("giacomo.cavalieri@icloud.com")]),
-    element("pubDate", [], [text(to_rss_date_string(post.meta.date))]),
+    element("description", [], [
+      html.text(jot_extra.to_string(post.meta.abstract)),
+    ]),
+    element("author", [], [html.text("giacomo.cavalieri@icloud.com")]),
+    element("pubDate", [], [html.text(to_rss_date_string(post.meta.date))]),
   ])
 }
 

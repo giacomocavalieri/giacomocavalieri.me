@@ -1,9 +1,11 @@
-import lustre/attribute.{class, href, rel}
-import lustre/element.{type Element, text}
-import lustre/element/html.{a, nav}
+import lustre/attribute as attr
+import lustre/element.{type Element}
+import lustre/element/html
 
 pub fn home() -> Element(a) {
-  let home_link =
-    a([rel("author"), href("/"), class("breadcrumb-link")], [text("← home")])
-  nav([class("breadcrumbs")], [home_link])
+  html.nav([attr.class("breadcrumbs")], [
+    html.a([attr.rel("author"), attr.href("/"), attr.class("breadcrumb-link")], [
+      html.text("← home"),
+    ]),
+  ])
 }
