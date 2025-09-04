@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><title>A new Gleam feature I love</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><meta content="Giacomo Cavalieri&#39;s blog" property="og:site_name"><meta content="A new Gleam feature I love" property="og:title"><meta content="website" property="og:type"><meta content="A new Gleam release is right around the corner and it will come with a new feature I absolutely love: _label shorthands._ It might not be as flashy as other features but I wanted to implement it for the longest time and think it will really help me write better code. Here&#39;s what it&#39;s all about." property="og:description"><meta content="A new Gleam release is right around the corner and it will come with a new feature I absolutely love: _label shorthands._ It might not be as flashy as other features but I wanted to implement it for the longest time and think it will really help me write better code. Here&#39;s what it&#39;s all about." name="description"><meta content="summary" property="twitter:card"><meta content="A new Gleam feature I love" property="twitter:title"><meta content="A new Gleam release is right around the corner and it will come with a new feature I absolutely love: _label shorthands._ It might not be as flashy as other features but I wanted to implement it for the longest time and think it will really help me write better code. Here&#39;s what it&#39;s all about." property="twitter:description"><meta content="@giacomo_cava" property="twitter:creator"><link as="font" crossorigin="true" href="Mona-Sans.woff2" rel="payload" type="font/woff2"><meta content="#cceac3" media="(prefers-color-scheme: light)" name="theme-color"><link href="/style.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry "><header><h1 class="post-title p-name ">A new Gleam feature I love</h1><nav class="breadcrumbs"><a class="breadcrumb-link" href="/" rel="author">← home</a></nav><div class="post-subtitle"><time class="post-date dt-published " datetime="2024-07-26">26 July 2024</time><ul class="post-tags"><li class="post-tag p-category "><a href="/tags/dx.html">dx</a></li><li class="post-tag p-category "><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category "><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content "><p><a href="https://gleam.run">Gleam</a> is a functional &quot;friendly language for building
+<html lang="en"><head><title>A new Gleam feature I love</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><meta content="Giacomo Cavalieri&#39;s blog" property="og:site_name"><meta content="A new Gleam feature I love" property="og:title"><meta content="website" property="og:type"><meta content="A new Gleam release is right around the corner and it will come with a new feature I absolutely love:  label shorthands.  It might not be as flashy as other features but I wanted to implement it for the longest time and think it will really help me write better code. Here&#39;s what it&#39;s all about." property="og:description"><meta content="A new Gleam release is right around the corner and it will come with a new feature I absolutely love:  label shorthands.  It might not be as flashy as other features but I wanted to implement it for the longest time and think it will really help me write better code. Here&#39;s what it&#39;s all about." name="description"><meta content="summary" property="twitter:card"><meta content="A new Gleam feature I love" property="twitter:title"><meta content="A new Gleam release is right around the corner and it will come with a new feature I absolutely love:  label shorthands.  It might not be as flashy as other features but I wanted to implement it for the longest time and think it will really help me write better code. Here&#39;s what it&#39;s all about." property="twitter:description"><meta content="@giacomo_cava" property="twitter:creator"><link as="font" crossorigin="true" href="Mona-Sans.woff2" rel="payload" type="font/woff2"><meta content="#cceac3" media="(prefers-color-scheme: light)" name="theme-color"><link href="/style.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry "><header><h1 class="post-title p-name ">A new Gleam feature I love</h1><nav class="breadcrumbs"><a class="breadcrumb-link" href="/" rel="author">← home</a></nav><div class="post-subtitle"><time class="post-date dt-published " datetime="2024-07-26">26 July 2024</time><ul class="post-tags"><li class="post-tag p-category "><a href="/tags/dx.html">dx</a></li><li class="post-tag p-category "><a href="/tags/fp.html">fp</a></li><li class="post-tag p-category "><a href="/tags/gleam.html">gleam</a></li></ul></div></header><main class="post-body e-content "><p><a href="https://gleam.run">Gleam</a> is a functional &quot;friendly language for building
 systems that scale&quot;. But if I had to describe it with a single word it would be
 <em>simple.</em>
 Given the small number of features, one could probably go through the entire
@@ -8,7 +8,7 @@ is to the language.
 This is intentional! Gleam&#39;s simplicity is also one of its key features;
 as clichè as it may sound, sometimes less is more.
 As <a href="https://www.youtube.com/watch?v=rFejpH_tAHM">Rob Pike puts it</a>
-<em>&quot;Simplicity is complicated but the clarity is worth the fight.&quot;</em></p><p>Here&#39;s what Gleam looks like:</p><pre><code class="not-prose language-gleam" data-lang="gleam">import gleam/io
+<em>&quot;Simplicity is complicated but the clarity is worth the fight.&quot;</em></p><p>Here&#39;s what Gleam looks like:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import gleam/io
 
 pub type Month {
   Jan
@@ -31,17 +31,19 @@ pub fn main() {
   Jan
   |&gt; month_to_string
   |&gt; io.println
-}</code></pre><p>If you already know other programming languages like Java, C# or Rust, this
+}
+</code></pre><p>If you already know other programming languages like Java, C# or Rust, this
 example might have a familiar look to it: a
 <a href="https://tour.gleam.run/data-types/custom-types/">type</a> looks like an <code>enum</code>,
 <a href="https://tour.gleam.run/flow-control/case-expressions/">case</a> is a lot like a
 <code>switch</code> statement (albeit more powerful), and that pipe operator
 <a href="https://tour.gleam.run/functions/pipelines/">|&gt;</a> is a nifty piece of syntax
-sugar to make chains of function calls less clunky.</p><blockquote><p>What would the code above look like without <code>|&gt;</code>?</p><pre><code class="not-prose language-gleam" data-lang="gleam">Jan |&gt; month_to_string |&gt; io.println
+sugar to make chains of function calls less clunky.</p><blockquote><p>What would the code above look like without <code>|&gt;</code>?</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">Jan |&gt; month_to_string |&gt; io.println
 // Is the same as writing:
-io.println(month_to_string(Jan))</code></pre></blockquote><p>The cool thing about constructors is that they can also hold arbitrary data,
+io.println(month_to_string(Jan))
+</code></pre></blockquote><p>The cool thing about constructors is that they can also hold arbitrary data,
 so you can use types to define data structures that are more complex than simple
-enumerations of things:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub type Date {
+enumerations of things:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub type Date {
   Date(year: Int, month: Month, day: Int)
 //^^^^ The Date type has a single constructor
 //     that is also called date.
@@ -58,29 +60,32 @@ pub fn my_birthday() -&gt; Date {
   // When using labels, you can supply arguments in
   // the order that makes the most sense to you:
   Date(day: 11, month: Oct, year: 1998)
-}</code></pre><div class="post-heading h2-title"><a class="clip" href="#new-features?-what-are-those?" id="new-features?-what-are-those?"><h2>New features? What are those?</h2></a></div><p>A great deal of care is needed to keep Gleam small: a new feature must solve
+}
+</code></pre><h2 id="New-features-What-are-those">New features? What are those?</h2><p>A great deal of care is needed to keep Gleam small: a new feature must solve
 some real pain points we&#39;re currently facing without overlapping with existing
 ones.
 The most glaring example for people who are getting started with their Gleam
 journey is the absence of <code>if</code> expressions.
 To control the flow of execution Gleam uses <code>case</code>, so there&#39;s no need to
-introduce <em>a different way to do the same thing:</em></p><pre><code class="not-prose language-gleam" data-lang="gleam">case is_admin(user) {
+introduce <em>a different way to do the same thing:</em></p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">case is_admin(user) {
   True -&gt; admin_page()
   False -&gt; error_401()
-}</code></pre><blockquote><p>This also has the nice side effect of making it easier to refactor your code
-once you inevitably want to stop using booleans:</p><pre><code class="not-prose language-gleam" data-lang="gleam">// Imagine we want to start dealing with
+}
+</code></pre><blockquote><p>This also has the nice side effect of making it easier to refactor your code
+once you inevitably want to stop using booleans:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">// Imagine we want to start dealing with
 // kinds of user instead of just admins...
 case user_role(user) {
   Admin -&gt; admin_page()
   Moderator -&gt; moderator_page()
   _ -&gt; error_401()
-}</code></pre></blockquote><p>So now we get to my new favourite feature being added to the language: in the
-upcoming 1.4 release Gleam is going to support a new <em>label shorthand syntax.</em></p><div class="post-heading h2-title"><a class="clip" href="#the-problem" id="the-problem"><h2>The problem</h2></a></div><p>Consider the <code>Date</code> type I showed you earlier.
+}
+</code></pre></blockquote><p>So now we get to my new favourite feature being added to the language: in the
+upcoming 1.4 release Gleam is going to support a new <em>label shorthand syntax.</em></p><h2 id="The-problem">The problem</h2><p>Consider the <code>Date</code> type I showed you earlier.
 I actually use that for my own personal blog
 (yeah <a href="https://giacomocavalieri.me/posts/look-i-made-this-with-gleam">it&#39;s written in Gleam!</a>)
 to sort posts based on their date.
 Posts are just markdown files with an additional header, so what I did to parse
-dates looked like this:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn read_date(date_string: String) -&gt; Date {
+dates looked like this:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn read_date(date_string: String) -&gt; Date {
   case string.split(date_string, on: &quot;-&quot;) {
     [day_string, month_string, year_string] -&gt; {
       let day = to_int(day_string)
@@ -90,11 +95,12 @@ dates looked like this:</p><pre><code class="not-prose language-gleam" data-lang
     }
     _ -&gt; panic as &quot;The post has an invalid date, go fix it!&quot;
   }
-}</code></pre><p>Can you spot the bug? Me neither!
+}
+</code></pre><p>Can you spot the bug? Me neither!
 I just noticed it when a couple of weeks ago I wrote a new blog post and it was
 not properly sorted.
 The problem is that I&#39;ve inadvertenly got the position of the <code>Date</code> arguments
-wrong:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub type Date {
+wrong:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub type Date {
   Date(year: Int, month: Month, day: Int)
 }
 
@@ -108,7 +114,8 @@ pub fn read_date(date_string: String) -&gt; Date {
   //       I&#39;ve passed the day and year arguments
   //       in the wrong order.
   // ...
-}</code></pre><p>This could have been avoided by using explicit labels to pass in arguments:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn read_date(date_string: String) -&gt; Date {
+}
+</code></pre><p>This could have been avoided by using explicit labels to pass in arguments:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn read_date(date_string: String) -&gt; Date {
   // ...
       let day = string_to_int(day_string)
       let month = string_to_month(month_string)
@@ -119,13 +126,14 @@ pub fn read_date(date_string: String) -&gt; Date {
   //       really matter, I could have sorted the arguments
   //       in any order without running into any issue.
   // ...
-}</code></pre><p>Why didn&#39;t I do it in the first place then? Short answer is I&#39;m lazy and
+}
+</code></pre><p>Why didn&#39;t I do it in the first place then? Short answer is I&#39;m lazy and
 couldn&#39;t be bothered writing the labels explicitly, and the labelled code
 doesn&#39;t look particularly nice.
 <em>&quot;I don&#39;t really need labels here, I know I&#39;m passing arguments in the right order&quot;</em>
-are the last famous words.</p><div class="post-heading h2-title"><a class="clip" href="#the-solution" id="the-solution"><h2>The solution</h2></a></div><p>The label shorthand syntax aims to solve this exact problem by making it easier
+are the last famous words.</p><h2 id="The-solution">The solution</h2><p>The label shorthand syntax aims to solve this exact problem by making it easier
 to use labelled arguments.
-The code I showed you earlier could be written like this:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn read_date(date_string: String) -&gt; Date {
+The code I showed you earlier could be written like this:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn read_date(date_string: String) -&gt; Date {
   // ...
   let day = string_to_int(day_string)
   let month = string_to_month(month_string)
@@ -133,38 +141,44 @@ The code I showed you earlier could be written like this:</p><pre><code class="n
   Date(day:, month:, year:)
   // This is the same as writing:
   //   Day(day: day, month: month, year: year)
-}</code></pre><p>This syntax trick helps you pass variables with the same name as a labelled
+}
+</code></pre><p>This syntax trick helps you pass variables with the same name as a labelled
 argument, so you don&#39;t have to write the same thing twice while still getting
 all the benefits of explicitly using labels.</p><p>Using the shorthand syntax is pretty nice when building records, but I think it
 really shines when destructuring them.
 In my codebase I also have a small function to turn a <code>Date</code> back into a string
-to display it in the blog post page:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn format_date(date: Date) -&gt; String {
+to display it in the blog post page:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(d, m, y) = date
 
   [int_to_string(d), month_to_string(m), int_to_string(y)]
   |&gt; string.join(with: &quot;-&quot;)
-}</code></pre><p>The line <code>Day(d, m, y) = date</code> creates three variables <code>d</code>, <code>m</code> and <code>y</code> binding
+}
+</code></pre><p>The line <code>Day(d, m, y) = date</code> creates three variables <code>d</code>, <code>m</code> and <code>y</code> binding
 them to the first, second and third argument used to build the given date.</p><p>Once again, we&#39;re relying on the order of the <code>Date</code>&#39;s arguments, assuming the
 day is the first one, followed by month and year. However, I&#39;ve made the same
 mistake twice: the first field of a date is the year and not the day!</p><blockquote><p>If you&#39;re wondering why I&#39;m always getting the order of arguments of <code>Date</code>
-wrong, it&#39;s because in Italy the standard format I&#39;m used to is <code>dd-mm-yyyy</code>.</p></blockquote><p>Once again, this problem could have been solved by using labels:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn format_date(date: Date) -&gt; String {
+wrong, it&#39;s because in Italy the standard format I&#39;m used to is <code>dd-mm-yyyy</code>.</p></blockquote><p>Once again, this problem could have been solved by using labels:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(day: d, month: m, year: y) = date
   // ...
-}</code></pre><p>Now the variable <code>d</code> is going to have the value of the <code>day</code> field, no matter
+}
+</code></pre><p>Now the variable <code>d</code> is going to have the value of the <code>day</code> field, no matter
 the order of the arguments.</p><blockquote><p>I used single letter variables just to show you an example, in reality what
 I&#39;d write is even more repetitive as I don&#39;t really like abbreviations and
-want my variables to have the same name as the labels they correspond to:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn format_date(date: Date) -&gt; String {
+want my variables to have the same name as the labels they correspond to:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(day: day, month: month, year: year) = date
   // ...
-}</code></pre><p>Doing the right thing, that is using labels, is not really pleasant as I have
-to type the same thing twice all the times.</p></blockquote><p>Label shorthands once again come in handy here:</p><pre><code class="not-prose language-gleam" data-lang="gleam">pub fn format_date(date: Date) -&gt; String {
+}
+</code></pre><p>
+Doing the right thing, that is using labels, is not really pleasant as I have
+to type the same thing twice all the times.</p></blockquote><p>Label shorthands once again come in handy here:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn format_date(date: Date) -&gt; String {
   let Date(day:, month:, year:) = date
   // This is the same as writing
   //   Date(day: day, month: month, year: year)
 
   [int_to_string(day), month_to_string(month), int_to_string(year)]
   |&gt; string.join(with: &quot;-&quot;)
-}</code></pre><p>So now you can get the best of both worlds: use labels to avoid inadvertently
+}
+</code></pre><p>So now you can get the best of both worlds: use labels to avoid inadvertently
 swapping arguments, and still use nice descriptive names for your variables.</p><hr><p>This might not be a flashy feature that gets people talking about a language,
 but it&#39;s a great way to make labelled arguments easier to use and to help me
 (and hopefully others) avoid hours of head-scratching due to pesky
