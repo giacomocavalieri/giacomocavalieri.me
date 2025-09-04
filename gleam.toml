@@ -3,7 +3,7 @@ version = "1.0.0"
 description = "My personal blog"
 
 [dependencies]
-jot = ">= 5.0.0 and < 6.0.0"
+jot = ">= 6.0.0 and < 7.0.0"
 gleam_stdlib = ">= 0.40.0 and < 1.0.0"
 simplifile = ">= 2.1.0 and < 3.0.0"
 glevatar = ">= 0.1.2 and < 1.0.0"

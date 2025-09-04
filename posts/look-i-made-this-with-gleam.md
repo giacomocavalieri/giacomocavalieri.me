@@ -9,7 +9,7 @@ status = "show"
 
 Hello! I'm Giacomo 👋
 I love functional programming and getting caught in rabbit holes; the thing I
-love most, though, is sharing what I learn with my friends — sorry guys for
+love most, though, is sharing what I learn with my friends -- sorry guys for
 nagging you, you're the best for putting up with me!
 
 What better way to pester even more people than setting up a personal blog?
@@ -37,7 +37,7 @@ People in the [official Discord](https://discord.gg/daRe3WpYPK) are incredibly
 nice: chatting with everyone always managed to lighten my mood even after the
 worst, most disheartening days at work.
 I've learnt loads of new things just by hanging around and it's just a pleasure
-to chat and share things with other gleamlins — yes, that's what I call other
+to chat and share things with other gleamlins -- yes, that's what I call other
 Gleam programmers.
 
 ---

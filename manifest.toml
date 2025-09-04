@@ -15,7 +15,7 @@ packages = [
   { name = "glesha", version = "0.1.4", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "glesha", source = "hex", outer_checksum = "31AAC355BF83A0565D858252F81193A61F4E6C3763D071EA6F76BA7686E8A65A" },
   { name = "glevatar", version = "0.1.2", build_tools = ["gleam"], requirements = ["gleam_stdlib", "glesha"], otp_app = "glevatar", source = "hex", outer_checksum = "2C23EB6C7EF2806AF59010AD35D874C4DBD4A3AD8BADC81590492661ED3F96D2" },
   { name = "houdini", version = "1.2.0", build_tools = ["gleam"], requirements = [], otp_app = "houdini", source = "hex", outer_checksum = "5DB1053F1AF828049C2B206D4403C18970ABEF5C18671CA3C2D2ED0DD64F6385" },
-  { name = "jot", version = "5.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib", "houdini", "splitter"], otp_app = "jot", source = "hex", outer_checksum = "B1A0C91A3D273971D1CA1F644FF0A9CAC8256BDA249CADC927041BF14E7114A6" },
+  { name = "jot", version = "6.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "houdini", "splitter"], otp_app = "jot", source = "hex", outer_checksum = "9DB82F47FECF252461D832500EAD9AF0312953CD3D2B393BAA319BEF1B3B5FA1" },
   { name = "lustre", version = "5.3.4", build_tools = ["gleam"], requirements = ["gleam_erlang", "gleam_json", "gleam_otp", "gleam_stdlib", "houdini"], otp_app = "lustre", source = "hex", outer_checksum = "D0EF92316D51435823A234ADA4FFDD799740C89F1A188412CBC76722139121A5" },
   { name = "simplifile", version = "2.3.0", build_tools = ["gleam"], requirements = ["filepath", "gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "0A868DAC6063D9E983477981839810DC2E553285AB4588B87E3E9C96A7FB4CB4" },
   { name = "splitter", version = "1.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "splitter", source = "hex", outer_checksum = "05564A381580395DCDEFF4F88A64B021E8DAFA6540AE99B4623962F52976AA9D" },
@@ -29,7 +29,7 @@ frontmatter = { version = ">= 1.0.1 and < 2.0.0" }
 gleam_stdlib = { version = ">= 0.40.0 and < 1.0.0" }
 gleam_time = { version = ">= 1.4.0 and < 2.0.0" }
 glevatar = { version = ">= 0.1.2 and < 1.0.0" }
-jot = { version = ">= 5.0.0 and < 6.0.0" }
+jot = { version = ">= 6.0.0 and < 7.0.0" }
 lustre = { version = ">= 5.2.1 and < 6.0.0" }
 simplifile = { version = ">= 2.1.0 and < 3.0.0" }
 temporary = { version = ">= 1.0.0 and < 2.0.0" }
