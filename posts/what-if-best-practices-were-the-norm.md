@@ -15,7 +15,7 @@ status = "show"
 During my second year of university I followed an amazing course dedicated to
 object-oriented programming, held by one of the best professors I've
 ever had the pleasure to meet. It focused not only on the language in itself
-— Java, in this case — but also on the _best practices_ we ought to follow to
+-- Java, in this case -- but also on the _best practices_ we ought to follow to
 make code easier to refactor and reason about.
 To me, a freshman who only knew C, that felt almost like magic and I quickly
 fell in love with Java.
@@ -43,7 +43,7 @@ will be well-behaved under all circumstances.
 
 Take for example null references, the bane of every Java programmer's
 existence. Every time we return `null` from a method we are condemning another
-programmer — or our future selves — to deal with a much dreaded
+programmer -- or our future selves -- to deal with a much dreaded
 `NullPointerException`.
 
 The problem is that `null`s are a sneaky way for our methods to _lie_ about
@@ -75,8 +75,8 @@ To me, that's where the beauty of static types lies: just by reading the
 signature of a method we can get a pretty good hunch of what to expect.
 
 So, what is `load`'s signature telling us?
-_"Give me an int and I'll get you a `User`"_. Great! Let's put it to good use
-and do something useful:
+"Give me an int and I'll get you a `User`"
+Great! Let's put it to good use and do something useful:
 
 ```java
 class Main {
@@ -115,8 +115,8 @@ class Main {
 ```
 
 The crux of the problem is that _nothing forced me to add any checks!_ I had to
-be diligent and remember to add those. The easy thing to do — simply accessing
-the name property of the user, disregarding any possible check — is not the
+be diligent and remember to add those. The easy thing to do -- simply accessing
+the name property of the user, disregarding any possible check -- is not the
 correct one!
 It follows that forgetting to add a null check or a try-catch is bound to
 happen; it's not a matter of _if_, but _when:_ developers can be in a rush,
@@ -292,7 +292,7 @@ A program won't crash at runtime because it's impossible for an error to go
 undetected.
 And, as I hope you might have noticed, the language doesn't have to be complex
 to give you these guarantees! On the contrary, it makes things easier: there's
-only one control flow mechanism — pattern matching — and you don't have to
+only one control flow mechanism -- pattern matching -- and you don't have to
 juggle between if statements and try-catch blocks to deal with all the possible
 ways a method might lie.
 
@@ -333,8 +333,8 @@ ways a method might lie.
 ## Beware of mutable data
 
 When learning Java our teacher really drilled into us a rule of thumb to always
-follow: _always favour immutable data structures, when defining a class_
-_always make its fields `final`._
+follow: _always favour immutable data structures,_ when defining a class
+always make its fields `final`.
 
 This is great advice! Removing the final annotation should only be used as a
 last resort. The rationale behind this practice is that having immutable data
@@ -380,7 +380,7 @@ user.birthday.setYear(1900);
 
 And now, all of a sudden, we have a really old user! Since mutation can happen
 anywhere, it can be incredibly hard to trace back to the source of the problem
-and might require quite the debugging ability — and I, for one, don't have it.
+and might require quite the debugging ability -- and I, for one, don't have it.
 
 ### A web of dependencies
 
@@ -411,7 +411,7 @@ around, talk about fiddly! We are caught in a web of invisible dependencies
 threaded throughout every method call: the order of every single method call
 that takes as input a mutable object is important!
 A strong testing suite can really help us giving confidence that our
-innocent-looking refactoring didn't actually break some important properties —
+innocent-looking refactoring didn't actually break some important properties --
 easier said than done!
 
 Is there a way out? Sort of. We can make our best to encapsulate the state of
@@ -438,8 +438,8 @@ class User {
 ```
 
 By storing and returning copies we're making sure that no one can put their
-hands on the user's birthday. Mutation can now happen in a single place — the
-`User` class — and can be tamed much more easily.
+hands on the user's birthday. Mutation can now happen in a single place -- the
+`User` class -- and can be tamed much more easily.
 
 ### Making best practices the rules of the game
 
@@ -467,7 +467,7 @@ Let's appreciate how we now have one less thing to constantly worry about.
 
 > _"But how can I do anything useful if I can't mutate data?"_ I hear you cry.
 > You're right, you can't write a program the same way you would if you could
-> mutate data; you can't even have a `for` loop — after all, even increasing a
+> mutate data; you can't even have a `for` loop -- after all, even increasing a
 > loop counter counts as mutation and that's not allowed.
 >
 > It can require some getting used to at first but trust me, it's absolutely
@@ -490,7 +490,7 @@ taste, creativity and imagination play such an important role in coding that if
 you ask a thousand developers to implement the same algorithm you'll probably
 get a thousand of different answers.
 
-That's the beauty of programming — and what made me fall in love with it in the
+That's the beauty of programming -- and what made me fall in love with it in the
 first place. However, it can also turn into an endless source of teeth grinding
 when working with other developers: we all have different tastes and everyone
 will push for their own style to be adopted. Take this small snippet of code,
@@ -537,7 +537,7 @@ case user {
 
 I could go on for days adding small tweaks to the look of this bit of code.
 And it can be quite a fun exercise! Finding the best looking possible solution
-is really satisfying after all — and I love doing that from time to time.
+is really satisfying after all -- and I love doing that from time to time.
 
 The point is that we want to avoid these kind of inconsitencies in style at all
 costs when working with other people: imagine having a codebase where sometimes

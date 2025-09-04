@@ -60,6 +60,12 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
         _ -> html.h6(attributes, content)
       }
     }
+
+    jot.BlockQuote(attributes:, items:) ->
+      html.blockquote(
+        djot_attributes(attributes),
+        list.map(items, container_to_element),
+      )
   }
 }
 
@@ -115,6 +121,7 @@ fn container_to_string(container: jot.Container) -> String {
     jot.Paragraph(attributes: _, content:) -> inlines_to_string(content)
     jot.Heading(attributes: _, level: _, content:) -> inlines_to_string(content)
     jot.Codeblock(attributes: _, language: _, content:) -> content
+    jot.BlockQuote(attributes: _, items:) -> containers_to_string(items)
     jot.RawBlock(content:) -> content
     jot.BulletList(layout: _, style: _, items:) ->
       list.map(items, containers_to_string)
