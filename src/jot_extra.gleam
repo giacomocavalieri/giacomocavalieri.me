@@ -20,7 +20,7 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
   case container {
     jot.ThematicBreak -> html.hr([])
 
-    jot.RawBlock(content: _) -> panic as "unsupported raw block"
+    jot.RawBlock(content:) -> element.unsafe_raw_html("", "div", [], content)
 
     jot.Paragraph(attributes:, content:) ->
       html.p(djot_attributes(attributes), list.map(content, inline_to_element))
