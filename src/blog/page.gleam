@@ -118,6 +118,8 @@ fn with_body(
 
 const hljs_script_url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
 
+const hljs_diff_url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"
+
 const gleam_hljs_script_url = "/highlightjs-gleam.js"
 
 fn default_head(page_title: String, description: String) -> Element(a) {
@@ -152,6 +154,7 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
     stylesheet("/style.css"),
     html.script([attr.src(hljs_script_url)], ""),
+    html.script([attr.src(hljs_diff_url)], ""),
     html.script([attr.src(gleam_hljs_script_url)], ""),
     html.script([], "hljs.highlightAll();"),
   ])

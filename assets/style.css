@@ -115,6 +115,22 @@ h3 {
     margin-right: auto;
 }
 
+img {
+    object-fit: contain;
+    align-self: center;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.skeet-embed {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: var(--line-height);
+    margin-bottom: var(--line-height);
+    display: flex;
+    justify-content: center;
+}
+
 hr {
     margin-top: 2rem;
     margin-bottom: 2rem;
@@ -226,9 +242,6 @@ a:not(.clip):hover {
 
 .breadcrumbs {
     margin-bottom: var(--line-height);
-}
-
-.breadcrumb-link {
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
@@ -395,7 +408,8 @@ a:not(.clip):hover {
 }
 
 .hljs-keyword,
-.hljs-built_in {
+.hljs-built_in,
+.hljs-operator {
     color: rgb(255, 69, 138);
 }
 
@@ -403,7 +417,18 @@ a:not(.clip):hover {
     color: rgb(56, 146, 240);
 }
 
-.hljs-variable,
-.hljs-operator {
+.hljs-variable {
     color: var(--text-color);
+}
+
+.hljs-addition {
+    display: inline-block;
+    width: 100%;
+    background-color: rgb(94, 173, 94, 0.4);
+}
+
+.hljs-deletion {
+    display: inline-block;
+    width: 100%;
+    background-color: rgb(255, 69, 138, 0.4);
 }
