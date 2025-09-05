@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en"><head><title>How I solved a little nuisance using Gleam and a Raspberry Pi</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><meta content="Giacomo Cavalieri&#39;s blog" property="og:site_name"><meta content="How I solved a little nuisance using Gleam and a Raspberry Pi" property="og:title"><meta content="website" property="og:type"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="og:description"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." name="description"><meta content="summary" property="twitter:card"><meta content="How I solved a little nuisance using Gleam and a Raspberry Pi" property="twitter:title"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="twitter:description"><meta content="@giacomo_cava" property="twitter:creator"><link as="font" crossorigin="true" href="Mona-Sans.woff2" rel="payload" type="font/woff2"><meta content="#cceac3" media="(prefers-color-scheme: light)" name="theme-color"><link href="/style.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry "><header><h1 class="post-title p-name ">How I solved a little nuisance using Gleam and a Raspberry Pi</h1><nav class="breadcrumbs"><a class="breadcrumb-link" href="/" rel="author">← home</a></nav><div class="post-subtitle"><time class="post-date dt-published " datetime="2025-09-05">5 September 2025</time><ul class="post-tags"><li class="post-tag p-category "><a href="/tags/gleam.html">gleam</a></li><li class="post-tag p-category "><a href="/tags/raspberry-pi.html">raspberry-pi</a></li></ul></div></header><main class="post-body e-content "><h2 id="The-problem">The problem</h2><p>I work a lot on the <a href="https://github.com/gleam-lang/gleam">Gleam compiler</a>, it&#39;s
+quite common for me to have many open PRs waiting to be reviewed and merged.
+One thing that usually happens is one of them (or some other PR) is merged and
+then conflicts start popping up without me noticing, until the reviewer pings me
+asking for a rebase.</p><p>The thing that&#39;s been bugging me for a while is that GitHub&#39;s PR view is not
+showing me the mergeability of any of my open PRs: that is wether they are still
+drafts, if they have conflicts I need to address, or if they don&#39;t need any of
+my attention.</p><p><img src="/imgs/github-prs-view.png"></p><p>Whenever a PR is merged, I need to go check each one individually and see if it
+has a conflict or not… quite annoying!</p><h2 id="The-solution">The solution</h2><p>GitHub has a handy <a href="https://docs.github.com/en/graphql">GraphQL API</a>.
+I had used it a couple of times to write small scripts, and so I was pretty
+confident it could help me solve this problem… turns out it really could!</p><p>The GraphQL query I ended up writing looks like this:</p><pre><code class="not-prose language-graphql hljs" data-lang="graphql">query {
+  viewer {
+    pullRequests(first: 50, states: OPEN, orderBy: { field: UPDATED_AT, direction: DESC }) {
+      nodes {
+        title
+        url
+        mergeable
+        isDraft
+      }
+    }
+  }
+}
+</code></pre><p>So how do we query the GitHub GraphQL API using Gleam? We can craft an http
+request with the proper headers and body as suggested by GitHub&#39;s own
+<a href="https://docs.github.com/en/graphql/guides/forming-calls-with-graphql#communicating-with-graphql">documentation</a>:</p><ul><li><p>The endpoint is <code>https://api.github.com/graphql</code></p></li><li><p>It needs to be a POST request…</p></li><li><p>…with a json body containing a <code>&quot;query&quot;</code> string field</p></li><li><p>and an <code>&quot;authorization&quot;</code> header with a suitable <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">GitHub token</a></p></li></ul><p>Building such request in Gleam can look something like this, using the
+<a href="https://hexdocs.pm/gleam_http/index.html">gleam_http</a> package:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import gleam/http
+import gleam/http/request
+
+pub fn fetch_pull_requests(gh_token: String) {
+  let query = &quot;the GraphQL query I showed you earlier&quot;
+
+  let request =
+    request.new()
+    // It&#39;s a POST request
+    |&gt; request.set_method(http.Post)
+    // For the `api.github.com/graphql` endpoint
+    |&gt; request.set_host(&quot;api.github.com&quot;)
+    |&gt; request.set_path(&quot;/graphql&quot;)
+    // With an authorization header
+    |&gt; request.prepend_header(&quot;authorization&quot;, &quot;bearer &quot; &lt;&gt; gh_token)
+    // A json body containing a `&quot;query&quot;` string field
+    |&gt; request.set_body(&quot;{ \&quot;query\&quot;: \&quot;&quot; &lt;&gt; query &lt;&gt; &quot;\&quot;}&quot;)
+}
+</code></pre><p>And we&#39;re good to go, now we have to actually send the request and see what the
+server replies with, we&#39;re using the
+<a href="https://hexdocs.pm/gleam_httpc/index.html">gleam_httpc</a> client to do that:</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> import gleam/http
+ import gleam/http/request
++import gleam/httpc
+
+ pub fn fetch_pull_requests(gh_token: String) {
+   let query = &quot;the GraphQL query I showed you earlier&quot;
+
+-  let request =
++  let assert Ok(response) =
+     request.new()
+     |&gt; request.set_method(http.Post)
+     |&gt; request.set_host(&quot;api.github.com&quot;)
+     |&gt; request.set_path(&quot;/graphql&quot;)
+     |&gt; request.prepend_header(&quot;authorization&quot;, &quot;bearer &quot; &lt;&gt; gh_token)
+     |&gt; request.set_body(&quot;{ \&quot;query\&quot;: \&quot;&quot; &lt;&gt; query &lt;&gt; &quot;\&quot;}&quot;)
++    |&gt; httpc.send
+ }
+</code></pre><blockquote><p>Here I&#39;m <a href="https://tour.gleam.run/advanced-features/let-assert/"><code>assert</code></a>-ing
+that I will get a response from the server, so this code will crash in case
+there&#39;s an error.
+For my little application it is completely fine to crash when an error occurs,
+but most of the times you&#39;d want to actually deal with the error!</p></blockquote><p>The JSON string we get back looks something like this (after being nicely
+formatted):</p><pre><code class="not-prose language-json hljs" data-lang="json">{
+  &quot;query&quot;: {
+    &quot;viewer&quot;: {
+      &quot;pullRequests&quot;: {
+        &quot;nodes&quot;: [
+          { &quot;mergeable&quot;: &quot;CONFLICTING&quot;, &quot;isDraft&quot;: true, &quot;title&quot;: &quot;...&quot;, &quot;url&quot;: &quot;...&quot; },
+          { &quot;mergeable&quot;: &quot;MERGEABLE&quot;, &quot;isDraft&quot;: false, &quot;title&quot;: &quot;...&quot;, &quot;url&quot;: &quot;...&quot; },
+          { &quot;mergeable&quot;: &quot;UNKNOWN&quot;, &quot;isDraft&quot;: false, &quot;title&quot;: &quot;...&quot;, &quot;url&quot;: &quot;...&quot; }
+        ]
+      }
+    }
+  }
+}
+</code></pre><p>So the first PR has a conflict that needs to be addressed, while the second one
+has no issues. The third PR has an <code>&quot;UNKNOWN&quot;</code> status, that means GitHub is
+still determining if it can be safely merged or not.</p><p>It&#39;s pretty straightforward to describe such a PR using a couple of
+<a href="https://tour.gleam.run/data-types/custom-types/">custom types</a>:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub type PullRequest {
+  PullRequest(
+    title: String,
+    url: String,
+    mergeability: Mergeability,
+    is_draft: Bool
+  )
+}
+
+pub type Mergeability {
+  Conflicting
+  Mergeable
+  Unknown
+}
+</code></pre><p>The next step is turning this JSON string we get as a response – which is quite
+hard to work with – into a list of <code>PullRequest</code>s; one can do that in Gleam by
+using a <a href="https://hexdocs.pm/gleam_stdlib/gleam/dynamic/decode.html"><code>Decoder</code></a>.</p><p>The nice thing about them is that they can compose nicely so we can start
+with small building blocks and join them together as needed.
+Let&#39;s start with the decoding of the mergeability, those are plain strings in
+the JSON response:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import gleam/dynamic/decode.{type Decoder}
+
+pub fn mergeability_decoder() -&gt; Decoder(Mergeability) {
+  // We first start by trying to decode a string...
+  use decoded_string &lt;- decode.then(decode.string)
+
+  // ... if we could decode it, then we can check if it&#39;s one of
+  // the three expected values:
+  case decoded_string {
+    // If it is, we succeed and return the corresponding value.
+    &quot;CONFLICTING&quot; -&gt; decode.success(Conflicting)
+    &quot;MERGEABLE&quot; -&gt; decode.success(Mergeable)
+    &quot;UNKNOWN&quot; -&gt; decode.success(Unknown)
+
+    // Otherwise we fail providing an example and a textual
+    // description of what we were expecting to see.
+    _ -&gt; decode.failure(Unknown, &quot;Mergeability&quot;)
+  }
+}
+</code></pre><p>We can now define a decoder that takes care of decoding a single PR object, by
+decoding each individual field:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn pull_request_decoder() -&gt; Decoder(PullRequest) {
+  use title &lt;- decode.field(&quot;title&quot;, decode.string)
+  use url &lt;- decode.field(&quot;url&quot;, decode.string)
+  // We decode the &quot;mergeable&quot; field by using the decoder we&#39;ve defined earlier!
+  use mergeability &lt;- decode.field(&quot;mergeable&quot;, mergeability_decoder())
+  use is_draft &lt;- decode.field(&quot;isDraft&quot;, decode.bool)
+
+  // If we can decode all the fields we care about, then we can return a PR!
+  decode.success(PullRequest(title:, url:, mergeability:, is_draft:))
+}
+</code></pre><p>And now everything is ready to decode the full response into a list of pull
+requests:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import gleam/json
+
+pub fn fetch_pull_requests(gh_token: String) -&gt; List(PullRequest) {
+  // ...
+
+  let response_decoder =
+    decode.at(
+      [&quot;data&quot;, &quot;viewer&quot;, &quot;pullRequests&quot;, &quot;nodes&quot;],
+      decode.list(pull_request_decoder())
+    )
+
+  let assert Ok(pull_requests) = json.parse(response.body, response_decoder)
+  pull_requests
+}
+</code></pre><p>So we can check that we&#39;ve indeed decoded that json string into a Gleam list
+of <code>PullRequest</code>s. Nice! Now we need a way to actually display this data…</p><h3 id="Enters-the-trusty-Raspberry-Pi-Zero">Enters the trusty Raspberry Pi Zero</h3><p>A while ago I got a
+<a href="https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/">Raspberry Pi Zero 2 W</a>,
+a tiny, tiny $15 computer.
+Being a Gleam nerd, of course I wanted to try and run some Gleam code on it!
+It was great fun playing around with it and some little displays I had lying
+around.</p><div><div class="skeet-embed">
+<blockquote
+  class="bluesky-embed"
+  data-bluesky-uri="at://did:plc:vzaxc2idqnxovkqscsa3tvvi/app.bsky.feed.post/3lmptyp2lis2p"
+  data-bluesky-cid="bafyreif25grnsothwhmfhs5phn72efgux4xx36xppxcvym4xvbbiilqwiq"
+  data-bluesky-embed-color-mode="system">
+  <p lang="en">
+    In my DIY hardware era 💅This is powered by Gleam running on a Raspberry Pi Zero, how cool is that?
+    <br>
+    <br>
+    <a href="https://bsky.app/profile/did:plc:vzaxc2idqnxovkqscsa3tvvi/post/3lmptyp2lis2p?ref_src=embed">
+      [image or embed]
+    </a>
+  </p>
+  &mdash; Giacomo Cavalieri (<a href="https://bsky.app/profile/did:plc:vzaxc2idqnxovkqscsa3tvvi?ref_src=embed">@giacomocavalieri.me</a>)
+  <a href="https://bsky.app/profile/did:plc:vzaxc2idqnxovkqscsa3tvvi/post/3lmptyp2lis2p?ref_src=embed">
+    13 aprile 2025 alle ore 22:07
+  </a>
+</blockquote>
+<script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
+</div></div><p>In the end I turned it into a small local server that I use to play silly games
+when my friends come over.
+All the code powering it is written in Gleam using the
+<a href="https://gleam-wisp.github.io/wisp/">Wisp</a> framework.
+The gist of it is you define a handler that, given an http request, produces a
+response:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">// The simplest handler I could think of: always returns a fixed html response.
+pub fn handle_request(req: wisp.Request) -&gt; wisp.Response {
+  &quot;&lt;h1&gt;Hello, Joe!&lt;/h1&gt;&quot;
+  |&gt; wisp.html_response(200)
+}
+</code></pre><p>The real deal is actually a bit more complex and will do routing using pattern
+matching:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn handle_request(req: wisp.Request) -&gt; wisp.Response {
+  case wisp.path_segments(req) {
+    [] -&gt; homepage()
+    [&quot;games&quot;, &quot;scattergories&quot;] -&gt; scattergories_page(req)
+    _ -&gt; wisp.not_found()
+  }
+}
+</code></pre><p>So my idea was to add a new route to serve a page showing all this data I&#39;m
+gathering from GitHub&#39;s API:</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> pub fn handle_request(
+   req: wisp.Request,
++  gh_token: String,
+ ) -&gt; wisp.Response {
+   case wisp.path_segments(req) {
+     [] -&gt; homepage()
+     [&quot;games&quot;, &quot;scattergories&quot;] -&gt; scattergories_page(req)
++    [&quot;git&quot;, &quot;pull-requests&quot;] -&gt; pull_requests_page(gh_token)
+     _ -&gt; wisp.not_found()
+   }
+ }
+</code></pre><p>All the hard work of fetching and decoding the pull requests had already been
+implemented in <code>fetch_pull_requests</code>, now we just need a way to dinamically
+produce some html document from those.
+To do that I&#39;m using <a href="https://hexdocs.pm/lustre/index.html">Lustre</a>, it looks
+like this:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import lustre/element/html
+
+pub fn pull_requests_page(gh_token: String) -&gt; Element(msg) {
+  let pull_requests = fetch_pull_requests(gh_token)
+
+  html.main([], [
+    html.h1([], [html.text(&quot;Pull Requests&quot;)]),
+    html.ul([], todo as &quot;the list items&quot;)
+  ])
+}
+</code></pre><p>The thing I love about Lustre is that everything is just functions™️, there&#39;s
+no templating language or fancy macros: all I know about organising code and
+refactoring applies just as nicely to my HTML-producing code.
+Let&#39;s make an helper function to turn a single pull request into a list item:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn pull_request_to_li(pull_request: PullRequest) -&gt; Element(msg) {
+  let mergeability = case pull_request.mergeability {
+    Mergeable -&gt; &quot;✅&quot;
+    Conflicting -&gt; &quot;❌&quot;
+    Unknown -&gt; &quot;⚙️&quot;
+  }
+
+  let draft = case pull_request.is_draft {
+    True -&gt; &quot; (DRAFT) &quot;
+    False -&gt; &quot; &quot;
+  }
+
+  html.li([], [
+    html.text(mergeability &lt;&gt; draft),
+    html.a([attribute.href(pull_request.url)], [
+      html.text(pull_request.title),
+    ]),
+  ])
+}
+</code></pre><p>And now we can use it for each of the pull requests we&#39;ve fetched:</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> import lustre/element/html
++import gleam/list
+
+ pub fn pull_requests_page() {
+   // In the real code this is read at startup from an env variable,
+   // never put secrets in your code!
+   let gh_token = todo as &quot;a GitHub access token&quot;
+   let pull_requests = fetch_pull_requests(gh_token)
+
+   html.main([], [
+     html.h1([], [html.text(&quot;Pull Requests&quot;)]),
+-    html.ul([], todo as &quot;the list items&quot;)
++    html.ul([], list.map(pull_requests, pull_request_to_li))
+   ])
+ }
+</code></pre><h2 id="The-final-result">The final result</h2><p>I set up a <code>systemctl</code> timer – thank you Louis for introducing me to that! –
+to fire up the server listening on port 80 every time the Raspberry is turned
+on:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() -&gt; Nil {
+  wisp.configure_logger()
+
+  // Totally fine to assert here, if those env variables are not set there&#39;s no
+  // way we can try and keep running, so we might as well panic!
+  let assert Ok(port) = envoy.get(&quot;DANEEL_PORT&quot;) |&gt; result.try(int.parse)
+    as &quot;DANEEL_PORT should be set&quot;
+  let assert Ok(gh_token) = envoy.get(&quot;GH_TOKEN&quot;)
+    as &quot;GH_TOKEN should be set&quot;
+
+  let assert Ok(_) =
+    // This is the handler I just showed you!
+    handle_request(_, gh_token)
+    |&gt; wisp_mist.handler(wisp.random_string(64))
+    |&gt; mist.new
+    |&gt; mist.bind(&quot;0.0.0.0&quot;)
+    |&gt; mist.port(port)
+    |&gt; mist.start
+
+  process.sleep_forever()
+}
+</code></pre><p>And now I can browse to my raspberry and see at a glance whether any of my PRs
+need some fixing, pretty neat if you ask me!</p><p><img src="/imgs/final-result.png"></p><p>Yes, I know this won&#39;t probably win a design award, but I&#39;m quite fond of the
+web 1.0 aesthetic and that&#39;s more than enough for me.</p><h2 id="Was-it-worth-it">Was it worth it?</h2><p>Ok we all know the joke of the developer speding months trying to automate the
+5 minutes task. But this actually took me less than an hour to build – Gleam is
+an incredibly productive language!</p><p>I think there&#39;s something exhilarating in racking one&#39;s brain trying to automate
+routine tasks, and even if this
+<a href="https://xkcd.com/1205/">might not have be worth the time,</a> I sure had loads of
+fun… and that&#39;s the whole point of coding!</p></main></article></div></body></html>
