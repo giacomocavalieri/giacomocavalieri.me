@@ -28,6 +28,8 @@
     --selection-color: #dff2d9;
     --code-background-color: #dff2d940;
     --blockquote-background-color: #dff2d970;
+    --bsky-embed-background-color: #0a7aff15;
+    --bsky-embed-link-color: #0a7aff40;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,6 +41,7 @@
         --selection-color: #b9bfe5;
         --code-background-color: #52598c20;
         --blockquote-background-color: #52598c40;
+        --bsky-embed-background-color: #0a7aff15;
     }
 }
 
@@ -158,7 +161,7 @@ a > h3,
 a > h4,
 a > h5,
 a > h6 {
-    /* This is needed to disaplay nice titles with the same undeline effect
+    /* This is needed to display nice titles with the same undeline effect
      * as normal text */
     display: inline;
     padding-left: 0.2rem;
@@ -175,7 +178,7 @@ a {
     font-weight: 700;
 }
 
-a:not(.clip) {
+a:not(.no-highlight) {
     /* Highlighted effect */
     background-image: linear-gradient(to right, var(--main-color), var(--main-color));
     background-size: 100% 45%;
@@ -185,7 +188,11 @@ a:not(.clip) {
     transition-timing-function: var(--link-transition-function);
 }
 
-a:not(.clip):hover {
+a:not(.no-highlight).bsky-embed-link {
+    background-image: linear-gradient(to right, var(--bsky-embed-link-color), var(--bsky-embed-link-color));
+}
+
+a:not(.no-highlight):hover {
     background-size: 100% 80%;
     transition: var(--link-transition-time);
     transition-timing-function: var(--link-transition-function);
@@ -244,6 +251,39 @@ a:not(.clip):hover {
 
 .post-tag > a {
     background-image: none;
+}
+
+/* --- BLUESKY EMBEDS ------------------------------------------------------- */
+
+.bsky-embed {
+    width: calc(100% - 4rem);
+    @media screen and (min-width: 992px) {
+        width: calc(80% - 4rem);
+        margin-left: 10%;
+    }
+
+    padding: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--bsky-embed-background-color);
+
+    video {
+        width: 100%;
+    }
+}
+
+.bsky-embed-account {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    gap: 1rem;
+    line-height: 1.1;
+}
+
+.bsky-embed-logo {
+    height: 2rem;
+    width: 2rem;
+    margin: 0;
 }
 
 /* --- BREADCRUMBS ---------------------------------------------------------- */
