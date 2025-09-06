@@ -275,7 +275,9 @@ a:not(.no-highlight):hover {
 .bsky-embed-account {
     display: flex;
     flex-direction: row;
+    align-items: end;
     gap: 1rem;
+    line-height: 1.1;
 }
 
 .bsky-embed-logo {
