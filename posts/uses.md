@@ -12,6 +12,8 @@ status = "show"
 - _Mac Mini M2 Pro (2023)_
 - _Apple Magic Keyboard, Trackpad and Mouse_
 - _reMarkable 1,_ I love the big e-ink display to read books and annotate pdfs
+- _Raspberry Pi Zero W 2,_ it's a small, small $15 computer. I turned it into a
+  tiny local server I use to play games with my friends when they come over
 
 ### Writing stuff
 
