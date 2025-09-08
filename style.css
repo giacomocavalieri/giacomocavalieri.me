@@ -8,7 +8,7 @@
     --code-font-size: 0.9rem;
     --code-font-family: "Fira Code", monospace;
 
-    --h1-size: 3rem;
+    --h1-size: 2.5rem;
     --h2-size: 2rem;
     --h3-size: 1.5rem;
     --line-height: 1.5;
@@ -28,6 +28,8 @@
     --selection-color: #dff2d9;
     --code-background-color: #dff2d940;
     --blockquote-background-color: #dff2d970;
+    --bsky-embed-background-color: #0a7aff15;
+    --bsky-embed-link-color: #0a7aff40;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,18 +41,21 @@
         --selection-color: #b9bfe5;
         --code-background-color: #52598c20;
         --blockquote-background-color: #52598c40;
+        --bsky-embed-background-color: #0a7aff15;
     }
 }
 
 @media screen and (min-width: 992px) {
     :root {
         --body-horizontal-padding: 5rem;
+        --h1-size: 3rem;
     }
 }
 
 @media screen and (min-width: 1200px) {
     :root {
         --body-horizontal-padding: 10rem;
+        --h1-size: 3rem;
     }
 }
 
@@ -99,6 +104,8 @@ body {
 
 h1 {
     font-size: var(--h1-size);
+    text-wrap: balance;
+    line-height: 1.1;
 }
 
 h2 {
@@ -113,6 +120,26 @@ h3 {
     max-width: var(--main-content-max-size);
     margin-left: auto;
     margin-right: auto;
+}
+
+img {
+    object-fit: contain;
+    align-self: center;
+    width: 100%;
+
+    @media screen and (min-width: 992px) {
+        width: 80%;
+        margin-left: 10%;
+    }
+}
+
+.skeet-embed {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: var(--line-height);
+    margin-bottom: var(--line-height);
+    display: flex;
+    justify-content: center;
 }
 
 hr {
@@ -134,7 +161,7 @@ a > h3,
 a > h4,
 a > h5,
 a > h6 {
-    /* This is needed to disaplay nice titles with the same undeline effect
+    /* This is needed to display nice titles with the same undeline effect
      * as normal text */
     display: inline;
     padding-left: 0.2rem;
@@ -151,7 +178,7 @@ a {
     font-weight: 700;
 }
 
-a:not(.clip) {
+a:not(.no-highlight) {
     /* Highlighted effect */
     background-image: linear-gradient(to right, var(--main-color), var(--main-color));
     background-size: 100% 45%;
@@ -161,7 +188,11 @@ a:not(.clip) {
     transition-timing-function: var(--link-transition-function);
 }
 
-a:not(.clip):hover {
+a:not(.no-highlight).bsky-embed-link {
+    background-image: linear-gradient(to right, var(--bsky-embed-link-color), var(--bsky-embed-link-color));
+}
+
+a:not(.no-highlight):hover {
     background-size: 100% 80%;
     transition: var(--link-transition-time);
     transition-timing-function: var(--link-transition-function);
@@ -222,13 +253,43 @@ a:not(.clip):hover {
     background-image: none;
 }
 
+/* --- BLUESKY EMBEDS ------------------------------------------------------- */
+
+.bsky-embed {
+    width: calc(100% - 4rem);
+    @media screen and (min-width: 992px) {
+        width: calc(80% - 4rem);
+        margin-left: 10%;
+    }
+
+    padding: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--bsky-embed-background-color);
+
+    video {
+        width: 100%;
+    }
+}
+
+.bsky-embed-account {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    gap: 1rem;
+    line-height: 1.1;
+}
+
+.bsky-embed-logo {
+    height: 2rem;
+    width: 2rem;
+    margin: 0;
+}
+
 /* --- BREADCRUMBS ---------------------------------------------------------- */
 
 .breadcrumbs {
     margin-bottom: var(--line-height);
-}
-
-.breadcrumb-link {
 }
 
 /* --- POSTS ---------------------------------------------------------------- */
@@ -347,6 +408,7 @@ a:not(.clip):hover {
 .post-body ul {
     list-style: "-> " outside;
     padding-inline-start: 2rem;
+    text-align: left;
 }
 
 .post-body ul li {
@@ -395,7 +457,8 @@ a:not(.clip):hover {
 }
 
 .hljs-keyword,
-.hljs-built_in {
+.hljs-built_in,
+.hljs-operator {
     color: rgb(255, 69, 138);
 }
 
@@ -403,7 +466,14 @@ a:not(.clip):hover {
     color: rgb(56, 146, 240);
 }
 
-.hljs-variable,
-.hljs-operator {
+.hljs-variable {
     color: var(--text-color);
+}
+
+.hljs-addition {
+    background-color: rgb(94, 173, 94, 0.4);
+}
+
+.hljs-deletion {
+    background-color: rgb(255, 69, 138, 0.4);
 }
