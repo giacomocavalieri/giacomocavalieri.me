@@ -7,13 +7,12 @@ quite common for me to have many open PRs waiting to be reviewed and merged.
 One thing that usually happens is one of them (or some other PR) is merged and
 then conflicts start popping up without me noticing, until the reviewer pings me
 asking for a rebase.</p><p>The thing that&#39;s been bugging me for a while is that GitHub&#39;s PR view is not
-showing me the mergeability of any of my open PRs: that is wether they are still
-drafts, if they have conflicts I need to address, or if they don&#39;t need any of
-my attention.</p><p><img src="/imgs/github-prs-view.png"></p><p>Whenever a PR is merged, I need to go check each one individually and see if it
-has a conflict or not… quite annoying!</p><h2 id="The-solution">The solution</h2><p>GitHub has a handy <a href="https://docs.github.com/en/graphql">GraphQL API</a>.
+showing me the mergeability of any of my open PRs: that is wether they have
+conflicts I need to address, or if they don&#39;t need any of my attention.</p><p><img src="/imgs/github-prs-view.png"></p><p>Whenever a PR is merged I need to go check each of the remaining ones
+individually and see if there&#39;s a conflict or not. I find that quite annoying!</p><h2 id="The-solution">The solution</h2><p>GitHub has a handy <a href="https://docs.github.com/en/graphql">GraphQL API</a>.
 I had used it a couple of times to write small scripts, and so I was pretty
 confident it could help me solve this problem.
-I don&#39;t need to fetch a lot of data, for each PR I need to know it&#39;s title, a
+I don&#39;t need to fetch a lot of data: for each PR I need to know its title, a
 url pointing to it, whether it is mergeable, and if it is a draft.
 The GraphQL query I ended up writing looks like this:</p><pre><code class="not-prose language-graphql hljs" data-lang="graphql">query {
   viewer {
@@ -49,7 +48,7 @@ pub fn fetch_pull_requests(gh_token: String) {
     |&gt; request.set_body(&quot;{ \&quot;query\&quot;: \&quot;&quot; &lt;&gt; query &lt;&gt; &quot;\&quot;}&quot;)
 }
 </code></pre><p>And we&#39;re good to go, now we have to actually send the request and see what the
-server replies with, we&#39;re using the
+server replies with. We&#39;re using the
 <a href="https://hexdocs.pm/gleam_httpc/index.html">gleam_httpc</a> client to do that:</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> import gleam/http
  import gleam/http/request
 +import gleam/httpc
@@ -157,7 +156,7 @@ pub fn fetch_pull_requests(gh_token: String) -&gt; List(PullRequest) {
   pull_requests
 }
 </code></pre><p>Notice how we pieced together the little decoders we defined to get an
-increasingly more powerful decoder: we start with somthing that can decode just
+increasingly more powerful decoder: we start with something that can decode just
 a mergeability string into a Gleam type, we use it to define something that can
 decode a single pull request. Finally, we can use that to define a decoder that
 decodes a list of pull requests that is found deeply nested in a json object.</p><p>Now we&#39;re just missing a way to nicely display all this data!</p><h3 id="Enters-the-trusty-Raspberry-Pi-Zero">Enters the trusty Raspberry Pi Zero</h3><p>A while ago I got a
@@ -184,7 +183,11 @@ lying around.</p><div><figure class="bsky-embed">
         <br />
         This is powered by Gleam running on a Raspberry Pi Zero, how cool is that?
     </p>
-    <video loop autoplay muted controls aria-describedby="embed-video-description">
+    <video
+      muted controls
+      poster="/imgs/raspberry-display-poster.png"
+      preload="none"
+      aria-describedby="embed-video-description">
         <source type="video/mp4" src="/imgs/raspberry-display.mp4" />
     </video>
     <a class="bsky-embed-link" href="https://bsky.app/profile/did:plc:vzaxc2idqnxovkqscsa3tvvi/post/3lmptyp2lis2p">
@@ -311,4 +314,4 @@ minutes task. But this actually took me less than an hour to build – Gleam is
 an incredibly productive language!</p><p>I think there&#39;s something exhilarating in racking one&#39;s brain trying to automate
 routine tasks; and even if this
 <a href="https://xkcd.com/1205/">might not have been worth the time,</a> I sure had loads
-of fun, and that&#39;s the whole point of coding!</p></main></article></div></body></html>
+of fun, and that&#39;s the whole point of coding!</p><hr></main></article></div></body></html>
