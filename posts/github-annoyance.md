@@ -272,7 +272,7 @@ lying around.
     <video
       muted controls
       poster="/imgs/raspberry-display-poster.png"
-      preload="none"
+      preload="metadata"
       aria-describedby="embed-video-description">
         <source type="video/mp4" src="/imgs/raspberry-display.mp4" />
     </video>
