@@ -1,14 +1,14 @@
 ---
 id = "fixing-my-gripes-with-github-using-gleam-and-a-raspberry-pi"
 title = "Fixing my gripes with GitHub using Gleam and a Raspberry Pi"
-abstract = "As a programmer there's no greater joy than trying to code your way out of little daily annoyances. Lately I've been annoyed by GitHub's UI and I set up to fix this using Gleam and a little Raspberry Pi Zero."
+abstract = "As a programmer there's no greater joy than trying to code my way out of little daily annoyances. Lately I've been annoyed by GitHub's UI and I set up to fix this using Gleam and a little Raspberry Pi Zero."
 tags = ["gleam", "raspberry-pi"]
 date = 2025-09-08
 status = "show"
 ---
 
-As a programmer there's no greater joy than trying to code your way out of
-little daily annoyances.
+As a programmer there's no greater joy than trying to code my way out of little
+daily annoyances.
 Lately I've been annoyed by GitHub's UI and I set up to fix this using Gleam and
 a little Raspberry Pi Zero.
 
