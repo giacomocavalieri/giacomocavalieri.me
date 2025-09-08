@@ -269,7 +269,11 @@ lying around.
         <br />
         This is powered by Gleam running on a Raspberry Pi Zero, how cool is that?
     </p>
-    <video loop autoplay muted controls aria-describedby="embed-video-description">
+    <video
+      muted controls
+      poster="/imgs/raspberry-display-poster.png"
+      preload="none"
+      aria-describedby="embed-video-description">
         <source type="video/mp4" src="/imgs/raspberry-display.mp4" />
     </video>
     <a class="bsky-embed-link" href="https://bsky.app/profile/did:plc:vzaxc2idqnxovkqscsa3tvvi/post/3lmptyp2lis2p">
