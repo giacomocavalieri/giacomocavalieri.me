@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><title>How I solved a little nuisance using Gleam and a Raspberry Pi</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><meta content="Giacomo Cavalieri&#39;s blog" property="og:site_name"><meta content="How I solved a little nuisance using Gleam and a Raspberry Pi" property="og:title"><meta content="website" property="og:type"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="og:description"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." name="description"><meta content="summary" property="twitter:card"><meta content="How I solved a little nuisance using Gleam and a Raspberry Pi" property="twitter:title"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="twitter:description"><meta content="@giacomo_cava" property="twitter:creator"><link as="font" crossorigin="true" href="Mona-Sans.woff2" rel="payload" type="font/woff2"><meta content="#cceac3" media="(prefers-color-scheme: light)" name="theme-color"><link href="/style.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry "><header><h1 class="post-title p-name ">How I solved a little nuisance using Gleam and a Raspberry Pi</h1><nav class="breadcrumbs"><a class="breadcrumb-link" href="/" rel="author">← home</a></nav><div class="post-subtitle"><time class="post-date dt-published " datetime="2025-09-05">5 September 2025</time><ul class="post-tags"><li class="post-tag p-category "><a href="/tags/gleam.html">gleam</a></li><li class="post-tag p-category "><a href="/tags/raspberry-pi.html">raspberry-pi</a></li></ul></div></header><main class="post-body e-content "><p>As a programmer there&#39;s no greater joy than trying to code your way out of
+<html lang="en"><head><title>Fixing my gripes with GitHub using Gleam and a Raspberry Pi</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><meta content="Giacomo Cavalieri&#39;s blog" property="og:site_name"><meta content="Fixing my gripes with GitHub using Gleam and a Raspberry Pi" property="og:title"><meta content="website" property="og:type"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="og:description"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." name="description"><meta content="summary" property="twitter:card"><meta content="Fixing my gripes with GitHub using Gleam and a Raspberry Pi" property="twitter:title"><meta content="As a programmer there&#39;s no greater joy than trying to code your way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="twitter:description"><meta content="@giacomo_cava" property="twitter:creator"><link as="font" crossorigin="true" href="Mona-Sans.woff2" rel="payload" type="font/woff2"><meta content="#cceac3" media="(prefers-color-scheme: light)" name="theme-color"><link href="/style.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry "><header><h1 class="post-title p-name ">Fixing my gripes with GitHub using Gleam and a Raspberry Pi</h1><nav class="breadcrumbs"><a class="breadcrumb-link" href="/" rel="author">← home</a></nav><div class="post-subtitle"><time class="post-date dt-published " datetime="2025-09-08">8 September 2025</time><ul class="post-tags"><li class="post-tag p-category "><a href="/tags/gleam.html">gleam</a></li><li class="post-tag p-category "><a href="/tags/raspberry-pi.html">raspberry-pi</a></li></ul></div></header><main class="post-body e-content "><p>As a programmer there&#39;s no greater joy than trying to code your way out of
 little daily annoyances.
 Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and
 a little Raspberry Pi Zero.</p><h2 id="The-problem">The problem</h2><p>I work a lot on the <a href="https://github.com/gleam-lang/gleam">Gleam compiler</a>, it&#39;s
@@ -13,7 +13,9 @@ my attention.</p><p><img src="/imgs/github-prs-view.png"></p><p>Whenever a PR is
 has a conflict or not… quite annoying!</p><h2 id="The-solution">The solution</h2><p>GitHub has a handy <a href="https://docs.github.com/en/graphql">GraphQL API</a>.
 I had used it a couple of times to write small scripts, and so I was pretty
 confident it could help me solve this problem.
-The GraphQL query I ended up writing to fetch data about PRs looks like this:</p><pre><code class="not-prose language-graphql hljs" data-lang="graphql">query {
+I don&#39;t need to fetch a lot of data, for each PR I need to know it&#39;s title, a
+url pointing to it, whether it is mergeable, and if it is a draft.
+The GraphQL query I ended up writing looks like this:</p><pre><code class="not-prose language-graphql hljs" data-lang="graphql">query {
   viewer {
     pullRequests(first: 50, states: OPEN, orderBy: { field: UPDATED_AT, direction: DESC }) {
       nodes {
@@ -100,9 +102,13 @@ pub type Mergeability {
   Mergeable
   Unknown
 }
-</code></pre><p>The next step is turning this JSON string we get as a response – which is quite
-hard to work with – into a list of <code>PullRequest</code>s; one can do that in Gleam by
-using a <a href="https://hexdocs.pm/gleam_stdlib/gleam/dynamic/decode.html"><code>Decoder</code></a>.</p><p>The nice thing about them is that they can compose nicely so we can start
+</code></pre><h3 id="Dealing-with-the-unknown">Dealing with the unknown</h3><p>The response we get back from the API is a plain string containing an unknown
+JSON object. So, before we can do anything meaningful with this data, we need to
+parse it into something with a known shape: a list of <code>PullRequest</code>s in this
+case.</p><p>One can do that in Gleam using a
+<a href="https://hexdocs.pm/gleam_stdlib/gleam/dynamic/decode.html"><code>Decoder</code></a>: a value
+that can be used to turn unknown data into well typed values.
+The nice thing about decoders is that they can compose nicely, so we can start
 with small building blocks and join them together as needed.
 Let&#39;s start with the decoder for mergeability, those are plain strings in
 the JSON response:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import gleam/dynamic/decode.{type Decoder}
@@ -221,8 +227,7 @@ API:</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> pub fn
  }
 </code></pre><p>All the hard work of fetching and decoding the pull requests is already
 implemented in <code>fetch_pull_requests</code>, so we just need a way to dinamically
-produce some html document from those.
-To do that I&#39;m using <a href="https://hexdocs.pm/lustre/index.html">Lustre</a>, a Gleam web
+produce some HTML document from those.</p><h3 id="HTML-templating-with-Lustre">HTML templating with Lustre</h3><p>To do that I&#39;m using <a href="https://hexdocs.pm/lustre/index.html">Lustre</a>, a Gleam web
 framework for building HTML templates, single page applications, and real-time
 server components.
 In my case I&#39;m using it just for the HTML templating, and it looks like this:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import lustre/element/html
@@ -233,12 +238,14 @@ pub fn pull_requests_page(gh_token: String) -&gt; Element(msg) {
   html.main([], [
     html.h1([], [html.text(&quot;Pull Requests&quot;)]),
     html.ul([], todo as &quot;the list items&quot;)
+    //          ^^^^ A handy Gleam keyword to leave some bits
+    //               and pieces of code unimplemented!
   ])
 }
 </code></pre><p>The thing I love about Lustre is that everything is just functions™️, there&#39;s
 no external templating language, fancy macros, or new syntax I need to learn:
-all I know about refactoring and organising code applies just as nicely to my
-HTML-producing code.
+<em>all I know about refactoring and organising code applies just as nicely to my
+HTML-producing code.</em>
 So here to keep things nice and tidy I want to define a helper function that
 takes care of turning a single pull request into a list item:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn pull_request_to_li(pull_request: PullRequest) -&gt; Element(msg) {
   let mergeability = case pull_request.mergeability {
@@ -299,9 +306,9 @@ on:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn
 }
 </code></pre><p>And now I can browse to my Raspberry and see at a glance whether any of my PRs
 need some fixing, pretty neat if you ask me!</p><p><img src="/imgs/final-result.png"></p><p>Yes, I know this won&#39;t probably win a design award, but I&#39;m quite fond of the
-web 1.0 aesthetic and that&#39;s more than enough for me.</p><h2 id="Was-it-worth-it">Was it worth it?</h2><p>Ok we all know the joke of the developer speding months trying to automate a
-5 minutes task. But this actually took me less than an hour to build – Gleam is
+web 1.0 aesthetic and that&#39;s more than enough for me.</p><h2 id="Was-it-worth-it">Was it worth it?</h2><p>We all know the joke of the developer speding months trying to automate a 5
+minutes task. But this actually took me less than an hour to build – Gleam is
 an incredibly productive language!</p><p>I think there&#39;s something exhilarating in racking one&#39;s brain trying to automate
 routine tasks; and even if this
 <a href="https://xkcd.com/1205/">might not have been worth the time,</a> I sure had loads
-of fun… and that&#39;s the whole point of coding!</p></main></article></div></body></html>
+of fun, and that&#39;s the whole point of coding!</p></main></article></div></body></html>
