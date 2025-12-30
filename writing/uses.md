@@ -27,11 +27,11 @@ status = "show"
 
 ## Software
 
-- [_Zed_](https://zed.dev)
-- [_Jujutsu,_](https://jj-vcs.github.io/jj/latest/) I'm slowly getting the hang
+- _[Zed](https://zed.dev)_
+- _[Jujutsu,](https://jj-vcs.github.io/jj/latest/)_ I'm slowly getting the hang
   of how it works and the DX has been really nice so far
-- [_Rectangle_](https://rectangleapp.com)
-- [_Delta,_](https://github.com/dandavison/delta) I use this to show pretty
+- _[Rectangle](https://rectangleapp.com)_
+- _[Delta,](https://github.com/dandavison/delta)_ I use this to show pretty
   git diffs on the command line, a real life saver
-- [_Screen Studio,_](https://www.screen.studio) this makes the prettiest screen
+- _[Screen Studio,](https://www.screen.studio)_ this makes the prettiest screen
   recordings I've ever seen

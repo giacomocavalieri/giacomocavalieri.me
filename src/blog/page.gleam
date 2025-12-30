@@ -1,6 +1,9 @@
 import blog/breadcrumbs
 import blog/post.{type Post}
-import glevatar
+import blog/talk.{type Talk}
+import gleam/dict
+import gleam/int
+import gleam/list
 import jot_extra
 import lustre/attribute.{type Attribute, attribute} as attr
 import lustre/element.{type Element}
@@ -8,111 +11,163 @@ import lustre/element/html
 
 // --- HOME PAGE ---------------------------------------------------------------
 
-pub fn homepage(posts: List(Post)) -> Element(a) {
-  with_body(
-    "Giacomo Cavalieri",
-    "A personal blog where I share my thoughts as I jump from one obsession to the other",
-    [homepage_header(), html.main([], [post.to_preview_list(posts)])],
-  )
-}
-
-fn profile_picture_source() -> String {
-  glevatar.new("giacomo.cavalieri@icloud.com")
-  |> glevatar.set_size(440)
-  |> glevatar.to_string
-}
-
-fn profile_picture() -> Element(a) {
-  html.img([
-    attr.id("homepage-profile-picture"),
-    attr.class("u-photo"),
-    attr.alt(""),
-    attr.src(profile_picture_source()),
+pub fn home() -> Element(a) {
+  page("Giacomo Cavalieri", "", [attr.class("stack-l jak-cover")], [
+    html.h1([], [html.text("Giacomo Cavalieri")]),
+    html.main([attr.class("stack-s")], [
+      html.p([], [html.text("Italy-based developer.")]),
+      html.p([], [
+        html.a([attr.href("https://gleam.run")], [html.text("Gleam")]),
+        html.text(" core team member."),
+      ]),
+      html.p([], [
+        html.text("Appreciate my work? Support me on "),
+        html.a([attr.href("https://github.com/sponsors/giacomocavalieri")], [
+          html.text("GitHub Sponsors."),
+        ]),
+      ]),
+    ]),
+    navbar(
+      html.li([], [
+        html.a([attr.href("contact.html")], [html.text("contact")]),
+      ]),
+    ),
   ])
 }
 
-fn homepage_header() -> Element(a) {
-  let me_link = fn(link, name) {
-    html.a([attr.href(link), attr.rel("me"), attr.class("u-url")], [
-      html.text(name),
-    ])
-  }
-
-  html.header([attr.id("homepage-header"), attr.class("h-card p-author")], [
-    profile_picture(),
-    html.h2([attr.id("homepage-subtitle")], [html.text("Hello 👋")]),
-    html.h1([attr.id("homepage-title")], [
-      html.text("I'm "),
-      html.span([attr.class("p-given-name")], [html.text("Giacomo")]),
+pub fn contact() -> Element(a) {
+  page("Giacomo Cavalieri", "", [attr.class("stack-l jak-cover")], [
+    html.h1([], [html.text("Giacomo Cavalieri")]),
+    html.address([attr.class("stack-s")], [
+      html.p([], [
+        html.text("For any inquiry "),
+        html.a([attr.href("mailto:info@giacomocavalieri.me")], [
+          html.text("info@giacomocavalieri.me"),
+        ]),
+      ]),
+      html.p([], [
+        html.text("My open source work is on GitHub "),
+        html.a([attr.href("https://github.com/giacomocavalieri")], [
+          html.text("@giacomocavalieri"),
+        ]),
+      ]),
+      html.p([], [
+        html.text("Find me on Bluesky "),
+        html.a([attr.href("https://bsky.app/profile/giacomocavalieri.me")], [
+          html.text("@giacomocavalieri"),
+        ]),
+      ]),
     ]),
-    html.p([attr.id("homepage-description"), attr.class("p-note")], [
-      html.i([], [html.text("He/Him")]),
-      html.text(" • I love functional programming and learning new things"),
-      html.br([]),
-      html.text("Sharing my thoughts as I hop from one obsession to the other"),
-      html.br([]),
-      html.text("You can also find me on "),
-      me_link("https://github.com/giacomocavalieri", "GitHub"),
-      html.text(" and "),
-      me_link("https://bsky.app/profile/giacomocavalieri.me", "Bluesky"),
-      html.text("!"),
+    navbar(
+      html.li([], [
+        html.a([attr.href("index.html")], [html.text("home")]),
+      ]),
+    ),
+  ])
+}
+
+fn navbar(last_item: Element(a)) -> Element(a) {
+  html.nav([], [
+    html.ul([attr.class("switcher nav-switcher")], [
+      html.li([], [
+        html.a([attr.href("writing.html"), animate("writing")], [
+          html.text("writing"),
+        ]),
+      ]),
+      html.li([], [
+        html.a([attr.href("speaking.html"), animate("speaking")], [
+          html.text("speaking"),
+        ]),
+      ]),
+      last_item,
     ]),
   ])
+}
+
+fn animate(name: String) -> Attribute(a) {
+  attr.style("view-transition-name", name <> "-animation")
 }
 
 // --- 404 PAGE ---------------------------------------------------------------
 
 pub fn not_found() -> Element(a) {
-  with_body("Not found", "There's nothing here", [
-    html.main([], [
-      html.h1([], [html.text("There's nothing here!")]),
-      html.p([], [
-        html.text("Go back to the "),
-        html.a([attr.href("/")], [html.text("home page")]),
-      ]),
+  page("Not found", "There's nothing here", [attr.class("stack-l")], [
+    html.h1([], [html.text("There's nothing here!")]),
+    html.p([], [
+      html.text("Go back "),
+      html.a([attr.href("index.html")], [html.text("home")]),
     ]),
   ])
 }
 
 // --- POST PAGE ---------------------------------------------------------------
 
-pub fn from_post(post: Post) -> Element(Nil) {
-  with_body(post.meta.title, jot_extra.to_string(post.meta.abstract), [
-    post.to_article(post),
-  ])
-}
+pub fn writing(posts: List(Post)) -> Element(Nil) {
+  let posts_by_year =
+    list.group(posts, fn(post) { post.meta.date.year })
+    |> dict.to_list
+    |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
-// --- TAG PAGE ----------------------------------------------------------------
-
-pub fn from_tag(tag: String, posts: List(Post)) -> Element(Nil) {
-  with_body(tag, "posts tagged \"" <> tag <> "\"", [
-    html.h1([attr.class("tag-title")], [
-      html.text("Posts tagged "),
-      html.i([], [html.text("\"" <> tag <> "\"")]),
+  page("writing", "", [attr.class("stack-l")], [
+    breadcrumbs.new([
+      breadcrumbs.link("home", to: "/"),
+      breadcrumbs.animated_link("writing", to: "/writing.html"),
     ]),
-    breadcrumbs.home(),
-    html.main([], [post.to_preview_list(posts)]),
+    html.main([], [
+      html.ol([attr.class("stack")], {
+        use #(year, posts) <- list.map(posts_by_year)
+        html.li([attr.class("stack-s")], [
+          html.h2([], [html.text(int.to_string(year))]),
+          post.to_preview_list(posts),
+        ])
+      }),
+    ]),
   ])
 }
 
-// --- CV PAGE -----------------------------------------------------------------
+pub fn speaking(talks: List(Talk)) -> Element(Nil) {
+  let talks_by_year =
+    list.group(talks, fn(talk) { talk.date.year })
+    |> dict.to_list
+    |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
-pub fn cv() -> Element(nothing) {
-  with_body("cv", "my curriculum vitae", [])
+  page("speaking", "", [attr.class("stack-l")], [
+    breadcrumbs.new([
+      breadcrumbs.link("home", to: "/"),
+      breadcrumbs.animated_link("speaking", to: "/speaking.html"),
+    ]),
+    html.main([], [
+      html.ol([attr.class("stack")], {
+        use #(year, talks) <- list.map(talks_by_year)
+        html.li([attr.class("stack-s")], [
+          html.h2([], [html.text(int.to_string(year))]),
+          talk.to_preview_list(talks),
+        ])
+      }),
+    ]),
+  ])
+}
+
+pub fn from_post(post: Post) -> Element(Nil) {
+  page(
+    post.meta.title,
+    jot_extra.to_string(post.meta.abstract),
+    [attr.class("stack-l")],
+    post.to_article(post),
+  )
 }
 
 // --- HELPERS -----------------------------------------------------------------
 
-fn with_body(
+fn page(
   title: String,
   description: String,
+  attributes: List(Attribute(a)),
   elements: List(Element(a)),
 ) -> Element(a) {
   html.html([lang("en")], [
     default_head(title, description),
-    html.body([], [
-      html.div([attr.class("limit-max-width-and-center")], elements),
-    ]),
+    html.body(attributes, elements),
   ])
 }
 
@@ -135,23 +190,11 @@ fn default_head(page_title: String, description: String) -> Element(a) {
       attr.title("giacomocavalieri.me posts feed"),
       attr.href("https://giacomocavalieri.me/feed.xml"),
     ]),
-    html.meta([property("og:site_name"), content("Giacomo Cavalieri's blog")]),
+    html.meta([property("og:site_name"), content("Giacomo Cavalieri")]),
     html.meta([property("og:title"), content(page_title)]),
     html.meta([property("og:type"), content("website")]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
-    html.meta([property("twitter:card"), content("summary")]),
-    html.meta([property("twitter:title"), content(page_title)]),
-    html.meta([property("twitter:description"), content(description)]),
-    html.meta([property("twitter:creator"), content("@giacomo_cava")]),
-    html.link([
-      attr.rel("payload"),
-      attr.href("Mona-Sans.woff2"),
-      as_("font"),
-      attr.type_("font/woff2"),
-      crossorigin(),
-    ]),
-    theme_color([content("#cceac3"), media("(prefers-color-scheme: light)")]),
     stylesheet("/style.css"),
     html.script([attr.src(hljs_script_url)], ""),
     html.script([attr.src(hljs_diff_url)], ""),
@@ -160,7 +203,7 @@ fn default_head(page_title: String, description: String) -> Element(a) {
   ])
 }
 
-// --- META BUILDERS ---
+// --- META BUILDERS -----------------------------------------------------------
 
 fn meta_named(meta_name: String, attributes: List(Attribute(a))) -> Element(a) {
   html.meta([attr.name(meta_name), ..attributes])
@@ -168,10 +211,6 @@ fn meta_named(meta_name: String, attributes: List(Attribute(a))) -> Element(a) {
 
 fn viewport(attributes: List(Attribute(a))) -> Element(a) {
   meta_named("viewport", attributes)
-}
-
-fn theme_color(attributes: List(Attribute(a))) -> Element(a) {
-  meta_named("theme-color", attributes)
 }
 
 fn stylesheet(file: String) -> Element(a) {
@@ -186,22 +225,10 @@ fn content(value: String) -> Attribute(a) {
   attribute("content", value)
 }
 
-fn media(value: String) -> Attribute(a) {
-  attribute("media", value)
-}
-
 fn lang(value: String) -> Attribute(a) {
   attribute("lang", value)
 }
 
 fn property(value: String) -> Attribute(a) {
   attribute("property", value)
-}
-
-fn as_(value: String) -> Attribute(a) {
-  attribute("as", value)
-}
-
-fn crossorigin() -> Attribute(a) {
-  attribute("crossorigin", "true")
 }
