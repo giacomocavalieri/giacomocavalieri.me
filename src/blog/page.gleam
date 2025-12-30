@@ -11,8 +11,10 @@ import lustre/element/html
 
 // --- HOME PAGE ---------------------------------------------------------------
 
+const description = "Italy-based developer, Gleam core team member"
+
 pub fn home() -> Element(a) {
-  page("Giacomo Cavalieri", "", [attr.class("stack-l jak-cover")], [
+  page("Giacomo Cavalieri", description, [attr.class("stack-l jak-cover")], [
     html.h1([], [html.text("Giacomo Cavalieri")]),
     html.main([attr.class("stack-s")], [
       html.p([], [html.text("Italy-based developer.")]),
@@ -36,7 +38,7 @@ pub fn home() -> Element(a) {
 }
 
 pub fn contact() -> Element(a) {
-  page("Giacomo Cavalieri", "", [attr.class("stack-l jak-cover")], [
+  page("Giacomo Cavalieri", description, [attr.class("stack-l jak-cover")], [
     html.h1([], [html.text("Giacomo Cavalieri")]),
     html.address([attr.class("stack-s")], [
       html.p([], [
@@ -108,7 +110,7 @@ pub fn writing(posts: List(Post)) -> Element(Nil) {
     |> dict.to_list
     |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
-  page("writing", "", [attr.class("stack-l")], [
+  page("writing", description, [attr.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("writing", to: "/writing.html"),
@@ -131,7 +133,7 @@ pub fn speaking(talks: List(Talk)) -> Element(Nil) {
     |> dict.to_list
     |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
-  page("speaking", "", [attr.class("stack-l")], [
+  page("speaking", description, [attr.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("speaking", to: "/speaking.html"),
