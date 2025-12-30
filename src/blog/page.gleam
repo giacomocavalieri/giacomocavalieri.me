@@ -202,7 +202,7 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     ]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
-    stylesheet("/style.css"),
+    stylesheet("/style-2.css"),
     html.script([attr.src(hljs_script_url)], ""),
     html.script([attr.src(hljs_diff_url)], ""),
     html.script([attr.src(gleam_hljs_script_url)], ""),
