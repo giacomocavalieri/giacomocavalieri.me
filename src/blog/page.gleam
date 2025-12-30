@@ -38,7 +38,8 @@ pub fn home() -> Element(a) {
 }
 
 pub fn contact() -> Element(a) {
-  page("Giacomo Cavalieri", description, [attr.class("stack-l jak-cover")], [
+  let title = "Contact | Giacomo Cavalieri"
+  page(title, description, [attr.class("stack-l jak-cover")], [
     html.h1([], [html.text("Giacomo Cavalieri")]),
     html.address([attr.class("stack-s")], [
       html.p([], [
@@ -110,7 +111,7 @@ pub fn writing(posts: List(Post)) -> Element(Nil) {
     |> dict.to_list
     |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
-  page("writing", description, [attr.class("stack-l")], [
+  page("Writing | Giacomo Cavalieri", description, [attr.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("writing", to: "/writing.html"),
@@ -133,7 +134,7 @@ pub fn speaking(talks: List(Talk)) -> Element(Nil) {
     |> dict.to_list
     |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
-  page("speaking", description, [attr.class("stack-l")], [
+  page("Speaking | Giacomo Cavalieri", description, [attr.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("speaking", to: "/speaking.html"),
