@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="en"><head><title>Fixing my gripes with GitHub using Gleam and a Raspberry Pi</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><meta content="Giacomo Cavalieri&#39;s blog" property="og:site_name"><meta content="Fixing my gripes with GitHub using Gleam and a Raspberry Pi" property="og:title"><meta content="website" property="og:type"><meta content="As a programmer there&#39;s no greater joy than trying to code my way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="og:description"><meta content="As a programmer there&#39;s no greater joy than trying to code my way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." name="description"><meta content="summary" property="twitter:card"><meta content="Fixing my gripes with GitHub using Gleam and a Raspberry Pi" property="twitter:title"><meta content="As a programmer there&#39;s no greater joy than trying to code my way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="twitter:description"><meta content="@giacomo_cava" property="twitter:creator"><link as="font" crossorigin="true" href="Mona-Sans.woff2" rel="payload" type="font/woff2"><meta content="#cceac3" media="(prefers-color-scheme: light)" name="theme-color"><link href="/style.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body><div class="limit-max-width-and-center"><article class="post h-entry "><header><h1 class="post-title p-name ">Fixing my gripes with GitHub using Gleam and a Raspberry Pi</h1><nav class="breadcrumbs"><a class="breadcrumb-link" href="/" rel="author">← home</a></nav><div class="post-subtitle"><time class="post-date dt-published " datetime="2025-09-08">8 September 2025</time><ul class="post-tags"><li class="post-tag p-category "><a href="/tags/gleam.html">gleam</a></li><li class="post-tag p-category "><a href="/tags/raspberry-pi.html">raspberry-pi</a></li></ul></div></header><main class="post-body e-content "><p>As a programmer there&#39;s no greater joy than trying to code my way out of little
+<html lang="en"><head><title>Fixing my gripes with GitHub using Gleam and a Raspberry Pi</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><meta content="Giacomo Cavalieri" property="og:site_name"><meta content="Fixing my gripes with GitHub using Gleam and a Raspberry Pi" property="og:title"><meta content="website" property="og:type"><meta content="As a programmer there&#39;s no greater joy than trying to code my way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="og:description"><meta content="As a programmer there&#39;s no greater joy than trying to code my way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." name="description"><link href="/style.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body class="stack-l"><ol aria-label="Breadcrumb" class="breadcrumb"><li><a href="/">home</a></li><li><a href="/writing.html" style="view-transition-name:writing-animation;">writing</a></li><li><h2 aria-current="page" data-crumb="block">Fixing my gripes with GitHub using Gleam and a Raspberry Pi</h2></li></ol><main class="stack article"><section class="stack"><p>As a programmer there&#39;s no greater joy than trying to code my way out of little
 daily annoyances.
 Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and
-a little Raspberry Pi Zero.</p><h2 id="The-problem">The problem</h2><p>I work a lot on the <a href="https://github.com/gleam-lang/gleam">Gleam compiler</a>, it&#39;s
+a little Raspberry Pi Zero.</p></section><section class="stack"><h2 id="The-problem">The problem</h2><p>I work a lot on the <a href="https://github.com/gleam-lang/gleam">Gleam compiler</a>, it&#39;s
 quite common for me to have many open PRs waiting to be reviewed and merged.
 One thing that usually happens is one of them (or some other PR) is merged and
 then conflicts start popping up without me noticing, until the reviewer pings me
 asking for a rebase.</p><p>The thing that&#39;s been bugging me for a while is that GitHub&#39;s PR view is not
 showing me the mergeability of any of my open PRs: that is wether they have
 conflicts I need to address, or if they don&#39;t need any of my attention.</p><p><img src="/imgs/github-prs-view.png"></p><p>Whenever a PR is merged I need to go check each of the remaining ones
-individually and see if there&#39;s a conflict or not. I find that quite annoying!</p><h2 id="The-solution">The solution</h2><p>GitHub has a handy <a href="https://docs.github.com/en/graphql">GraphQL API</a>.
+individually and see if there&#39;s a conflict or not. I find that quite annoying!</p></section><section class="stack"><h2 id="The-solution">The solution</h2><p>GitHub has a handy <a href="https://docs.github.com/en/graphql">GraphQL API</a>.
 I had used it a couple of times to write small scripts, and so I was pretty
 confident it could help me solve this problem.
 I don&#39;t need to fetch a lot of data: for each PR I need to know its title, a
@@ -28,7 +28,7 @@ The GraphQL query I ended up writing looks like this:</p><pre><code class="not-p
 }
 </code></pre><p>So how do we query the GitHub GraphQL API using Gleam? We can craft an HTTP
 request with the proper headers and body as suggested by GitHub&#39;s own
-<a href="https://docs.github.com/en/graphql/guides/forming-calls-with-graphql#communicating-with-graphql">documentation</a>:</p><ul><li><p>The endpoint is <code>https://api.github.com/graphql</code></p></li><li><p>It needs to be a POST request…</p></li><li><p>…with a json body containing a <code>&quot;query&quot;</code> string field</p></li><li><p>and an <code>&quot;authorization&quot;</code> header with a suitable <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">GitHub token</a></p></li></ul><p>Building such request in Gleam can look something like this, using the
+<a href="https://docs.github.com/en/graphql/guides/forming-calls-with-graphql#communicating-with-graphql">documentation</a>:</p><ul><li><section class="stack"><p>The endpoint is <code>https://api.github.com/graphql</code></p></section></li><li><section class="stack"><p>It needs to be a POST request…</p></section></li><li><section class="stack"><p>…with a json body containing a <code>&quot;query&quot;</code> string field</p></section></li><li><section class="stack"><p>and an <code>&quot;authorization&quot;</code> header with a suitable <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">GitHub token</a></p></section></li></ul><p>Building such request in Gleam can look something like this, using the
 <a href="https://hexdocs.pm/gleam_http/index.html">gleam_http</a> package:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import gleam/http
 import gleam/http/request
 
@@ -66,7 +66,7 @@ server replies with. We&#39;re using the
      |&gt; request.set_body(&quot;{ \&quot;query\&quot;: \&quot;&quot; &lt;&gt; query &lt;&gt; &quot;\&quot;}&quot;)
 +    |&gt; httpc.send
  }
-</code></pre><blockquote><p>Here I&#39;m <a href="https://tour.gleam.run/advanced-features/let-assert/"><code>assert</code></a>-ing
+</code></pre><blockquote class="stack"><p>Here I&#39;m <a href="https://tour.gleam.run/advanced-features/let-assert/"><code>assert</code></a>-ing
 that I will get a response from the server, so this code will crash in case
 there&#39;s an error.
 For my little application it is completely fine to crash when an error occurs,
@@ -101,7 +101,7 @@ pub type Mergeability {
   Mergeable
   Unknown
 }
-</code></pre><h3 id="Dealing-with-the-unknown">Dealing with the unknown</h3><p>The response we get back from the API is a plain string containing an unknown
+</code></pre></section><section class="stack"><h3 id="Dealing-with-the-unknown">Dealing with the unknown</h3><p>The response we get back from the API is a plain string containing an unknown
 JSON object. So, before we can do anything meaningful with this data, we need to
 parse it into something with a known shape: a list of <code>PullRequest</code>s in this
 case.</p><p>One can do that in Gleam using a
@@ -159,45 +159,27 @@ pub fn fetch_pull_requests(gh_token: String) -&gt; List(PullRequest) {
 increasingly more powerful decoder: we start with something that can decode just
 a mergeability string into a Gleam type, we use it to define something that can
 decode a single pull request. Finally, we can use that to define a decoder that
-decodes a list of pull requests that is found deeply nested in a json object.</p><p>Now we&#39;re just missing a way to nicely display all this data!</p><h3 id="Enters-the-trusty-Raspberry-Pi-Zero">Enters the trusty Raspberry Pi Zero</h3><p>A while ago I got a
+decodes a list of pull requests that is found deeply nested in a json object.</p><p>Now we&#39;re just missing a way to nicely display all this data!</p></section><section class="stack"><h3 id="Enters-the-trusty-Raspberry-Pi-Zero">Enters the trusty Raspberry Pi Zero</h3><p>A while ago I got a
 <a href="https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/">Raspberry Pi Zero 2 W</a>,
 a tiny, tiny $15 computer.
 Being a Gleam nerd, of course I wanted to try and run some Gleam code on it!
 It was great fun playing around with it and with some little displays I had
-lying around.</p><div><figure class="bsky-embed">
-    <div class="bsky-embed-account">
-        <a class="no-highlight" href="https://bsky.app/profile/giacomocavalieri.me">
-            <img
-                class="bsky-embed-logo"
-                src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20fill='none'%20viewBox='0%200%20320%20286'%3e%3cpath%20fill='rgb(10,122,255)'%20d='M69.364%2019.146c36.687%2027.806%2076.147%2084.186%2090.636%20114.439%2014.489-30.253%2053.948-86.633%2090.636-114.439C277.107-.917%20320-16.44%20320%2032.957c0%209.865-5.603%2082.875-8.889%2094.729-11.423%2041.208-53.045%2051.719-90.071%2045.357%2064.719%2011.12%2081.182%2047.953%2045.627%2084.785-80%2082.874-106.667-44.333-106.667-44.333s-26.667%20127.207-106.667%2044.333c-35.555-36.832-19.092-73.665%2045.627-84.785-37.026%206.362-78.648-4.149-90.071-45.357C5.603%20115.832%200%2042.822%200%2032.957%200-16.44%2042.893-.917%2069.364%2019.147Z'/%3e%3c/svg%3e"
-            />
-        </a>
-        <div>
-            Giacomo Cavalieri
-            <br />
-            <a class="bsky-embed-link" href="https://bsky.app/profile/giacomocavalieri.me"> @giacomocavalieri.me </a>
-        </div>
-    </div>
-    <p>
-        In my DIY hardware era 💅
-        <br />
-        This is powered by Gleam running on a Raspberry Pi Zero, how cool is that?
-    </p>
-    <video
-      muted controls
-      poster="/imgs/raspberry-display-poster.png"
-      preload="metadata"
-      aria-describedby="embed-video-description">
-        <source type="video/mp4" src="/imgs/raspberry-display.mp4" />
-    </video>
-    <a class="bsky-embed-link" href="https://bsky.app/profile/did:plc:vzaxc2idqnxovkqscsa3tvvi/post/3lmptyp2lis2p">
-        Read on BlueSky →
-    </a>
-    <figcaption id="embed-video-description" style="display:none">
-        A video of a seven segment display connected to a Raspberry Pi. The display shows the numbers from 44 up to 58
-        in rapid succession.
-    </figcaption>
-</figure></div><p>In the end I turned it into a small local server that I use to play silly games
+lying around.</p><figure class="stack-s bluesky-embed"><div class="sidebar"><img class="social-logo" src="data:image/svg+xml,%3csvg%20xmlns=&#39;http://www.w3.org/2000/svg&#39;%20fill=&#39;none&#39;%20viewBox=&#39;0%200%20320%20286&#39;%3e%3cpath%20fill=&#39;rgb(10,122,255)&#39;%20d=&#39;M69.364%2019.146c36.687%2027.806%2076.147%2084.186%2090.636%20114.439%2014.489-30.253%2053.948-86.633%2090.636-114.439C277.107-.917%20320-16.44%20320%2032.957c0%209.865-5.603%2082.875-8.889%2094.729-11.423%2041.208-53.045%2051.719-90.071%2045.357%2064.719%2011.12%2081.182%2047.953%2045.627%2084.785-80%2082.874-106.667-44.333-106.667-44.333s-26.667%20127.207-106.667%2044.333c-35.555-36.832-19.092-73.665%2045.627-84.785-37.026%206.362-78.648-4.149-90.071-45.357C5.603%20115.832%200%2042.822%200%2032.957%200-16.44%2042.893-.917%2069.364%2019.147Z&#39;/%3e%3c/svg%3e"><div class="stack-xs"><p>Giacomo Cavalieri</p><a href="https://bsky.app/profile/giacomocavalieri.me">@giacomocavalieri.me</a></div></div><div class="stack-s"><p>
+  In my DIY hardware era 💅
+  <br />
+  This is powered by Gleam running on a Raspberry Pi Zero, how cool is that?
+</p>
+<video
+  muted controls
+  poster='/imgs/raspberry-display-poster.png'
+  preload='metadata'
+  aria-describedby='embed-video-description'>
+    <source type='video/mp4' src='/imgs/raspberry-display.mp4' />
+</video>
+<figcaption id='embed-video-description' style='display:none'>
+  A video of a seven segment display connected to a Raspberry Pi. The display shows the numbers from 44 up to 58
+  in rapid succession.
+</figcaption></div><a href="https://bsky.app/profile/giacomocavalieri.me/post/3lmptyp2lis2p">Read on Bluesky</a></figure><p>In the end I turned it into a small local server that I use to play silly games
 when my friends come over; and all the code powering it is written in, you
 guessed it, Gleam.
 For this I&#39;m using the <a href="https://gleam-wisp.github.io/wisp/">Wisp</a> framework.
@@ -230,7 +212,7 @@ API:</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> pub fn
  }
 </code></pre><p>All the hard work of fetching and decoding the pull requests is already
 implemented in <code>fetch_pull_requests</code>, so we just need a way to dinamically
-produce some HTML document from those.</p><h3 id="HTML-templating-with-Lustre">HTML templating with Lustre</h3><p>To do that I&#39;m using <a href="https://hexdocs.pm/lustre/index.html">Lustre</a>, a Gleam web
+produce some HTML document from those.</p></section><section class="stack"><h3 id="HTML-templating-with-Lustre">HTML templating with Lustre</h3><p>To do that I&#39;m using <a href="https://hexdocs.pm/lustre/index.html">Lustre</a>, a Gleam web
 framework for building HTML templates, single page applications, and real-time
 server components.
 In my case I&#39;m using it just for the HTML templating, and it looks like this:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import lustre/element/html
@@ -284,7 +266,7 @@ takes care of turning a single pull request into a list item:</p><pre><code clas
 +    html.ul([], list.map(pull_requests, pull_request_to_li))
    ])
  }
-</code></pre><h2 id="The-final-result">The final result</h2><p>I set up a <code>systemctl</code> timer – thank you Louis for introducing me to that! –
+</code></pre></section><section class="stack"><h2 id="The-final-result">The final result</h2><p>I set up a <code>systemctl</code> timer – thank you Louis for introducing me to that! –
 to fire up the server listening on port 80 every time the Raspberry is turned
 on:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() -&gt; Nil {
   wisp.configure_logger()
@@ -309,9 +291,9 @@ on:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn
 }
 </code></pre><p>And now I can browse to my Raspberry and see at a glance whether any of my PRs
 need some fixing, pretty neat if you ask me!</p><p><img src="/imgs/final-result.png"></p><p>Yes, I know this won&#39;t probably win a design award, but I&#39;m quite fond of the
-web 1.0 aesthetic and that&#39;s more than enough for me.</p><h2 id="Was-it-worth-it">Was it worth it?</h2><p>We all know the joke of the developer speding months trying to automate a 5
+web 1.0 aesthetic and that&#39;s more than enough for me.</p></section><section class="stack"><h2 id="Was-it-worth-it">Was it worth it?</h2><p>We all know the joke of the developer speding months trying to automate a 5
 minutes task. But this actually took me less than an hour to build – Gleam is
 an incredibly productive language!</p><p>I think there&#39;s something exhilarating in racking one&#39;s brain trying to automate
 routine tasks; and even if this
 <a href="https://xkcd.com/1205/">might not have been worth the time,</a> I sure had loads
-of fun… and that&#39;s the whole point of coding!</p><hr></main></article></div></body></html>
+of fun… and that&#39;s the whole point of coding!</p></section></main></body></html>
