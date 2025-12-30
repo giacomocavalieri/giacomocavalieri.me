@@ -11,7 +11,7 @@ import lustre/element/html
 
 // --- HOME PAGE ---------------------------------------------------------------
 
-const description = "Italy-based developer, Gleam core team member"
+const description = "Italy-based developer, Gleam core team member, and functional programming enthusiast"
 
 pub fn home() -> Element(a) {
   page("Giacomo Cavalieri", description, [attr.class("stack-l jak-cover")], [
@@ -196,6 +196,10 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     html.meta([property("og:site_name"), content("Giacomo Cavalieri")]),
     html.meta([property("og:title"), content(page_title)]),
     html.meta([property("og:type"), content("website")]),
+    html.meta([
+      property("og:image"),
+      content("https://giacomocavalieri.me/imgs/og-preview-image.jpg"),
+    ]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
     stylesheet("/style.css"),
