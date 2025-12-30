@@ -1,5 +1,4 @@
 import blog/breadcrumbs
-import blog/id
 import frontmatter.{Extracted}
 import gleam/int
 import gleam/list
@@ -10,7 +9,7 @@ import gleam/string
 import gleam/time/calendar.{type Date, Date}
 import jot
 import jot_extra
-import lustre/attribute.{type Attribute, attribute} as attr
+import lustre/attribute as attr
 import lustre/element.{type Element}
 import lustre/element/html
 import simplifile
@@ -121,97 +120,50 @@ fn toml_field(
 /// Turns a post (with html body) into an `<article>` element that can be used
 /// for a full post page.
 ///
-pub fn to_article(post: Post) -> Element(Nil) {
-  html.article([classes(["post", "h-entry"])], [
-    html.header([], [
-      html.h1([classes(["post-title", "p-name"])], [html.text(post.meta.title)]),
-      breadcrumbs.home(),
-      to_subtitle(post),
+pub fn to_article(post: Post) -> List(Element(Nil)) {
+  [
+    breadcrumbs.new([
+      breadcrumbs.link("home", to: "/"),
+      breadcrumbs.animated_link("writing", to: "/writing.html"),
+      breadcrumbs.block_link(post.meta.title),
     ]),
-    html.main([classes(["post-body", "e-content"])], [
+
+    html.main([attr.class("stack article")], [
       jot_extra.to_element(post.body),
     ]),
-  ])
+  ]
 }
 
 pub fn to_preview_list(posts: List(Post)) -> Element(a) {
-  html.ul([attr.id("posts-previews")], list.map(posts, to_preview))
+  html.ol(
+    [attr.class("stack-s")],
+    list.sort(posts, compare)
+      |> list.reverse
+      |> list.map(to_preview),
+  )
 }
 
 fn to_preview(post: Post) -> Element(a) {
-  let title_classes = classes(["post-preview-title", "p-name", "u-url"])
-  let post_link = "/posts/" <> post.meta.id <> ".html"
-
-  html.li([classes(["post-preview", "h-entry"])], [
-    html.a([title_classes, attr.href(post_link)], [
-      html.h2([], [html.text(post.meta.title)]),
-    ]),
-    to_subtitle(post),
-    html.p([classes(["post-preview-abstract", "p-summary"])], [
-      jot_extra.to_element(post.meta.abstract),
-      html.a([attr.class("breadcrumb-link"), attr.href(post_link)], [
-        html.text("read more →"),
-      ]),
+  let post_link = "writing/" <> post.meta.id <> ".html"
+  html.li([], [
+    html.article([attr.class("preview sidebar")], [
+      html.time([attr.class("info")], [html.text(month_day(post.meta.date))]),
+      html.a([attr.href(post_link)], [html.text(post.meta.title)]),
     ]),
   ])
 }
 
-fn to_subtitle(post: Post) -> Element(a) {
-  html.div([attr.class("post-subtitle")], [
-    to_date(post),
-    html.ul([attr.class("post-tags")], {
-      list.sort(post.meta.tags, by: string.compare)
-      |> list.map(to_pill)
-    }),
-  ])
-}
+fn month_day(date: Date) -> String {
+  let Date(year: _, month:, day:) = date
+  let day = int.to_string(day) |> string.pad_start(to: 2, with: "0")
 
-fn to_date(post: Post) -> Element(a) {
-  let datetime = attribute("datetime", shorthand_date(post.meta.date))
-  html.time([classes(["post-date", "dt-published"]), datetime], [
-    html.text(human_readable_date(post.meta.date)),
-  ])
-}
-
-fn shorthand_date(date: Date) -> String {
-  let Date(year:, month:, day:) = date
-
-  int.to_string(year)
-  <> "-"
-  <> string.pad_start(
-    int.to_string(calendar.month_to_int(month)),
-    to: 2,
-    with: "0",
-  )
-  <> "-"
-  <> string.pad_start(int.to_string(day), to: 2, with: "0")
-}
-
-fn human_readable_date(date: Date) -> String {
-  let Date(year:, month:, day:) = date
-
-  int.to_string(day)
-  <> " "
-  <> calendar.month_to_string(month)
-  <> " "
-  <> int.to_string(year)
-}
-
-fn to_pill(tag: String) -> Element(a) {
-  html.li([classes(["post-tag", "p-category"])], [
-    html.a([attr.href("/tags/" <> id.from_string(tag) <> ".html")], [
-      html.text(tag),
-    ]),
-  ])
+  calendar.month_to_string(month)
+  |> string.slice(at_index: 0, length: 3)
+  |> string.capitalise
+  |> string.append(" " <> day)
 }
 
 // UTILITIES -------------------------------------------------------------------
-
-fn classes(classes: List(String)) -> Attribute(a) {
-  classes
-  |> list.map(fn(class) { #(class, True) })
-  |> attr.classes
-}
 
 pub fn is_shown(post: Post) -> Bool {
   case post.meta.status {

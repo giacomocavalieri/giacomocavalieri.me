@@ -1,11 +1,10 @@
 import blog/page
 import blog/post.{type Post}
 import blog/rss
+import blog/talk
 import filepath
-import gleam/dict.{type Dict}
 import gleam/io
 import gleam/list
-import gleam/option.{None, Some}
 import gleam/order
 import gleam/string
 import lustre/element
@@ -16,9 +15,7 @@ const out_dir = "site"
 
 const assets_dir = "assets"
 
-const posts_dir = "posts"
-
-const tags_dir = "tags"
+const posts_dir = "writing"
 
 pub fn main() {
   let all_posts = read_posts()
@@ -37,10 +34,28 @@ pub fn main() {
     use directory <- temporary.create(temporary.directory())
 
     let assert Ok(_) =
-      page.homepage(chronological_posts)
+      page.home()
       |> element.to_document_string
       |> simplifile.write(to: filepath.join(directory, "index.html"))
       as "failed to create index.html"
+
+    let assert Ok(_) =
+      page.contact()
+      |> element.to_document_string
+      |> simplifile.write(to: filepath.join(directory, "contact.html"))
+      as "failed to create contact.html"
+
+    let assert Ok(_) =
+      page.writing(chronological_posts)
+      |> element.to_document_string
+      |> simplifile.write(to: filepath.join(directory, "writing.html"))
+      as "failed to create writing.html"
+
+    let assert Ok(_) =
+      page.speaking(talk.talks)
+      |> element.to_document_string
+      |> simplifile.write(to: filepath.join(directory, "speaking.html"))
+      as "failed to create speaking.html"
 
     let assert Ok(_) =
       page.not_found()
@@ -72,17 +87,18 @@ pub fn main() {
         as { "failed to create post " <> post_file }
     })
 
-    let tags_dir = filepath.join(directory, tags_dir)
-    let assert Ok(_) = simplifile.create_directory(tags_dir)
-    list.each(dict.to_list(group_by_tags(posts)), fn(entry) {
-      let #(tag, posts) = entry
-      let tag_file = tag <> ".html"
-      let assert Ok(_) =
-        page.from_tag(tag, posts)
-        |> element.to_document_string
-        |> simplifile.write(to: filepath.join(tags_dir, tag_file))
-        as { "failed to create tag page " <> tag_file }
-    })
+    // For now I'm dropping the tag thing
+    //let tags_dir = filepath.join(directory, tags_dir)
+    //let assert Ok(_) = simplifile.create_directory(tags_dir)
+    //list.each(dict.to_list(group_by_tags(posts)), fn(entry) {
+    //  let #(tag, posts) = entry
+    //  let tag_file = tag <> ".html"
+    //  let assert Ok(_) =
+    //    page.from_tag(tag, posts)
+    //    |> element.to_document_string
+    //    |> simplifile.write(to: filepath.join(tags_dir, tag_file))
+    //    as { "failed to create tag page " <> tag_file }
+    //})
 
     let assert Ok(_) = simplifile.copy_directory(assets_dir, directory)
       as "failed to copy assets"
@@ -110,14 +126,4 @@ fn read_posts() -> List(Post) {
   use file <- list.map(paths)
   let assert Ok(post) = post.read(from: filepath.join(posts_dir, file))
   post
-}
-
-fn group_by_tags(posts: List(Post)) -> Dict(String, List(Post)) {
-  use tagged_posts, post <- list.fold(over: posts, from: dict.new())
-  use tagged_posts, tag <- list.fold(over: post.meta.tags, from: tagged_posts)
-  use posts <- dict.upsert(in: tagged_posts, update: tag)
-  case posts {
-    Some(posts) -> [post, ..posts]
-    None -> [post]
-  }
 }

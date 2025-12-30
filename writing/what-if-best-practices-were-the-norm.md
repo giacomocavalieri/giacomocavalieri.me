@@ -296,7 +296,7 @@ only one control flow mechanism -- pattern matching -- and you don't have to
 juggle between if statements and try-catch blocks to deal with all the possible
 ways a method might lie.
 
-> **Addendum: what about `Optional`?**
+> _Addendum: what about Optional?_
 >
 > After posting this online I received some great feedback: people pointed that
 > one could use Java's `Optional` to help avoid `null`s. That's a good point!
