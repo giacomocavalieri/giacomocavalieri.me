@@ -40,12 +40,18 @@ pub const talks = [
     date: Date(day: 13, month: calendar.June, year: 2025),
   ),
   Talk(
-    title: "What's new in Gleam 1.11",
+    title: "Lightning Talk - What's new in Gleam 1.11",
     place: "Lambda Days",
     youtube_link: option.Some(
       "https://youtu.be/AKIZG0Dq3Bc?si=hlv9pCjhqA9CYh7l",
     ),
     date: Date(day: 13, month: calendar.June, year: 2025),
+  ),
+  Talk(
+    title: "Lightning Talk - You Don't Need an ORM",
+    place: "FOSDEM",
+    youtube_link: option.None,
+    date: Date(day: 2, month: calendar.February, year: 2025),
   ),
   Talk(
     title: "A Code Centric Journey Into the Gleam Language",
@@ -56,7 +62,7 @@ pub const talks = [
     date: Date(day: 4, month: calendar.October, year: 2024),
   ),
   Talk(
-    title: "Supercharge Your Tests With Snapshot Testing",
+    title: "Lightning Talk - Supercharge Your Tests With Snapshot Testing",
     place: "Lambda Days",
     youtube_link: option.Some(
       "https://youtu.be/s1pZN1kSiLA?si=E0UcooEkw44fzqai",
