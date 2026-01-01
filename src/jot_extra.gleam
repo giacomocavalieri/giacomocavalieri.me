@@ -50,10 +50,11 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
   case container {
     jot.ThematicBreak -> html.hr([])
 
-    jot.RawBlock(content:) -> {
-      let assert Ok(extra) = json.parse(content, extra_decoder())
-      extra_to_element(extra)
-    }
+    jot.RawBlock(content:) ->
+      case json.parse(content, extra_decoder()) {
+        Ok(extra) -> extra_to_element(extra)
+        Error(_) -> element.unsafe_raw_html("", "div", [], content)
+      }
 
     jot.Paragraph(attributes:, content:) ->
       html.p(djot_attributes(attributes), list.map(content, inline_to_element))
