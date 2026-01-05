@@ -12,6 +12,18 @@ pub type Talk {
 
 pub const talks = [
   Talk(
+    title: "You Don't Need an ORM",
+    place: "FOSDEM",
+    youtube_link: option.None,
+    date: Date(day: 01, month: calendar.February, year: 2026),
+  ),
+  Talk(
+    title: "Panel - Chat with Gleam Core Team",
+    place: "Gleam Gathering",
+    youtube_link: option.None,
+    date: Date(day: 21, month: calendar.February, year: 2026),
+  ),
+  Talk(
     title: "A Code Centric Journey Into the Gleam Language",
     place: "Func Prog Conf",
     youtube_link: option.Some(
@@ -106,7 +118,7 @@ fn to_preview(talk: Talk) -> Element(a) {
   }
 
   html.li([], [
-    html.article([attr.class("preview sidebar")], [
+    html.article([attr.class("preview broken-sidebar")], [
       html.div([attr.class("info")], [
         html.time([], [html.text(month(talk.date))]),
         html.span([], [html.text(" - " <> talk.place)]),
