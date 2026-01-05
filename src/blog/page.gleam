@@ -116,7 +116,7 @@ pub fn writing(posts: List(Post)) -> Element(Nil) {
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("writing", to: "/writing.html"),
     ]),
-    html.main([], [
+    html.main([attr.class("article")], [
       html.ol([attr.class("stack")], {
         use #(year, posts) <- list.map(posts_by_year)
         html.li([attr.class("stack-s")], [

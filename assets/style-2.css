@@ -176,6 +176,8 @@ hr {
 }
 
 .article {
+    margin-inline: auto;
+
     & .social-logo {
         max-width: 6ch;
         margin-inline-end: var(--s-1);
