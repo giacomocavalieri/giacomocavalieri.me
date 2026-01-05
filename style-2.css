@@ -155,11 +155,14 @@ hr {
 }
 
 .jak-cover {
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 50%, transparent 90%), url("imgs/bg-vertical.jpg");
+    background-image:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 50%, transparent 90%),
+        url("imgs/bg-vertical.jpg");
     background-position: 70% 50%;
     @media (width >= 720px) {
         background-image:
-            linear-gradient(to right, rgba(0, 0, 0, 0.9) 40%, transparent 50%), url("imgs/bg-horizontal.jpg");
+            linear-gradient(to right, rgba(0, 0, 0, 0.9) 40%, transparent 50%),
+            url("imgs/bg-horizontal.jpg");
         background-position: 50% top;
     }
 
@@ -178,7 +181,11 @@ hr {
         margin-inline-end: var(--s-1);
     }
     & .bluesky-embed {
-        background-color: color-mix(in oklab, var(--bluesky-embed-color) 15%, transparent);
+        background-color: color-mix(
+            in oklab,
+            var(--bluesky-embed-color) 15%,
+            transparent
+        );
         padding: var(--s1);
 
         & a {
@@ -192,7 +199,11 @@ hr {
     }
 
     & blockquote {
-        background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
+        background-color: color-mix(
+            in oklab,
+            var(--main-color) 15%,
+            transparent
+        );
         padding: var(--s1);
     }
 }
@@ -210,13 +221,15 @@ a:hover {
 
 /*** LAYOUT ELEMENTS **********************************************************/
 
-.sidebar {
+.sidebar,
+.broken-sidebar {
     display: flex;
     flex-wrap: wrap;
     row-gap: var(--s-5);
     column-gap: var(--s-2);
     align-items: top;
 }
+.broken-sidebar > :first-child,
 .sidebar > :first-child {
     min-inline-size: 6ch;
     flex-grow: 1;
@@ -225,6 +238,11 @@ a:hover {
     flex-basis: 0;
     flex-grow: 999;
     min-inline-size: 80%;
+}
+.broken-sidebar > :last-child {
+    flex-basis: 0;
+    flex-grow: 999;
+    min-inline-size: 100%;
 }
 
 .stack,
