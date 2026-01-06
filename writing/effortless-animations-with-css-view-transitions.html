@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><title>Effortless animations with CSS view transitions</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><meta content="Giacomo Cavalieri" property="og:site_name"><meta content="Effortless animations with CSS view transitions" property="og:title"><meta content="website" property="og:type"><meta content="https://giacomocavalieri.me/imgs/og-preview-image.jpg" property="og:image"><meta content="Designing an appealing web page is always a bit of a challenge for me. But this time around I actually had a really good time, and really enjoyed dipping my toes into CSS View Transitions. Here&#39;s how I managed to add nice animations to my static personal website with just a few lines of CSS." property="og:description"><meta content="Designing an appealing web page is always a bit of a challenge for me. But this time around I actually had a really good time, and really enjoyed dipping my toes into CSS View Transitions. Here&#39;s how I managed to add nice animations to my static personal website with just a few lines of CSS." name="description"><link href="/style-2.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body class="stack-l"><ol aria-label="Breadcrumb" class="breadcrumb"><li><a href="/">home</a></li><li><a href="/writing.html" style="view-transition-name:writing-animation;">writing</a></li><li><h2 aria-current="page" data-crumb="block">Effortless animations with CSS view transitions</h2></li></ol><main class="stack article"><section class="stack"><p>Designing an appealing web page is always a bit of a challenge for me: I don&#39;t
+have a lot of web design experience, and the one time a year I set up to do
+anything that has to look decent I always feel like I&#39;m relearning CSS 101 from
+scratches.</p><p>Surprisingly, this time around I actually had a really good time, and the part
+I enjoyed the most was dipping my toes into <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API">CSS view transitions.</a>
+I think the final result is really impressive given this is a static web page,
+with no JavaScript, no tricks, and just a couple of lines of CSS:</p><div><video muted loop autoplay>
+  <source type='video/mp4' src='/imgs/view-transition-preview.mp4'/>
+</video></div></section><section class="stack"><h2 id="Getting-started">Getting started</h2><p>So how did I do it? To get started we need to add a <code>@view-transition</code> rule to
+the page&#39;s CSS:</p><pre><code class="not-prose language-css hljs" data-lang="css">@view-transition {
+  navigation: auto;
+}
+</code></pre><p>This will enable view transitions when navigating from one page to the other.
+And that&#39;s it… mostly!
+With this one rule the default animation between pages becomes a smooth
+cross-fade.
+You can see it in action when clicking on the <code>contact</code> link on my homepage.
+<a href="https://caniuse.com/?search=%40view-transition">Not all browsers</a> fully support
+cross document view transitions yet, so here&#39;s what it looks like for people
+using Firefox:</p><div><video muted loop autoplay>
+  <source type='video/mp4' src='/imgs/view-transition-contact.mp4'/>
+</video></div></section><section class="stack"><h2 id="Customising-the-animation">Customising the animation</h2><p>The default animation can be changed using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::view-transition-group"><code>::view-transition-group()</code></a>
+CSS pseudo-element. With our basic setup every element in the page will belong
+to a single group, being animated as one.
+To affect all groups (more to come later!) we can write something like this:</p><pre><code class="not-prose language-css hljs" data-lang="css">::view-transition-group(*) {
+  animation-duration: 0.25s;
+}
+</code></pre><p>And that&#39;s what I did in my website. I also played around with the
+<code>animation-timing-function</code> property for a spring-y animation:</p><pre><code class="not-prose language-css hljs" data-lang="css">::view-transition-group(*) {
+  animation-duration: 0.25s;
+  animation-timing-function: cubic-bezier(0.78, -0.02, 0.33, 1.15);
+}
+</code></pre><p>But ended up sticking to the default, as the animation was getting a bit
+distracting. You can really get creative with this, the sky&#39;s the limit!</p></section><section class="stack"><h2 id="Animating-individual-items">Animating individual items</h2><p>This works great but I wanted to animate some individual items separately to
+make the page feel a bit more interesting.
+I thought it would be really nice if the &quot;speaking&quot; and &quot;writing&quot; menu items
+would move to form the breadcrumbs element when clicked.
+This is the final result, pretty neat if you ask me:</p><div><video muted loop autoplay>
+  <source type='video/mp4' src='/imgs/view-transition-breadcrumb.mp4'/>
+</video></div><p>As you might recall, with no additional rules everything gets bunched together
+into a single animation group.
+To put some elements into their own separate group we need to specify its name
+with the <code>view-transition-name</code> property.</p><pre><code class="not-prose language-css hljs" data-lang="css">selector-for-element-to-animate-separately {
+  view-transition-name: &quot;the-name-of-the-group&quot;;
+}
+</code></pre><p>As long as two elements have the same <code>view-transition-name</code> they will be
+animated together, separately from all other groups. So to get the &quot;writing&quot; and
+&quot;speaking&quot; text to move across pages, they just need to have the same value:</p><pre><code class="not-prose language-html hljs" data-lang="html">&lt;!-- index.html --&gt;
+&lt;a href=&quot;...&quot; id=&quot;writing&quot;&gt;writing&lt;/a&gt;
+
+&lt;!-- writing.html --&gt;
+&lt;ol class=&quot;breadcrumb&quot;&gt;
+  &lt;li&gt;...&lt;/li&gt;
+  &lt;li&gt;
+    &lt;h3 id=&quot;writing&quot;&gt;writing&lt;/h3&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+</code></pre><pre><code class="not-prose language-css hljs" data-lang="css">#writing {
+  view-transition-name: &quot;writing-animation&quot;;
+}
+</code></pre><p>I find it a bit more convenient to specify the <code>view-transition-name</code> on the
+html elements directly, so if you&#39;ll inspect this website&#39;s source you&#39;ll see
+this:</p><pre><code class="not-prose language-html hljs" data-lang="html">&lt;!-- index.html --&gt;
+&lt;a href=&quot;...&quot; style=&quot;view-transition-name: writing-animation&quot;&gt;writing&lt;/a&gt;
+
+&lt;!-- writing.html --&gt;
+&lt;ol class=&quot;breadcrumb&quot;&gt;
+  &lt;li&gt;...&lt;/li&gt;
+  &lt;li&gt;
+    &lt;h3 style=&quot;view-transition-name: writing-animation&quot;&gt;writing&lt;/h3&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+</code></pre><blockquote class="stack"><p>Actually I&#39;m not handwriting this HTML, I&#39;m generating it in
+<a href="https://gleam.run">Gleam</a> using <a href="https://lustre.build">Lustre</a>.
+So I have a little helper to cut down on repetition:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn animate(name: String) -&gt; Attribute(_) {
+  attribute.style(&quot;view-transition-name&quot;, name &lt;&gt; &quot;-animation&quot;)
+}
+</code></pre><p>
+And whenever I need to make sure two items get animated as one I make sure to
+give them the same name:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">// homepage
+html.a([animate(&quot;writing&quot;)], [html.text(&quot;writing&quot;)])
+
+// writing breadcrumb
+html.h3([animate(&quot;writing&quot;)], [html.text(&quot;writing&quot;)])
+</code></pre></blockquote><p>That&#39;s it, for real! Those very few lines of css are all that I needed to add
+a few fancy animations in my website. I&#39;m far from being an experienced frontend
+developer, and I&#39;m really satisfied with how little effort it required to get a
+really nice looking page.</p></section></main></body></html>
