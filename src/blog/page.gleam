@@ -193,6 +193,11 @@ fn default_head(page_title: String, description: String) -> Element(a) {
       attr.title("giacomocavalieri.me posts feed"),
       attr.href("https://giacomocavalieri.me/feed.xml"),
     ]),
+    html.link([
+      attr.rel("icon"),
+      attr.type_("image/x-icon"),
+      attr.href("favicon.ico"),
+    ]),
     html.meta([property("og:site_name"), content("Giacomo Cavalieri")]),
     html.meta([property("og:title"), content(page_title)]),
     html.meta([property("og:type"), content("website")]),
