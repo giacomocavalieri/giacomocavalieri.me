@@ -26,6 +26,7 @@
 }
 
 :root {
+    color-scheme: dark;
     font-size: 100%;
     @media (width >= 720px) {
         font-size: 110%;
@@ -344,7 +345,7 @@ pre {
 
     padding: var(--s1);
     background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .hljs-number {
