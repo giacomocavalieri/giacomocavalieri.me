@@ -42,7 +42,7 @@ This is the final result, pretty neat if you ask me:</p><div><video muted loop a
 into a single animation group.
 To put some elements into their own separate group we need to specify its name
 with the <code>view-transition-name</code> property.</p><pre><code class="not-prose language-css hljs" data-lang="css">selector-for-element-to-animate-separately {
-  view-transition-name: &quot;the-name-of-the-group&quot;;
+  view-transition-name: the-name-of-the-group;
 }
 </code></pre><p>As long as two elements have the same <code>view-transition-name</code> they will be
 animated together, separately from all other groups. So to get the &quot;writing&quot; and
@@ -57,7 +57,7 @@ animated together, separately from all other groups. So to get the &quot;writing
   &lt;/li&gt;
 &lt;/ol&gt;
 </code></pre><pre><code class="not-prose language-css hljs" data-lang="css">#writing {
-  view-transition-name: &quot;writing-animation&quot;;
+  view-transition-name: writing-animation;
 }
 </code></pre><p>I find it a bit more convenient to specify the <code>view-transition-name</code> on the
 html elements directly, so if you&#39;ll inspect this website&#39;s source you&#39;ll see
