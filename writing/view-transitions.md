@@ -96,7 +96,7 @@ with the `view-transition-name` property.
 
 ```css
 selector-for-element-to-animate-separately {
-  view-transition-name: "the-name-of-the-group";
+  view-transition-name: the-name-of-the-group;
 }
 ```
 
@@ -119,7 +119,7 @@ animated together, separately from all other groups. So to get the "writing" and
 
 ```css
 #writing {
-  view-transition-name: "writing-animation";
+  view-transition-name: writing-animation;
 }
 ```
 
