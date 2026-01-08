@@ -87,7 +87,8 @@ footer {
     max-inline-size: none;
 }
 
-img {
+img,
+video {
     max-width: 100%;
 }
 
