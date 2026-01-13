@@ -120,7 +120,7 @@ fn toml_field(
 /// Turns a post (with html body) into an `<article>` element that can be used
 /// for a full post page.
 ///
-pub fn to_article(post: Post) -> List(Element(Nil)) {
+pub fn to_article(post: Post) -> List(Element(a)) {
   [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),

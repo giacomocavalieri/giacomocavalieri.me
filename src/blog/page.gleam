@@ -1,4 +1,5 @@
 import blog/breadcrumbs
+import blog/icon
 import blog/post.{type Post}
 import blog/talk.{type Talk}
 import gleam/dict
@@ -17,15 +18,15 @@ pub fn home() -> Element(a) {
   page("Giacomo Cavalieri", description, [attr.class("stack-l jak-cover")], [
     html.h1([], [html.text("Giacomo Cavalieri")]),
     html.main([attr.class("stack-s")], [
-      html.p([], [html.text("Italy-based developer.")]),
+      html.p([], [html.text("Italy-based developer")]),
       html.p([], [
         html.a([attr.href("https://gleam.run")], [html.text("Gleam")]),
-        html.text(" core team member."),
+        html.text(" core team member"),
       ]),
       html.p([], [
         html.text("Appreciate my work? Support me on "),
         html.a([attr.href("https://github.com/sponsors/giacomocavalieri")], [
-          html.text("GitHub Sponsors."),
+          html.text("GitHub Sponsors"),
         ]),
       ]),
     ]),
@@ -55,9 +56,9 @@ pub fn contact() -> Element(a) {
         ]),
       ]),
       html.p([], [
-        html.text("Find me on Bluesky "),
-        html.a([attr.href("https://bsky.app/profile/giacomocavalieri.me")], [
-          html.text("@giacomocavalieri"),
+        html.text("Connect with me on my "),
+        html.a([attr.href("/socials.html"), animate("socials")], [
+          html.text("socials"),
         ]),
       ]),
     ]),
@@ -105,7 +106,7 @@ pub fn not_found() -> Element(a) {
 
 // --- POST PAGE ---------------------------------------------------------------
 
-pub fn writing(posts: List(Post)) -> Element(Nil) {
+pub fn writing(posts: List(Post)) -> Element(a) {
   let posts_by_year =
     list.group(posts, fn(post) { post.meta.date.year })
     |> dict.to_list
@@ -128,7 +129,7 @@ pub fn writing(posts: List(Post)) -> Element(Nil) {
   ])
 }
 
-pub fn speaking(talks: List(Talk)) -> Element(Nil) {
+pub fn speaking(talks: List(Talk)) -> Element(a) {
   let talks_by_year =
     list.group(talks, fn(talk) { talk.date.year })
     |> dict.to_list
@@ -151,13 +152,60 @@ pub fn speaking(talks: List(Talk)) -> Element(Nil) {
   ])
 }
 
-pub fn from_post(post: Post) -> Element(Nil) {
+pub fn from_post(post: Post) -> Element(a) {
   page(
     post.meta.title,
     jot_extra.to_string(post.meta.abstract),
     [attr.class("stack-l")],
     post.to_article(post),
   )
+}
+
+pub fn socials() -> Element(a) {
+  let description =
+    "Let's connect on social media! Here's all the places where you can find me."
+
+  page("Socials | Giacomo Cavalieri", description, [attr.class("stack-l")], [
+    breadcrumbs.new([
+      breadcrumbs.link("contact", to: "/contact.html"),
+      breadcrumbs.animated_link("socials", to: "/socials.html"),
+    ]),
+    html.main([attr.class("stack")], [
+      html.p([], [html.text(description)]),
+      html.ul([attr.class("stack-s")], [
+        html.li([attr.class("with-icon")], [
+          icon.discord(),
+          html.a([attr.href("https://discord.gg/wgm8ssRU5c")], [
+            html.text("Discord"),
+          ]),
+        ]),
+        html.li([attr.class("with-icon")], [
+          icon.bluesky(),
+          html.a([attr.href("https://bsky.app/profile/giacomocavalieri.me")], [
+            html.text("Bluesky"),
+          ]),
+        ]),
+        html.li([attr.class("with-icon")], [
+          icon.tiktok(),
+          html.a([attr.href("https://www.tiktok.com/@giacomocavalieri.me")], [
+            html.text("TikTok"),
+          ]),
+        ]),
+        html.li([attr.class("with-icon")], [
+          icon.twitch(),
+          html.a([attr.href("https://www.twitch.tv/giacomo_cavalieri")], [
+            html.text("Twitch"),
+          ]),
+        ]),
+        html.li([attr.class("with-icon")], [
+          icon.linkedin(),
+          html.a([attr.href("https://www.linkedin.com/in/giacomo-cavalieri")], [
+            html.text("LinkedIn"),
+          ]),
+        ]),
+      ]),
+    ]),
+  ])
 }
 
 // --- HELPERS -----------------------------------------------------------------
@@ -207,7 +255,7 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     ]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
-    stylesheet("/style-4.css"),
+    stylesheet("/style-5.css"),
     html.script([attr.src(hljs_script_url)], ""),
     html.script([attr.src(hljs_diff_url)], ""),
     html.script([attr.src(gleam_hljs_script_url)], ""),

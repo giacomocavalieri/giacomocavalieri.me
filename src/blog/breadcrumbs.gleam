@@ -9,7 +9,7 @@ pub opaque type Item {
   BlockLink(name: String)
 }
 
-pub fn new(items: List(Item)) -> Element(Nil) {
+pub fn new(items: List(Item)) -> Element(a) {
   let items_count = list.length(items)
   html.ol([attr.class("breadcrumb"), attr.aria_label("Breadcrumb")], {
     use item, index <- list.index_map(items)
@@ -17,7 +17,7 @@ pub fn new(items: List(Item)) -> Element(Nil) {
   })
 }
 
-fn item_to_element(item: Item, is_last: Bool) -> Element(Nil) {
+fn item_to_element(item: Item, is_last: Bool) -> Element(a) {
   case item, is_last {
     // Any element that is last will not produce a link but a title.
     Link(name:, ..), True ->

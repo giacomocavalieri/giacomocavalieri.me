@@ -46,6 +46,12 @@ pub fn main() {
       as "failed to create contact.html"
 
     let assert Ok(_) =
+      page.socials()
+      |> element.to_document_string
+      |> simplifile.write(to: filepath.join(directory, "socials.html"))
+      as "failed to create socials.html"
+
+    let assert Ok(_) =
       page.writing(chronological_posts)
       |> element.to_document_string
       |> simplifile.write(to: filepath.join(directory, "writing.html"))

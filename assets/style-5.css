@@ -312,6 +312,20 @@ a:hover {
     color: var(--color);
 }
 
+.icon {
+    height: 0.8em;
+    height: 1cap;
+    width: 0.8em;
+    width: 1cap;
+}
+.with-icon {
+    display: inline-flex;
+    align-items: baseline;
+}
+.with-icon .icon {
+    margin-inline-end: var(--s-1);
+}
+
 /*** ANIMATIONS ***************************************************************/
 
 @media (prefers-reduced-motion: no-preference) {
