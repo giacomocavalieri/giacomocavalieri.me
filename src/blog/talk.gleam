@@ -14,7 +14,9 @@ pub const talks = [
   Talk(
     title: "You Don't Need an ORM",
     place: "FOSDEM",
-    youtube_link: option.None,
+    youtube_link: option.Some(
+      "https://fosdem.org/2026/schedule/event/F9Y7ZY-you-do-not-need-an-orm/",
+    ),
     date: Date(day: 01, month: calendar.February, year: 2026),
   ),
   Talk(
