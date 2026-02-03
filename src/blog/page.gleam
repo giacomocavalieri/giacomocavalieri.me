@@ -174,6 +174,12 @@ pub fn socials() -> Element(a) {
       html.p([], [html.text(description)]),
       html.ul([attr.class("stack-s")], [
         html.li([attr.class("with-icon")], [
+          icon.github(),
+          html.a([attr.href("https://github.com/sponsors/giacomocavalieri")], [
+            html.text("GitHub"),
+          ]),
+        ]),
+        html.li([attr.class("with-icon")], [
           icon.discord(),
           html.a([attr.href("https://discord.gg/wgm8ssRU5c")], [
             html.text("Discord"),
@@ -195,6 +201,12 @@ pub fn socials() -> Element(a) {
           icon.twitch(),
           html.a([attr.href("https://www.twitch.tv/giacomo_cavalieri")], [
             html.text("Twitch"),
+          ]),
+        ]),
+        html.li([attr.class("with-icon")], [
+          icon.youtube(),
+          html.a([attr.href("https://www.youtube.com/@giacomo_cavalieri")], [
+            html.text("YouTube"),
           ]),
         ]),
         html.li([attr.class("with-icon")], [
