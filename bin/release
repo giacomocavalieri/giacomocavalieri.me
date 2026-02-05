@@ -1,0 +1,13 @@
+#!/bin/bash
+echo "building blog"
+gleam run -m build
+
+if [ "$1" == "lustre" ]; then
+    echo "building lustre apps"
+    files=()
+    for entry in src/blog/interactive/*.gleam; do
+        name=$(basename -- "$entry" .gleam)
+        files+=("blog/interactive/$name")
+    done
+    gleam run -m lustre/dev build --minify --no-html --outdir=site/js "${files[@]}"
+fi

@@ -72,7 +72,7 @@ pub fn contact() -> Element(a) {
 
 fn navbar(last_item: Element(a)) -> Element(a) {
   html.nav([], [
-    html.ul([attr.class("switcher nav-switcher")], [
+    html.ul([attr.class("nav-switcher")], [
       html.li([], [
         html.a([attr.href("writing.html"), animate("writing")], [
           html.text("writing"),
@@ -267,7 +267,7 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     ]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
-    stylesheet("/style-5.css"),
+    stylesheet("/style-6.css"),
     html.script([attr.src(hljs_script_url)], ""),
     html.script([attr.src(hljs_diff_url)], ""),
     html.script([attr.src(gleam_hljs_script_url)], ""),
