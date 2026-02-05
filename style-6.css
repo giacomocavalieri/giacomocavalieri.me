@@ -26,6 +26,7 @@
 }
 
 :root {
+    color-scheme: dark;
     font-size: 100%;
     @media (width >= 720px) {
         font-size: 110%;
@@ -39,6 +40,8 @@
     --accent-color: #8c2155;
     --bg-color: #02030f;
     --bluesky-embed-color: #0a7aff;
+
+    --number-color: rgb(219, 148, 14);
 
     --s0: 1rem;
     --s1: calc(var(--s0) * var(--ratio));
@@ -86,7 +89,8 @@ footer {
     max-inline-size: none;
 }
 
-img {
+img,
+video {
     max-width: 100%;
 }
 
@@ -208,15 +212,28 @@ a:hover {
     text-decoration: underline;
 }
 
+button {
+    font-size: 0.8em;
+    padding-inline: var(--s-1);
+    padding-block: var(--s-2);
+    width: fit-content;
+    background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
+}
+button:hover {
+    cursor: pointer;
+}
+
 /*** LAYOUT ELEMENTS **********************************************************/
 
-.sidebar {
+.sidebar,
+.broken-sidebar {
     display: flex;
     flex-wrap: wrap;
     row-gap: var(--s-5);
     column-gap: var(--s-2);
     align-items: top;
 }
+.broken-sidebar > :first-child,
 .sidebar > :first-child {
     min-inline-size: 6ch;
     flex-grow: 1;
@@ -225,6 +242,11 @@ a:hover {
     flex-basis: 0;
     flex-grow: 999;
     min-inline-size: 80%;
+}
+.broken-sidebar > :last-child {
+    flex-basis: 0;
+    flex-grow: 999;
+    min-inline-size: 100%;
 }
 
 .stack,
@@ -292,6 +314,20 @@ a:hover {
     color: var(--color);
 }
 
+.icon {
+    height: 0.8em;
+    height: 1cap;
+    width: 0.8em;
+    width: 1cap;
+}
+.with-icon {
+    display: inline-flex;
+    align-items: baseline;
+}
+.with-icon .icon {
+    margin-inline-end: var(--s-1);
+}
+
 /*** ANIMATIONS ***************************************************************/
 
 @media (prefers-reduced-motion: no-preference) {
@@ -308,7 +344,8 @@ a:hover {
 
 pre code,
 pre code span,
-p code {
+p code,
+pre * {
     font-family: "Fira Code", monospace;
 }
 
@@ -326,11 +363,11 @@ pre {
 
     padding: var(--s1);
     background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .hljs-number {
-    color: rgb(219, 148, 14);
+    color: var(--number-color);
 }
 
 .hljs-string {
@@ -345,6 +382,22 @@ pre {
 .hljs-built_in,
 .hljs-operator {
     color: rgb(255, 69, 138);
+}
+
+.hljs-shell-error {
+    color: #fe7c6b;
+}
+
+.hljs-shell-info {
+    color: #9ce7ff;
+}
+
+.hljs-shell-warning {
+    color: #ffd596;
+}
+
+.hljs-shell-new {
+    color: #c8ffa7;
 }
 
 .hljs-title {
