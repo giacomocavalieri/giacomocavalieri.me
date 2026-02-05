@@ -13,7 +13,7 @@ import temporary
 
 const out_dir = "site"
 
-const assets_dir = "assets"
+const assets_dir = "priv/assets"
 
 const posts_dir = "writing"
 

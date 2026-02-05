@@ -10,17 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Push
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v4
-      - name: setup beam
-        uses: erlef/setup-beam@v1
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
         with:
           otp-version: "28"
           gleam-version: "1.14.0"
           elixir-version: "1.18.0"
           rebar3-version: "3"
-      - name: build
-        run: gleam run -m build
+      - run: bash bin/release lustre
       - name: push to site branch
         uses: s0/git-publish-subdir-action@develop
         env:

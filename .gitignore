@@ -6,3 +6,7 @@ node_modules
 
 site
 .DS_Store
+
+#Added automatically by Lustre Dev Tools
+/.lustre
+/dist

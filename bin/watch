@@ -1,0 +1,2 @@
+#!/bin/bash
+watchexec --watch writing --watch src --watch priv "release $1"
