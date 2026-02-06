@@ -9,15 +9,18 @@ import lustre/element/html
 import lustre/event
 
 type Model {
-  Model(
-    state: State,
-    command: String,
-    ran_commands: List(#(Command, Element(Message))),
-    tests_timing: Int,
-  )
+  Model(state: State, command: String, steps: List(Step), tests_timing: Int)
+}
+
+type Step {
+  StepCommand(Command)
+  Output(Element(Message))
+  Empty
 }
 
 type State {
+  Compiling
+  RunningTests
   WaitingForTest
   WaitingForReview
   Reviewing
@@ -28,7 +31,8 @@ type State {
 type Message {
   UserTypedCommand(command: String)
   UserPressedKey(String)
-  GleamFinishedRunning(tests_timing: Int)
+  GleamFinishedCompiling(elapsed: Int, success: Bool)
+  GleamFinishedRunningTests(elapsed: Int, success: Bool)
 }
 
 type Command {
@@ -42,13 +46,13 @@ type Command {
 pub fn main() {
   let app = lustre.application(init:, update:, view:)
   let assert Ok(_) =
-    lustre.start(app, onto: "#terminal", with: int.random(6) + 1)
+    lustre.start(app, onto: "#terminal", with: int.random(5) + 1)
   Nil
 }
 
 fn init(tests_timing: Int) -> #(Model, Effect(Message)) {
   #(
-    Model(state: WaitingForTest, command: "", ran_commands: [], tests_timing:),
+    Model(state: WaitingForTest, command: "", steps: [], tests_timing:),
     effect.none(),
   )
 }
@@ -59,13 +63,82 @@ fn update(model: Model, message: Message) -> #(Model, Effect(Message)) {
       Model(..model, command: string.lowercase(command)),
       effect.none(),
     )
+
+    GleamFinishedCompiling(elapsed:, success:) -> #(
+      Model(..model, state: RunningTests, steps: [
+        Output(
+          html.span([], [
+            html.span([attribute.class("hljs-operator")], [
+              html.text("   Running"),
+            ]),
+            html.text(" example_test.main"),
+          ]),
+        ),
+        Output(
+          html.span([], [
+            html.span([attribute.class("hljs-operator")], [
+              html.text("  Compiled"),
+            ]),
+            html.text(" in "),
+            html.text("0." <> int.to_string(elapsed) <> "s"),
+          ]),
+        ),
+        ..model.steps
+      ]),
+      start_running_timeout(success:),
+    )
+
+    GleamFinishedRunningTests(elapsed:, success:) -> #(
+      case success {
+        True ->
+          Model(..model, state: Done, steps: [
+            Output(
+              html.code([], [
+                html.span([attribute.class("hljs-shell-new")], [
+                  html.text(".\n1 passed, no failures"),
+                ]),
+              ]),
+            ),
+            Empty,
+            ..model.steps
+          ])
+
+        False ->
+          Model(..model, state: WaitingForReview, steps: [
+            Output(failed_gleam_test(elapsed)),
+            Empty,
+            ..model.steps
+          ])
+      },
+      effect.batch([
+        scroll_to("terminal-prompt-field"),
+        focus_no_scroll("terminal-prompt-field"),
+      ]),
+    )
+
     UserPressedKey("Enter") -> {
+      let previous_state = model.state
       let command = parse_command(model.command)
       let #(state, result) = run_command(model, command)
-      let ran_commands = [#(command, result), ..model.ran_commands]
-      let model = Model(..model, command: "", state:, ran_commands:)
+      let steps = case model.steps {
+        [] -> [
+          Output(result),
+          StepCommand(command),
+        ]
+        steps -> [Output(result), StepCommand(command), Empty, ..steps]
+      }
+      let model = Model(..model, command: "", state:, steps:)
       let effect = case command {
-        GleamTest -> new_random_timing()
+        GleamTest ->
+          start_compiling_timeout(case previous_state {
+            Accepted -> True
+            WaitingForTest
+            | WaitingForReview
+            | Reviewing
+            | Done
+            | Compiling
+            | RunningTests -> False
+          })
         _ -> effect.none()
       }
       #(
@@ -77,16 +150,28 @@ fn update(model: Model, message: Message) -> #(Model, Effect(Message)) {
         ]),
       )
     }
+
     UserPressedKey(_) -> #(model, effect.none())
-    GleamFinishedRunning(tests_timing:) -> {
-      #(Model(..model, tests_timing:), effect.none())
-    }
   }
 }
 
-fn new_random_timing() -> Effect(Message) {
+fn start_compiling_timeout(success success: Bool) -> Effect(Message) {
   use dispatch <- effect.from
-  dispatch(GleamFinishedRunning(1 + int.random(6)))
+  let timeout = int.random(4) + 3
+  use <- after(timeout * 100)
+  dispatch(GleamFinishedCompiling(elapsed: timeout, success:))
+}
+
+fn start_running_timeout(success success: Bool) -> Effect(Message) {
+  use dispatch <- effect.from
+  let timeout = int.random(5) + 1
+  use <- after(timeout * 10)
+  dispatch(GleamFinishedRunningTests(elapsed: timeout, success:))
+}
+
+@external(javascript, "./interactive_ffi.mjs", "after")
+fn after(ms _ms: Int, do _fun: fn() -> Nil) -> Nil {
+  panic as "not supported on the Erlang target"
 }
 
 fn scroll_to(id: String) -> Effect(Message) {
@@ -109,33 +194,42 @@ fn do_scroll_to(_id: String) -> Nil {
   Nil
 }
 
+fn failed_gleam_test(timing: Int) -> Element(msg) {
+  element.unsafe_raw_html(
+    "",
+    "code",
+    [],
+    "<span class='hljs-shell-error'>panic</span> test/example_test.gleam:9
+<span class='hljs-shell-info'>test</span>: example_test.usage_text_test
+<span class='hljs-shell-info'>info</span>: Birdie snapshot test failed
+
+── new snapshot ────────────────────────────────────────────
+<span class='hljs-shell-info'>title</span>: testing the help text
+<span class='hljs-shell-info'>hint</span>: <span class='hljs-shell-warning'>run `gleam run -m birdie` to review the snapshots</span>
+────────┬───────────────────────────────────────────────────
+  <span class='hljs-shell-new'>1 + usage: lucysay [-m message] [-f file]
+  2 +
+  3 +  -m, --message  the message to be printed
+  4 +  -f, --file     a file to read the message from
+  5 +  -h, --help     show this help text</span>
+────────┴───────────────────────────────────────────────────
+
+Finished in 0.0" <> int.to_string(timing) <> " seconds
+<span class='hljs-shell-error'>1 tests, 1 failures</span>",
+  )
+}
+
 fn run_command(model: Model, command: Command) -> #(State, Element(Message)) {
   let Model(state:, ..) = model
   case state, command {
+    RunningTests, _ | Compiling, _ -> #(state, element.none())
+
     WaitingForTest, GleamTest | WaitingForReview, GleamTest -> #(
-      WaitingForReview,
-      element.unsafe_raw_html(
-        "",
-        "code",
-        [],
-        "<span class='hljs-shell-error'>panic</span> test/example_test.gleam:9
- <span class='hljs-shell-info'>test</span>: example_test.usage_text_test
- <span class='hljs-shell-info'>info</span>: Birdie snapshot test failed
-
-── new snapshot ────────────────────────────────────────────
-  <span class='hljs-shell-info'>title</span>: testing the help text
-  <span class='hljs-shell-info'>hint</span>: <span class='hljs-shell-warning'>run `gleam run -m birdie` to review the snapshots</span>
-────────┬───────────────────────────────────────────────────
-      <span class='hljs-shell-new'>1 + usage: lucysay [-m message] [-f file]
-      2 +
-      3 +  -m, --message  the message to be printed
-      4 +  -f, --file     a file to read the message from
-      5 +  -h, --help     show this help text</span>
-────────┴───────────────────────────────────────────────────
-
-Finished in 0.00" <> int.to_string(model.tests_timing) <> " seconds
-<span class='hljs-shell-error'>1 tests, 1 failures</span>",
-      ),
+      Compiling,
+      html.span([], [
+        html.span([attribute.class("hljs-operator")], [html.text(" Compiling")]),
+        html.text(" example_test"),
+      ]),
     )
 
     WaitingForReview, BirdieReview -> #(
@@ -187,14 +281,7 @@ Finished in 0.00" <> int.to_string(model.tests_timing) <> " seconds
       html.div([], [html.text("the options are [a]ccept or [r]eject")]),
     )
 
-    Accepted, GleamTest -> #(
-      Done,
-      html.code([], [
-        html.span([attribute.class("hljs-shell-new")], [
-          html.text(".\n1 passed, no failures"),
-        ]),
-      ]),
-    )
+    Accepted, GleamTest -> #(Compiling, element.none())
 
     WaitingForTest, BirdieReview | Accepted, BirdieReview -> #(
       state,
@@ -250,49 +337,52 @@ fn parse_command(command: String) -> Command {
 
 fn view(model: Model) -> Element(Message) {
   let children = {
-    use #(command, outcome) <- list.map(list.reverse(model.ran_commands))
-    html.div([attribute.class("stack-xs")], [
-      html.div([attribute.class("with-icon")], [
-        html.span([attribute.class("icon hljs-comment")], [html.text(">")]),
-        html.span([attribute.class("hljs-comment")], [
-          html.text(command_to_string(command)),
-        ]),
-      ]),
-      outcome,
-    ])
+    use step <- list.map(list.reverse(model.steps))
+    case step {
+      Empty -> html.div([], [html.text(" ")])
+      Output(output) -> output
+      StepCommand(command) ->
+        html.div([attribute.class("with-icon")], [
+          html.span([attribute.class("icon hljs-comment")], [html.text(">")]),
+          html.span([attribute.class("hljs-comment")], [
+            html.text(command_to_string(command)),
+          ]),
+        ])
+    }
   }
 
   element.fragment([
-    html.pre(
-      [attribute.class("stack-s")],
-      list.append(children, [
-        html.div([attribute.class("with-icon")], [
-          html.span(
-            [
-              attribute.class("icon"),
-              case model.state {
-                WaitingForTest | WaitingForReview | Reviewing | Accepted ->
-                  attribute.none()
-                Done -> attribute.class("hljs-comment")
-              },
-            ],
-            [html.text(">")],
-          ),
-          html.input([
-            attribute.disabled(model.state == Done),
-            attribute.type_("text"),
-            attribute.spellcheck(False),
-            attribute.autocapitalize("off"),
-            attribute.autocomplete("off"),
-            attribute.value(model.command),
-            attribute.placeholder(next_step_hint(model.state)),
-            attribute.id("terminal-prompt-field"),
-            event.on_keyup(UserPressedKey),
-            event.on_input(UserTypedCommand),
-          ]),
+    html.pre([attribute.class("stack-s")], [
+      html.div([attribute.class("stack-xs")], children),
+      html.div([attribute.class("with-icon")], [
+        html.span(
+          [
+            attribute.class("icon"),
+            case model.state {
+              WaitingForTest | WaitingForReview | Reviewing | Accepted ->
+                attribute.none()
+              RunningTests | Compiling | Done -> attribute.class("hljs-comment")
+            },
+          ],
+          [html.text(">")],
+        ),
+        html.input([
+          attribute.disabled(case model.state {
+            WaitingForTest | WaitingForReview | Reviewing | Accepted -> False
+            RunningTests | Compiling | Done -> True
+          }),
+          attribute.type_("text"),
+          attribute.spellcheck(False),
+          attribute.autocapitalize("off"),
+          attribute.autocomplete("off"),
+          attribute.value(model.command),
+          attribute.placeholder(next_step_hint(model.state)),
+          attribute.id("terminal-prompt-field"),
+          event.on_keyup(UserPressedKey),
+          event.on_input(UserTypedCommand),
         ]),
       ]),
-    ),
+    ]),
     html.style(
       [],
       "#terminal-prompt-field {
@@ -316,5 +406,7 @@ fn next_step_hint(state: State) -> String {
     Reviewing -> "try accepting the snapshot with `a`"
     Accepted -> "try running `gleam test` again now..."
     Done -> "the demo is over!"
+    Compiling -> "compiling..."
+    RunningTests -> "running tests..."
   }
 }
