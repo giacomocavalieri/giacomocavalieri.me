@@ -55,7 +55,10 @@ fn init(tests_timing: Int) -> #(Model, Effect(Message)) {
 
 fn update(model: Model, message: Message) -> #(Model, Effect(Message)) {
   case message {
-    UserTypedCommand(command) -> #(Model(..model, command:), effect.none())
+    UserTypedCommand(command) -> #(
+      Model(..model, command: string.lowercase(command)),
+      effect.none(),
+    )
     UserPressedKey("Enter") -> {
       let command = parse_command(model.command)
       let #(state, result) = run_command(model, command)
