@@ -3,6 +3,7 @@ import gleam/dynamic/decode.{type Decoder}
 import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
+import gleam/regexp
 import gleam/string
 import jot
 import lustre/attribute.{type Attribute} as attr
@@ -83,15 +84,33 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
       })
 
     jot.Heading(attributes:, level:, content:) -> {
-      let attributes = djot_attributes(attributes)
+      let id =
+        list.map(content, inline_to_string)
+        |> string.join(with: "-")
+        |> to_safe_id
+
+      let attributes = [
+        attr.style("display", "inline"),
+        ..djot_attributes(
+          attributes
+          |> dict.insert("id", id),
+        )
+      ]
+
       let content = list.map(content, inline_to_element)
+      let anchor =
+        html.span([], [
+          html.a([attr.href("#" <> id), attr.class("anchor")], [html.text("#")]),
+          html.text(" "),
+        ])
+
       case level {
-        1 -> html.h1(attributes, content)
-        2 -> html.h2(attributes, content)
-        3 -> html.h3(attributes, content)
-        4 -> html.h4(attributes, content)
-        5 -> html.h5(attributes, content)
-        _ -> html.h6(attributes, content)
+        1 -> html.span([], [html.h1(attributes, [anchor, ..content])])
+        2 -> html.span([], [html.h2(attributes, [anchor, ..content])])
+        3 -> html.span([], [html.h3(attributes, [anchor, ..content])])
+        4 -> html.span([], [html.h4(attributes, [anchor, ..content])])
+        5 -> html.span([], [html.h5(attributes, [anchor, ..content])])
+        _ -> html.span([], [html.h6(attributes, [anchor, ..content])])
       }
     }
 
@@ -107,6 +126,19 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
         list.map(items, container_to_element),
       )
   }
+}
+
+@internal
+pub fn to_safe_id(string: String) -> String {
+  let assert Ok(non_alpha) = regexp.from_string("[^a-zA-Z0-9]")
+  let assert Ok(multiple_dashes) = regexp.from_string("-(-*)")
+  let assert Ok(dashes_start_or_end) = regexp.from_string("^-*|-*$")
+
+  string
+  |> string.lowercase
+  |> regexp.replace(each: non_alpha, with: "-")
+  |> regexp.replace(each: multiple_dashes, with: "-")
+  |> regexp.replace(each: dashes_start_or_end, with: "")
 }
 
 fn djot_attributes(
