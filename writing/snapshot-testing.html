@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en"><head><title>TODO AND ABSTRACT</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><link href="favicon.ico" rel="icon" type="image/x-icon"><meta content="Giacomo Cavalieri" property="og:site_name"><meta content="TODO AND ABSTRACT" property="og:title"><meta content="website" property="og:type"><meta content="https://giacomocavalieri.me/imgs/og-preview-image.jpg" property="og:image"><meta content="TODO" property="og:description"><meta content="TODO" name="description"><link href="/style-6.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body class="stack-l"><ol aria-label="Breadcrumb" class="breadcrumb"><li><a href="/">home</a></li><li><a href="/writing.html" style="view-transition-name:writing-animation;">writing</a></li><li><h2 aria-current="page" data-crumb="block">TODO AND ABSTRACT</h2></li></ol><main class="stack article"><section class="stack"><p>Writing tests is boring.
+<html lang="en"><head><title>A simple technique to make tests fun</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><link href="favicon.ico" rel="icon" type="image/x-icon"><meta content="Giacomo Cavalieri" property="og:site_name"><meta content="A simple technique to make tests fun" property="og:title"><meta content="website" property="og:type"><meta content="https://giacomocavalieri.me/imgs/og-preview-image.jpg" property="og:image"><meta content="Writing and maintaining tests is boring. But they&#39;re also some of the most valuable code we can write. With this blog post you&#39;ll learn a criminally underrated testing technique to add to your testing toolbox that can make tests a whole lot more pleasant." property="og:description"><meta content="Writing and maintaining tests is boring. But they&#39;re also some of the most valuable code we can write. With this blog post you&#39;ll learn a criminally underrated testing technique to add to your testing toolbox that can make tests a whole lot more pleasant." name="description"><link href="/style-6.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body class="stack-l"><ol aria-label="Breadcrumb" class="breadcrumb"><li><a href="/">home</a></li><li><a href="/writing.html" style="view-transition-name:writing-animation;">writing</a></li><li><h2 aria-current="page" data-crumb="block">A simple technique to make tests fun</h2></li></ol><main class="stack article"><section class="stack"><p>Writing tests is boring.
 Even worse, maintaining tests is boring <em>and</em> error prone.
-The tragedy is they&#39;re also one of the most valuable pieces of code we could
-write.</p><p>So let me show you a fun technique to add to your testing toolbox that can make
-writing and maintaining tests a whole lot more pleasant.
+The tragedy is they&#39;re also some of the most valuable code we can write.</p><p>So let me show you a fun and criminally underrated technique to add to your
+testing toolbox that can make writing and maintaining tests a whole lot more
+pleasant: <em>snapshot testing.</em>
 This technique is applicable everywhere and to prove it we&#39;ll go through
 real-world examples ranging from CLIs, to compilers written in Rust, to…
 web animations!</p></section><section class="stack"><span><h2 id="the-problem" style="display:inline;"><span><a class="anchor" href="#the-problem">#</a> </span>The problem</h2></span><p>Say you&#39;re writing a command line application (CLI), maybe it&#39;s just a little
@@ -23,14 +23,14 @@ usage: lucysay [-m message] [-f file]
   -h, --help     show this help text
 &quot;
 }
-</code></pre><p>We&#39;re checking the help text string conforms to an expected message, since we&#39;re
-writing a regular unit test assertion there&#39;s no escaping it: we have to type
-that in full.</p><p>What&#39;s worse is, if the help text changes (say we&#39;re shipping a v2 with more
+</code></pre><p>We&#39;re checking the help text string conforms to an expected message.
+Since we&#39;re writing a regular unit test assertion there&#39;s no escaping it:
+we have to type that in full.</p><p>What&#39;s worse is, if the help text changes (say we&#39;re shipping a v2 with more
 flags and features) we&#39;ll have to go through that literal string and manually
 edit it to make sure the test goes back to passing.
 This is quite the tedious chore.
 Writing and maintaining these kind of tests, with wordy assertions, is never
-fun: it&#39;s a boring, repetitive, and error-prone process.</p></section><section class="stack"><span><h2 id="snapshot-testing-to-the-rescue" style="display:inline;"><span><a class="anchor" href="#snapshot-testing-to-the-rescue">#</a> </span>Snapshot testing to the rescue</h2></span><p>Here&#39;s were snapshot testing comes into play.
+fun: it&#39;s a boring, repetitive, and error-prone process.</p></section><section class="stack"><span><h2 id="snapshot-testing-to-the-rescue" style="display:inline;"><span><a class="anchor" href="#snapshot-testing-to-the-rescue">#</a> </span>Snapshot testing to the rescue</h2></span><p>Here&#39;s where snapshot testing comes into play.
 The elevator pitch is simple: <em>you can focus on writing tests, and the snapshot
 testing library will take care of the expected values automatically.</em></p><p>What does this look like in practice? Here&#39;s a snapshot test:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">// In these examples we&#39;ll use the birdie library.
 // You can add it to a gleam project by running
@@ -85,12 +85,11 @@ Reviewing <span class='hljs-shell-warning'>1st</span> out of <span class='hljs-s
 options, and with no typos.
 We accept the snapshot.
 Now every time we run the tests, they will succeed… given the output of the
-function doesn&#39;t change.</p><p>What&#39;s happening under the hood is unremarkably simple: the snapshot testing
+function doesn&#39;t change.</p><p>What&#39;s happening under the hood is remarkably simple: the snapshot testing
 library, once we accept the snapshot, saves its content to a file and checks
 that the function will always produce that value.
 If the output changes, the test will fail and we&#39;ll have to review the snapshot
-again.</p><p>You can actually try the whole workflow for yourself here, just follow the hints
-and type away!</p><div><div id="terminal"></div>
+again.</p><p>Try it for yourself! You can really type at the prompt below.</p><div><div id="terminal"></div>
 <script src="/js/birdie_terminal.js" type="module"></script></div></section><section class="stack"><span><h3 id="it-s-like-vcs-for-your-tests" style="display:inline;"><span><a class="anchor" href="#it-s-like-vcs-for-your-tests">#</a> </span>It&#39;s like VCS for your tests</h3></span><p>The nice upside about dealing with changing assertions is that the snapshot
 testing library can be incredibly helpful when something changes.
 For example, <a href="https://github.com/giacomocavalieri/birdie"><code>birdie</code></a> (the library
@@ -106,13 +105,12 @@ control system:</p><div><pre><code data-highlighted='yes' class='not-prose langu
       <span class='hljs-comment'>4</span> |  <span class='hljs-comment'>-m, --message  the message to be printed</span>
  <span class='hljs-shell-error'>4      -  -f, --file     a file to read the message from</span>
       <span class='hljs-comment'>5</span> |  <span class='hljs-comment'>-h, --help     show this help text</span>
-────────┴───────────────────────────────────────────────────</code></pre></div><p>This is a really nice developer experience, we can see at a glance what has
+────────┴───────────────────────────────────────────────────</code></pre></div><p>This is a really nice developer experience: we can see at a glance what has
 changed and review it. And the best thing is we&#39;ve already been successfully
 using this workflow for years with version control systems like <code>git</code> and
 <a href="https://www.jj-vcs.dev/latest/"><code>jj</code></a>.
 We know how all of this works, it feels familiar:</p><ul><li><section class="stack"><p>Something has changed, so it needs a review</p></section></li><li><section class="stack"><p>It looks ok, we can accept it and go on with our day</p></section></li><li><section class="stack"><p>It looks bad, we have to figure out if the change is wanted at all, or what
-the cause of the bug might be</p></section></li></ul><p>Nowhere in this process we had to go through the assertions and update them
-manually.
+the cause of the bug might be</p></section></li></ul><p>We never need to go through the assertions and update them manually.
 We can finally start focusing on our tests without being slowed down by managing
 explicit assertions.</p></section><section class="stack"><span><h2 id="but-what-about-non-strings" style="display:inline;"><span><a class="anchor" href="#but-what-about-non-strings">#</a> </span>But what about non-strings?</h2></span><p>I hear you. With my first example I have cheated a bit: the function we were
 testing already produces a string that can be easily snapshotted and diffed.
@@ -126,16 +124,16 @@ But being intentional about each snapshot&#39;s content is what actually makes o
 breaks this testing technique.
 Working with the <a href="https://github.com/gleam-lang/gleam">Gleam compiler</a> I ran
 into a great example of how much of a difference a good snapshot test can
-actually make.</p><p>The Gleam compiler is a big piece of software written in Rust, it&#39;s also quite
-thoroughly tested with over 5000 unit tests.
+actually make.</p><p>The Gleam compiler is a big piece of software written in Rust.
+It&#39;s also quite thoroughly tested with over 5000 unit tests.
 More than 3000 are actually snapshot tests (so if you&#39;re wondering if snapshot
-testing can actually work in big numbers… it absolutely can)!</p><p>The piece of the Gleam codebase I will be focusing on is the Language Server
+testing can actually work at scale… it absolutely can)!</p><p>The piece of the Gleam codebase I will be focusing on is the Language Server
 implementation.
-I was looking at some snapshot tests meaning to check that hovering tooltips
-actually worked.</p><blockquote class="stack"><p>The Language Server Protocol allows to display little tooltips when hovering
-over specific portions of code. It&#39;s what shows you the documentation of a
-function once you go over it with your cursor; or what shows you the inferred
-type of a variable.</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() -&gt; Nil {
+I was looking at some snapshot tests intended to check that hovering tooltips
+actually worked.</p><blockquote class="stack"><p>The Language Server Protocol allows the IDE to display little tooltips when
+hovering over specific portions of code.
+It&#39;s what shows you the documentation of a function once you go over it with
+your cursor; or what shows you the inferred type of a variable.</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() -&gt; Nil {
   let a_variable = 11
   //  ^^^ If I put my cursor over here I&#39;m expecting
   //      a helpful tooltip to tell me the type of
@@ -145,11 +143,12 @@ type of a variable.</p><pre><code class="not-prose language-gleam hljs" data-lan
 It&#39;s really useful, so we have to make sure we&#39;re displaying the correct
 information and, crucially, that it is positioned correctly over the hovered
 element.</p></blockquote><p>The Language Server produces some complex data structure with all the
-information needed to render the tooltip by the IDE, that&#39;s what we will be
-testing.
-What we ended up doing at first, for lack of better ideas, is we snapshotted
-the entire data structure turning it into a string using a default display
-function. This is the test:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn hovering_variable_test() {
+information needed to render the tooltip by the IDE.
+That&#39;s what we will be testing.
+What we ended up doing at first, for lack of better ideas, was snapshotting the
+entire data structure by turning it into a string using a default display
+function.
+This is the test:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn hovering_variable_test() {
   hover(over: find_position_of(&quot;a_variable&quot;), code: &quot;
     pub fn main() -&gt; Nil {
       let a_variable = 11
@@ -193,7 +192,7 @@ In this example, this is the look I ended up implementing:</p><div><pre><code da
       9 + ```</span>
 ────────┴───────────────────────────────────────────────────</code></pre></div><p>This is what I call a fun snapshot.
 Looking at it we can see at a glance that the tooltip is perfectly aligned with
-the variable being hovered, and its content is also rendered nicely below.</p><p>I cannot understate how much time having nice-to-read snapshots like this one
+the variable being hovered over, and its content is also rendered nicely below.</p><p>I cannot overstate how much time having nice-to-read snapshots like this one
 has saved me, Louis, and Surya when reviewing new code being contributed to the
 Gleam compiler.
 Heck, I&#39;d go so far to say it&#39;s actually fun to write tests and be confronted
@@ -291,12 +290,12 @@ of its extremes.
 I don&#39;t know about you but this test gives me much more confidence in the
 correct working of the function, rather than having a bunch of random-looking
 <code>Float</code>s scattered through my test suite.</p></section><section class="stack"><span><h2 id="effective-snapshot-testing" style="display:inline;"><span><a class="anchor" href="#effective-snapshot-testing">#</a> </span>Effective snapshot testing</h2></span><p>Now, before you start trying to converting all your tests into snapshots I&#39;d
-like to share some insights on how to use this tool <em>effectively.</em></p></section><section class="stack"><span><h3 id="use-long-descriptive-titles" style="display:inline;"><span><a class="anchor" href="#use-long-descriptive-titles">#</a> </span>Use long descriptive titles</h3></span><p>Notice how snapshots require a title, that is what is shown you when you&#39;re
-reviewing them.
+like to share some insights on how to use this tool <em>effectively.</em></p></section><section class="stack"><span><h3 id="use-long-descriptive-titles" style="display:inline;"><span><a class="anchor" href="#use-long-descriptive-titles">#</a> </span>Use long descriptive titles</h3></span><p>Notice how snapshots require a title which is shown you when you&#39;re reviewing
+them.
 And it&#39;s actually an important piece of the equation: it&#39;s telling you what to
 look for.
 If your snapshot is called <code>&quot;some test&quot;</code> it&#39;s not really easy to figure out what
-you&#39;re looking at, isn&#39;t it?
+you&#39;re looking at, is it?
 On the other hand, if your snapshot title is
 <code>&quot;the &#39;wibble&#39; variable is underlined&quot;</code>, you know exactly what should be
 happening in the snapshot body and if the <code>wibble</code> variable is not underlined
@@ -306,9 +305,9 @@ The same goes for snapshot tests: <em>don&#39;t try and cram too much into a sin
 review on a <code>+10293/-5011</code> pull request: it&#39;s a lot simpler to review many small
 and well-defined snapshots rather than a single huge one… your colleagues will
 thank you!</p><p>The exact size will vary, but a good rule of thumb is if your snapshot is 10/50
-lines long it could be totally fine.
+lines long it&#39;s probably fine.
 If it starts getting longer it might be a sign you have to refactor your test
-(yes, tests need refactoring and love too), maybe you&#39;re trying to <em>assert way
+(yes, tests need refactoring and love too): maybe you&#39;re trying to <em>assert way
 too many things at once</em> and you could replace a single snapshot with a couple
 of more focused ones.</p></section><section class="stack"><span><h3 id="don-t-overdo-it" style="display:inline;"><span><a class="anchor" href="#don-t-overdo-it">#</a> </span>Don&#39;t overdo it</h3></span><p>This is the most important one.
 When we learn some new cool and shiny tool we think it&#39;s the next best thing
@@ -316,8 +315,8 @@ and want to use it everywhere.
 But it&#39;s even more important knowing when <em>not</em> to use something.
 As for snapshot testing:</p><ul><li><section class="stack"><p>If your assertions are simple</p></section></li><li><section class="stack"><p>If the tested data rarely ever changes</p></section></li><li><section class="stack"><p>If maintaining and evolving the test is not all that painful</p></section></li></ul><p>Then it might be the case that a regular unit test assertion is perfectly fine.</p></section><section class="stack"><span><h2 id="conclusions" style="display:inline;"><span><a class="anchor" href="#conclusions">#</a> </span>Conclusions</h2></span><p>Hopefully you now have a new tool to level up your testing game.
 I think snapshot testing is criminally underused and has a kind of bad rep
-because of badly misused it is in browser integration tests (by the way if you
-want to learn more about UI testing,
+because of how badly misused it is in browser integration tests (by the way if
+you want to learn more about UI testing,
 <a href="https://www.youtube.com/watch?v=lnvmbzwIt94">this might be the talk for you</a>).</p><p>In my experience snapshot testing has been a life saver.
 I now default to snapshot testing first and only in the cases mentioned above
 I switch back to unit testing… and I&#39;ll never look back!</p><hr><p>Thank you so much for reading through this, and thanks to all the amazing people
