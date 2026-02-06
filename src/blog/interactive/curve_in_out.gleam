@@ -1,4 +1,5 @@
 import gleam/bool
+import gleam/dynamic/decode
 import gleam/float
 import gleam/int
 import gleam/list
@@ -291,7 +292,7 @@ fn view(model: Model) -> Element(Message) {
       attribute.max("1.0"),
       attribute.step("0.01"),
       attribute.value(float.to_string(current_value)),
-      event.on_mouse_up(UserReleasedSlider),
+      event.on("pointerup", decode.success(UserReleasedSlider)),
       event.on_input(UserMovedSlider)
         |> event.throttle(10),
     ])
