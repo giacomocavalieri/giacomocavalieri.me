@@ -49,7 +49,7 @@ pub fn main() {
 fn init(tests_timing: Int) -> #(Model, Effect(Message)) {
   #(
     Model(state: WaitingForTest, command: "", ran_commands: [], tests_timing:),
-    focus_no_scroll("terminal-prompt-field"),
+    effect.none(),
   )
 }
 
