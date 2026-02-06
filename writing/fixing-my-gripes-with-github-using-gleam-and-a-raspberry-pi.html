@@ -2,14 +2,14 @@
 <html lang="en"><head><title>Fixing my gripes with GitHub using Gleam and a Raspberry Pi</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><link href="favicon.ico" rel="icon" type="image/x-icon"><meta content="Giacomo Cavalieri" property="og:site_name"><meta content="Fixing my gripes with GitHub using Gleam and a Raspberry Pi" property="og:title"><meta content="website" property="og:type"><meta content="https://giacomocavalieri.me/imgs/og-preview-image.jpg" property="og:image"><meta content="As a programmer there&#39;s no greater joy than trying to code my way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." property="og:description"><meta content="As a programmer there&#39;s no greater joy than trying to code my way out of little daily annoyances. Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and a little Raspberry Pi Zero." name="description"><link href="/style-6.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body class="stack-l"><ol aria-label="Breadcrumb" class="breadcrumb"><li><a href="/">home</a></li><li><a href="/writing.html" style="view-transition-name:writing-animation;">writing</a></li><li><h2 aria-current="page" data-crumb="block">Fixing my gripes with GitHub using Gleam and a Raspberry Pi</h2></li></ol><main class="stack article"><section class="stack"><p>As a programmer there&#39;s no greater joy than trying to code my way out of little
 daily annoyances.
 Lately I&#39;ve been annoyed by GitHub&#39;s UI and I set up to fix this using Gleam and
-a little Raspberry Pi Zero.</p></section><section class="stack"><h2 id="The-problem">The problem</h2><p>I work a lot on the <a href="https://github.com/gleam-lang/gleam">Gleam compiler</a>, it&#39;s
+a little Raspberry Pi Zero.</p></section><section class="stack"><span><h2 id="the-problem" style="display:inline;"><span><a class="anchor" href="#the-problem">#</a> </span>The problem</h2></span><p>I work a lot on the <a href="https://github.com/gleam-lang/gleam">Gleam compiler</a>, it&#39;s
 quite common for me to have many open PRs waiting to be reviewed and merged.
 One thing that usually happens is one of them (or some other PR) is merged and
 then conflicts start popping up without me noticing, until the reviewer pings me
 asking for a rebase.</p><p>The thing that&#39;s been bugging me for a while is that GitHub&#39;s PR view is not
 showing me the mergeability of any of my open PRs: that is wether they have
 conflicts I need to address, or if they don&#39;t need any of my attention.</p><p><img src="/imgs/github-prs-view.png"></p><p>Whenever a PR is merged I need to go check each of the remaining ones
-individually and see if there&#39;s a conflict or not. I find that quite annoying!</p></section><section class="stack"><h2 id="The-solution">The solution</h2><p>GitHub has a handy <a href="https://docs.github.com/en/graphql">GraphQL API</a>.
+individually and see if there&#39;s a conflict or not. I find that quite annoying!</p></section><section class="stack"><span><h2 id="the-solution" style="display:inline;"><span><a class="anchor" href="#the-solution">#</a> </span>The solution</h2></span><p>GitHub has a handy <a href="https://docs.github.com/en/graphql">GraphQL API</a>.
 I had used it a couple of times to write small scripts, and so I was pretty
 confident it could help me solve this problem.
 I don&#39;t need to fetch a lot of data: for each PR I need to know its title, a
@@ -101,7 +101,7 @@ pub type Mergeability {
   Mergeable
   Unknown
 }
-</code></pre></section><section class="stack"><h3 id="Dealing-with-the-unknown">Dealing with the unknown</h3><p>The response we get back from the API is a plain string containing an unknown
+</code></pre></section><section class="stack"><span><h3 id="dealing-with-the-unknown" style="display:inline;"><span><a class="anchor" href="#dealing-with-the-unknown">#</a> </span>Dealing with the unknown</h3></span><p>The response we get back from the API is a plain string containing an unknown
 JSON object. So, before we can do anything meaningful with this data, we need to
 parse it into something with a known shape: a list of <code>PullRequest</code>s in this
 case.</p><p>One can do that in Gleam using a
@@ -159,7 +159,7 @@ pub fn fetch_pull_requests(gh_token: String) -&gt; List(PullRequest) {
 increasingly more powerful decoder: we start with something that can decode just
 a mergeability string into a Gleam type, we use it to define something that can
 decode a single pull request. Finally, we can use that to define a decoder that
-decodes a list of pull requests that is found deeply nested in a json object.</p><p>Now we&#39;re just missing a way to nicely display all this data!</p></section><section class="stack"><h3 id="Enters-the-trusty-Raspberry-Pi-Zero">Enters the trusty Raspberry Pi Zero</h3><p>A while ago I got a
+decodes a list of pull requests that is found deeply nested in a json object.</p><p>Now we&#39;re just missing a way to nicely display all this data!</p></section><section class="stack"><span><h3 id="enters-the-trusty-raspberry-pi-zero" style="display:inline;"><span><a class="anchor" href="#enters-the-trusty-raspberry-pi-zero">#</a> </span>Enters the trusty Raspberry Pi Zero</h3></span><p>A while ago I got a
 <a href="https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/">Raspberry Pi Zero 2 W</a>,
 a tiny, tiny $15 computer.
 Being a Gleam nerd, of course I wanted to try and run some Gleam code on it!
@@ -212,7 +212,7 @@ API:</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> pub fn
  }
 </code></pre><p>All the hard work of fetching and decoding the pull requests is already
 implemented in <code>fetch_pull_requests</code>, so we just need a way to dinamically
-produce some HTML document from those.</p></section><section class="stack"><h3 id="HTML-templating-with-Lustre">HTML templating with Lustre</h3><p>To do that I&#39;m using <a href="https://hexdocs.pm/lustre/index.html">Lustre</a>, a Gleam web
+produce some HTML document from those.</p></section><section class="stack"><span><h3 id="html-templating-with-lustre" style="display:inline;"><span><a class="anchor" href="#html-templating-with-lustre">#</a> </span>HTML templating with Lustre</h3></span><p>To do that I&#39;m using <a href="https://hexdocs.pm/lustre/index.html">Lustre</a>, a Gleam web
 framework for building HTML templates, single page applications, and real-time
 server components.
 In my case I&#39;m using it just for the HTML templating, and it looks like this:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">import lustre/element/html
@@ -266,7 +266,7 @@ takes care of turning a single pull request into a list item:</p><pre><code clas
 +    html.ul([], list.map(pull_requests, pull_request_to_li))
    ])
  }
-</code></pre></section><section class="stack"><h2 id="The-final-result">The final result</h2><p>I set up a <code>systemctl</code> timer – thank you Louis for introducing me to that! –
+</code></pre></section><section class="stack"><span><h2 id="the-final-result" style="display:inline;"><span><a class="anchor" href="#the-final-result">#</a> </span>The final result</h2></span><p>I set up a <code>systemctl</code> timer – thank you Louis for introducing me to that! –
 to fire up the server listening on port 80 every time the Raspberry is turned
 on:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() -&gt; Nil {
   wisp.configure_logger()
@@ -291,7 +291,7 @@ on:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn
 }
 </code></pre><p>And now I can browse to my Raspberry and see at a glance whether any of my PRs
 need some fixing, pretty neat if you ask me!</p><p><img src="/imgs/final-result.png"></p><p>Yes, I know this won&#39;t probably win a design award, but I&#39;m quite fond of the
-web 1.0 aesthetic and that&#39;s more than enough for me.</p></section><section class="stack"><h2 id="Was-it-worth-it">Was it worth it?</h2><p>We all know the joke of the developer speding months trying to automate a 5
+web 1.0 aesthetic and that&#39;s more than enough for me.</p></section><section class="stack"><span><h2 id="was-it-worth-it" style="display:inline;"><span><a class="anchor" href="#was-it-worth-it">#</a> </span>Was it worth it?</h2></span><p>We all know the joke of the developer speding months trying to automate a 5
 minutes task. But this actually took me less than an hour to build – Gleam is
 an incredibly productive language!</p><p>I think there&#39;s something exhilarating in racking one&#39;s brain trying to automate
 routine tasks; and even if this
