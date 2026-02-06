@@ -279,6 +279,7 @@ fn view(model: Model) -> Element(Message) {
             attribute.disabled(model.state == Done),
             attribute.type_("text"),
             attribute.spellcheck(False),
+            attribute.autocapitalize("off"),
             attribute.autocomplete("off"),
             attribute.value(model.command),
             attribute.placeholder(next_step_hint(model.state)),
