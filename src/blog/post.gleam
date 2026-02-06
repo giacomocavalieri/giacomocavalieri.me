@@ -2,7 +2,7 @@ import blog/breadcrumbs
 import frontmatter.{Extracted}
 import gleam/int
 import gleam/list
-import gleam/option.{None, Some}
+import gleam/option.{type Option, None, Some}
 import gleam/order.{type Order}
 import gleam/result
 import gleam/string
@@ -32,6 +32,7 @@ pub type Metadata {
     date: Date,
     tags: List(String),
     status: Status,
+    preview_image: Option(String),
   )
 }
 
@@ -82,6 +83,12 @@ fn parse_metadata(metadata: String) -> Result(Metadata, Error) {
   use abstract <- toml_field(toml, tom.get_string, "abstract")
   let abstract = jot.parse(abstract)
 
+  use preview_image <- result.try(case tom.get_string(toml, ["preview-image"]) {
+    Ok(preview_image) -> Ok(Some(preview_image))
+    Error(tom.NotFound(..)) -> Ok(None)
+    Error(tom.WrongType(..)) -> Error(WrongMetadataField("preview-image"))
+  })
+
   use date <- toml_field(toml, tom.get_date, "date")
   use tags <- toml_field(toml, tom.get_array, "tags")
   use status <- toml_field(toml, tom.get_string, "status")
@@ -101,7 +108,7 @@ fn parse_metadata(metadata: String) -> Result(Metadata, Error) {
     _ -> Error(WrongMetadataField("status"))
   })
 
-  Ok(Metadata(id:, title:, abstract:, date:, tags:, status:))
+  Ok(Metadata(id:, title:, abstract:, date:, tags:, status:, preview_image:))
 }
 
 fn toml_field(

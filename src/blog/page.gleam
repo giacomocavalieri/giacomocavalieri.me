@@ -5,6 +5,7 @@ import blog/talk.{type Talk}
 import gleam/dict
 import gleam/int
 import gleam/list
+import gleam/option.{type Option, None, Some}
 import jot_extra
 import lustre/attribute.{type Attribute, attribute} as attr
 import lustre/element.{type Element}
@@ -15,7 +16,8 @@ import lustre/element/html
 const description = "Italy-based developer, Gleam core team member, and functional programming enthusiast"
 
 pub fn home() -> Element(a) {
-  page("Giacomo Cavalieri", description, [attr.class("stack-l jak-cover")], [
+  let title = "Giacomo Cavalieri"
+  page(title, description, None, [attr.class("stack-l jak-cover")], [
     html.h1([], [html.text("Giacomo Cavalieri")]),
     html.main([attr.class("stack-s")], [
       html.p([], [html.text("Italy-based developer")]),
@@ -40,7 +42,7 @@ pub fn home() -> Element(a) {
 
 pub fn contact() -> Element(a) {
   let title = "Contact | Giacomo Cavalieri"
-  page(title, description, [attr.class("stack-l jak-cover")], [
+  page(title, description, None, [attr.class("stack-l jak-cover")], [
     html.h1([], [html.text("Giacomo Cavalieri")]),
     html.address([attr.class("stack-s")], [
       html.p([], [
@@ -95,7 +97,9 @@ fn animate(name: String) -> Attribute(a) {
 // --- 404 PAGE ---------------------------------------------------------------
 
 pub fn not_found() -> Element(a) {
-  page("Not found", "There's nothing here", [attr.class("stack-l")], [
+  let title = "Not found"
+  let description = "There's nothing here"
+  page(title, description, None, [attr.class("stack-l")], [
     html.h1([], [html.text("There's nothing here!")]),
     html.p([], [
       html.text("Go back "),
@@ -112,7 +116,8 @@ pub fn writing(posts: List(Post)) -> Element(a) {
     |> dict.to_list
     |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
-  page("Writing | Giacomo Cavalieri", description, [attr.class("stack-l")], [
+  let title = "Writing | Giacomo Cavalieri"
+  page(title, description, None, [attr.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("writing", to: "/writing.html"),
@@ -135,7 +140,8 @@ pub fn speaking(talks: List(Talk)) -> Element(a) {
     |> dict.to_list
     |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
-  page("Speaking | Giacomo Cavalieri", description, [attr.class("stack-l")], [
+  let title = "Speaking | Giacomo Cavalieri"
+  page(title, description, None, [attr.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("speaking", to: "/speaking.html"),
@@ -156,16 +162,18 @@ pub fn from_post(post: Post) -> Element(a) {
   page(
     post.meta.title,
     jot_extra.to_string(post.meta.abstract),
+    post.meta.preview_image,
     [attr.class("stack-l")],
     post.to_article(post),
   )
 }
 
 pub fn socials() -> Element(a) {
+  let title = "Socials | Giacomo Cavalieri"
   let description =
     "Let's connect on social media! Here's all the places where you can find me."
 
-  page("Socials | Giacomo Cavalieri", description, [attr.class("stack-l")], [
+  page(title, description, None, [attr.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("contact", to: "/contact.html"),
       breadcrumbs.animated_link("socials", to: "/socials.html"),
@@ -225,11 +233,12 @@ pub fn socials() -> Element(a) {
 fn page(
   title: String,
   description: String,
+  preview_image: Option(String),
   attributes: List(Attribute(a)),
   elements: List(Element(a)),
 ) -> Element(a) {
   html.html([lang("en")], [
-    default_head(title, description),
+    default_head(title, description, preview_image),
     html.body(attributes, elements),
   ])
 }
@@ -240,7 +249,11 @@ const hljs_diff_url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11
 
 const gleam_hljs_script_url = "/highlightjs-gleam.js"
 
-fn default_head(page_title: String, description: String) -> Element(a) {
+fn default_head(
+  page_title: String,
+  description: String,
+  preview_image: Option(String),
+) -> Element(a) {
   html.head([], [
     html.title([], page_title),
     charset("utf-8"),
@@ -263,7 +276,10 @@ fn default_head(page_title: String, description: String) -> Element(a) {
     html.meta([property("og:type"), content("website")]),
     html.meta([
       property("og:image"),
-      content("https://giacomocavalieri.me/imgs/og-preview-image.jpg"),
+      content(case preview_image {
+        None -> "https://giacomocavalieri.me/imgs/og-preview-image.jpg"
+        Some(image) -> "https://giacomocavalieri.me/imgs/" <> image
+      }),
     ]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
