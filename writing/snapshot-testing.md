@@ -9,8 +9,7 @@ status = "show"
 
 Writing tests is boring.
 Even worse, maintaining tests is boring _and_ error prone.
-The tragedy is they're also one of the most valuable pieces of code we could
-write.
+The tragedy is they're also some of the most valuable code we can write.
 
 So let me show you a fun technique to add to your testing toolbox that can make
 writing and maintaining tests a whole lot more pleasant.
@@ -42,9 +41,9 @@ usage: lucysay [-m message] [-f file]
 }
 ```
 
-We're checking the help text string conforms to an expected message, since we're
-writing a regular unit test assertion there's no escaping it: we have to type
-that in full.
+We're checking the help text string conforms to an expected message.
+Since we're writing a regular unit test assertion there's no escaping it:
+we have to type that in full.
 
 What's worse is, if the help text changes (say we're shipping a v2 with more
 flags and features) we'll have to go through that literal string and manually
@@ -55,7 +54,7 @@ fun: it's a boring, repetitive, and error-prone process.
 
 ## Snapshot testing to the rescue
 
-Here's were snapshot testing comes into play.
+Here's where snapshot testing comes into play.
 The elevator pitch is simple: _you can focus on writing tests, and the snapshot
 testing library will take care of the expected values automatically._
 
@@ -139,14 +138,13 @@ We accept the snapshot.
 Now every time we run the tests, they will succeed... given the output of the
 function doesn't change.
 
-What's happening under the hood is unremarkably simple: the snapshot testing
+What's happening under the hood is remarkably simple: the snapshot testing
 library, once we accept the snapshot, saves its content to a file and checks
 that the function will always produce that value.
 If the output changes, the test will fail and we'll have to review the snapshot
 again.
 
-You can actually try the whole workflow for yourself here, just follow the hints
-and type away!
+Try it for yourself! You can really type at the prompt below.
 
 ```=html
 <div id="terminal"></div>
@@ -176,7 +174,7 @@ control system:
 ────────┴───────────────────────────────────────────────────</code></pre>
 ```
 
-This is a really nice developer experience, we can see at a glance what has
+This is a really nice developer experience: we can see at a glance what has
 changed and review it. And the best thing is we've already been successfully
 using this workflow for years with version control systems like `git` and
 [`jj`](https://www.jj-vcs.dev/latest/).
@@ -187,8 +185,7 @@ We know how all of this works, it feels familiar:
 - It looks bad, we have to figure out if the change is wanted at all, or what
   the cause of the bug might be
 
-Nowhere in this process we had to go through the assertions and update them
-manually.
+We never need to go through the assertions and update them manually.
 We can finally start focusing on our tests without being slowed down by managing
 explicit assertions.
 
@@ -216,20 +213,20 @@ Working with the [Gleam compiler](https://github.com/gleam-lang/gleam) I ran
 into a great example of how much of a difference a good snapshot test can
 actually make.
 
-The Gleam compiler is a big piece of software written in Rust, it's also quite
-thoroughly tested with over 5000 unit tests.
+The Gleam compiler is a big piece of software written in Rust.
+It's also quite thoroughly tested with over 5000 unit tests.
 More than 3000 are actually snapshot tests (so if you're wondering if snapshot
-testing can actually work in big numbers... it absolutely can)!
+testing can actually work at scale... it absolutely can)!
 
 The piece of the Gleam codebase I will be focusing on is the Language Server
 implementation.
-I was looking at some snapshot tests meaning to check that hovering tooltips
+I was looking at some snapshot tests intended to check that hovering tooltips
 actually worked.
 
-> The Language Server Protocol allows to display little tooltips when hovering
-> over specific portions of code. It's what shows you the documentation of a
-> function once you go over it with your cursor; or what shows you the inferred
-> type of a variable.
+> The Language Server Protocol allows the IDE to display little tooltips when
+> hovering over specific portions of code.
+> It's what shows you the documentation of a function once you go over it with
+> your cursor; or what shows you the inferred type of a variable.
 >
 > ```gleam
 > pub fn main() -> Nil {
@@ -245,11 +242,12 @@ actually worked.
 > element.
 
 The Language Server produces some complex data structure with all the
-information needed to render the tooltip by the IDE, that's what we will be
-testing.
-What we ended up doing at first, for lack of better ideas, is we snapshotted
-the entire data structure turning it into a string using a default display
-function. This is the test:
+information needed to render the tooltip by the IDE.
+That's what we will be testing.
+What we ended up doing at first, for lack of better ideas, was snapshotting the
+entire data structure by turning it into a string using a default display
+function.
+This is the test:
 
 ```gleam
 pub fn hovering_variable_test() {
@@ -316,9 +314,9 @@ In this example, this is the look I ended up implementing:
 
 This is what I call a fun snapshot.
 Looking at it we can see at a glance that the tooltip is perfectly aligned with
-the variable being hovered, and its content is also rendered nicely below.
+the variable being hovered over, and its content is also rendered nicely below.
 
-I cannot understate how much time having nice-to-read snapshots like this one
+I cannot overstate how much time having nice-to-read snapshots like this one
 has saved me, Louis, and Surya when reviewing new code being contributed to the
 Gleam compiler.
 Heck, I'd go so far to say it's actually fun to write tests and be confronted
@@ -471,12 +469,12 @@ like to share some insights on how to use this tool _effectively._
 
 ### Use long descriptive titles
 
-Notice how snapshots require a title, that is what is shown you when you're
-reviewing them.
+Notice how snapshots require a title which is shown you when you're reviewing
+them.
 And it's actually an important piece of the equation: it's telling you what to
 look for.
 If your snapshot is called `"some test"` it's not really easy to figure out what
-you're looking at, isn't it?
+you're looking at, is it?
 On the other hand, if your snapshot title is
 `"the 'wibble' variable is underlined"`, you know exactly what should be
 happening in the snapshot body and if the `wibble` variable is not underlined
@@ -494,9 +492,9 @@ and well-defined snapshots rather than a single huge one... your colleagues will
 thank you!
 
 The exact size will vary, but a good rule of thumb is if your snapshot is 10/50
-lines long it could be totally fine.
+lines long it's probably fine.
 If it starts getting longer it might be a sign you have to refactor your test
-(yes, tests need refactoring and love too), maybe you're trying to _assert way
+(yes, tests need refactoring and love too): maybe you're trying to _assert way
 too many things at once_ and you could replace a single snapshot with a couple
 of more focused ones.
 
@@ -518,8 +516,8 @@ Then it might be the case that a regular unit test assertion is perfectly fine.
 
 Hopefully you now have a new tool to level up your testing game.
 I think snapshot testing is criminally underused and has a kind of bad rep
-because of badly misused it is in browser integration tests (by the way if you
-want to learn more about UI testing,
+because of how badly misused it is in browser integration tests (by the way if
+you want to learn more about UI testing,
 [this might be the talk for you](https://www.youtube.com/watch?v=lnvmbzwIt94)).
 
 In my experience snapshot testing has been a life saver.
