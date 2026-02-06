@@ -19,6 +19,10 @@ This technique is applicable everywhere and to prove it we'll go through
 real-world examples ranging from CLIs, to compilers written in Rust, to...
 web animations!
 
+> This post is based on my talk _"Supercharge your Tests with Snapshot Testing",_
+> if you're interested you can
+> [watch it on YouTube.](https://www.youtube.com/watch?v=DpakV96jeRk)
+
 ## The problem
 
 Say you're writing a command line application (CLI), maybe it's just a little
