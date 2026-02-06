@@ -41,6 +41,8 @@
     --bg-color: #02030f;
     --bluesky-embed-color: #0a7aff;
 
+    --number-color: #fdffab;
+
     --s0: 1rem;
     --s1: calc(var(--s0) * var(--ratio));
     --s2: calc(var(--s1) * var(--ratio));
@@ -57,6 +59,10 @@
 
 ::selection {
     background: var(--main-color);
+}
+
+input {
+    accent-color: var(--main-color);
 }
 
 * {
@@ -157,14 +163,11 @@ hr {
 }
 
 .jak-cover {
-    background-image:
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 50%, transparent 90%),
-        url("imgs/bg-vertical.jpg");
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 50%, transparent 90%), url("imgs/bg-vertical.jpg");
     background-position: 70% 50%;
     @media (width >= 720px) {
         background-image:
-            linear-gradient(to right, rgba(0, 0, 0, 0.9) 40%, transparent 50%),
-            url("imgs/bg-horizontal.jpg");
+            linear-gradient(to right, rgba(0, 0, 0, 0.9) 40%, transparent 50%), url("imgs/bg-horizontal.jpg");
         background-position: 50% top;
     }
 
@@ -183,11 +186,7 @@ hr {
         margin-inline-end: var(--s-1);
     }
     & .bluesky-embed {
-        background-color: color-mix(
-            in oklab,
-            var(--bluesky-embed-color) 15%,
-            transparent
-        );
+        background-color: color-mix(in oklab, var(--bluesky-embed-color) 15%, transparent);
         padding: var(--s1);
 
         & a {
@@ -201,11 +200,7 @@ hr {
     }
 
     & blockquote {
-        background-color: color-mix(
-            in oklab,
-            var(--main-color) 15%,
-            transparent
-        );
+        background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
         padding: var(--s1);
     }
 }
@@ -219,6 +214,14 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.anchor {
+    color: var(--color);
+    font-weight: bold;
+    font-style: inherit;
+    font-size: 0.7em;
+    text-decoration: none;
 }
 
 /*** LAYOUT ELEMENTS **********************************************************/
@@ -271,19 +274,23 @@ a:hover {
 .switcher {
     display: flex;
     flex-wrap: wrap;
-    row-gap: var(--s-5);
-    column-gap: var(--s0);
-    --threshold: 15rem;
+    gap: var(--s0);
 }
 .switcher > * {
     flex-grow: 1;
-    flex-basis: calc((var(--threshold) - 100%) * 999);
+    flex-basis: calc((var(--measure) / 1.5 - 100%) * 999);
 }
 /* Exception for the nav switcher: we don't want elements to grow and we want
    to have a little dash separating elements */
+.nav-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: var(--s-5);
+    column-gap: var(--s0);
+}
 .nav-switcher > * {
     flex-grow: 0;
-    flex-basis: calc((var(--threshold) - 100%) * 999);
+    flex-basis: calc((30ch - 100%) * 999);
 }
 .nav-switcher > :not(:last-child)::after {
     content: "-" / "";
@@ -342,7 +349,8 @@ a:hover {
 
 pre code,
 pre code span,
-p code {
+p code,
+pre * {
     font-family: "Fira Code", monospace;
 }
 
@@ -363,12 +371,19 @@ pre {
     overflow-x: auto;
 }
 
-.hljs-number {
-    color: rgb(219, 148, 14);
+.padded-block {
+    padding: var(--s1);
+    background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
+    overflow-x: auto;
 }
 
-.hljs-string {
-    color: rgb(94, 173, 94);
+.hljs-number {
+    color: var(--number-color);
+}
+
+.hljs-string,
+.hljs-shell-new {
+    color: #c8ffa7;
 }
 
 .hljs-comment {
@@ -376,13 +391,25 @@ pre {
 }
 
 .hljs-keyword,
-.hljs-built_in,
-.hljs-operator {
-    color: rgb(255, 69, 138);
+.hljs-built_in {
+    color: #ffd596;
 }
 
-.hljs-title {
-    color: rgb(56, 146, 240);
+.hljs-operator {
+    color: #faaff3;
+}
+
+.hljs-shell-error {
+    color: #fe7c6b;
+}
+
+.hljs-title,
+.hljs-shell-info {
+    color: #9ce7ff;
+}
+
+.hljs-shell-warning {
+    color: #ffd596;
 }
 
 .hljs-variable {
@@ -390,9 +417,11 @@ pre {
 }
 
 .hljs-addition {
-    background-color: rgb(94, 173, 94, 0.4);
+    color: #c8ffa7;
+    background-color: #c8ffa730;
 }
 
 .hljs-deletion {
-    background-color: rgb(255, 69, 138, 0.4);
+    color: #fe7c6b;
+    background-color: #fe7c6b30;
 }
