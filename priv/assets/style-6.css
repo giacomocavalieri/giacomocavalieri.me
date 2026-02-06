@@ -216,6 +216,14 @@ a:hover {
     text-decoration: underline;
 }
 
+.anchor {
+    color: var(--color);
+    font-weight: bold;
+    font-style: inherit;
+    font-size: 0.7em;
+    text-decoration: none;
+}
+
 /*** LAYOUT ELEMENTS **********************************************************/
 
 .sidebar,
