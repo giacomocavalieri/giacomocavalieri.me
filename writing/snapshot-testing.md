@@ -1,7 +1,7 @@
 ---
 id = "snapshot-testing"
-title = "TODO AND ABSTRACT"
-abstract = "TODO"
+title = "A simple technique to make tests fun"
+abstract = "Writing and maintaining tests is boring. But they're also some of the most valuable code we can write. With this blog post you'll learn a criminally underrated testing technique to add to your testing toolbox that can make tests a whole lot more pleasant."
 tags = ["gleam", "testing"]
 date = 2026-02-06
 status = "show"
@@ -11,8 +11,9 @@ Writing tests is boring.
 Even worse, maintaining tests is boring _and_ error prone.
 The tragedy is they're also some of the most valuable code we can write.
 
-So let me show you a fun technique to add to your testing toolbox that can make
-writing and maintaining tests a whole lot more pleasant.
+So let me show you a fun and criminally underrated technique to add to your
+testing toolbox that can make writing and maintaining tests a whole lot more
+pleasant: _snapshot testing._
 This technique is applicable everywhere and to prove it we'll go through
 real-world examples ranging from CLIs, to compilers written in Rust, to...
 web animations!
