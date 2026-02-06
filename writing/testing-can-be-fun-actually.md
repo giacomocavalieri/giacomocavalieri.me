@@ -534,6 +534,7 @@ I switch back to unit testing... and I'll never look back!
 
 Thank you so much for reading through this, and thanks to all the amazing people
 who shared their feedback.
+You can _leave me a comment_ or share this post [on BlueSky.](https://bsky.app/profile/giacomocavalieri.me/post/3me7atrkl5k2e)
 A shoutout to [Cian Synnott](https://emauton.org/) for taking the time to
 proofread this and sharing his suggestions, you're the best!
 
