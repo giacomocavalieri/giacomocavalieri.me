@@ -1,6 +1,6 @@
 ---
 id = "snapshot-testing"
-title = "A simple technique to make tests fun"
+title = "Testing can be fun, actually"
 abstract = "Writing and maintaining tests is boring. But they're also some of the most valuable code we can write. With this blog post you'll learn a criminally underrated testing technique to add to your testing toolbox that can make tests a whole lot more pleasant."
 tags = ["gleam", "testing"]
 date = 2026-02-06
@@ -529,6 +529,8 @@ I switch back to unit testing... and I'll never look back!
 
 Thank you so much for reading through this, and thanks to all the amazing people
 who shared their feedback.
+A shoutout to [Cian Synnott](https://emauton.org/) for taking the time to
+proofread this and sharing his suggestions, you're the best!
 
 This has been lovingly written and coded entirely by a human: me!
 It takes quite some time, and if you want to support me you can on
