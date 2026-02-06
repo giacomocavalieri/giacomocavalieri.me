@@ -401,10 +401,10 @@ fn view(model: Model) -> Element(Message) {
 
 fn next_step_hint(state: State) -> String {
   case state {
-    WaitingForTest -> "try running `gleam test`..."
-    WaitingForReview -> "try running `gleam run -m birdie`"
-    Reviewing -> "try accepting the snapshot with `a`"
-    Accepted -> "try running `gleam test` again now..."
+    WaitingForTest -> "try `gleam test`..."
+    WaitingForReview -> "try `gleam run -m birdie`"
+    Reviewing -> "try accepting with `a`"
+    Accepted -> "try `gleam test` again now..."
     Done -> "the demo is over!"
     Compiling -> "compiling..."
     RunningTests -> "running tests..."
