@@ -35,3 +35,6 @@ status = "show"
   git diffs on the command line, a real life saver
 - _[Screen Studio,](https://www.screen.studio)_ this makes the prettiest screen
   recordings I've ever seen
+- _[direnv,](https://direnv.net)_ a neat command line tool to manage an
+  application's environment. I'm now using it in most of my projects that have
+  to deal with env variables.
