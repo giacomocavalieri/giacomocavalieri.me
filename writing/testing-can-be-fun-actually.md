@@ -1,5 +1,5 @@
 ---
-id = "snapshot-testing"
+id = "testing-can-be-fun-actually"
 title = "Testing can be fun, actually"
 abstract = "Writing and maintaining tests is boring. But they're also some of the most valuable code we can write. With this blog post you'll learn a criminally underrated testing technique to add to your testing toolbox that can make tests a whole lot more pleasant."
 tags = ["gleam", "testing"]
