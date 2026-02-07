@@ -3,7 +3,6 @@ import frontmatter.{Extracted}
 import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import gleam/order.{type Order}
 import gleam/result
 import gleam/string
 import gleam/time/calendar.{type Date, Date}
@@ -41,18 +40,6 @@ pub type Error {
   MissingFrontmatter
   WrongMetadata
   WrongMetadataField(field: String)
-}
-
-pub fn compare(one: Post, other: Post) -> Order {
-  let Date(year:, month:, day:) = one.meta.date
-  let Date(year: year_other, month: month_other, day: day_other) =
-    other.meta.date
-
-  use <- order.lazy_break_tie(int.compare(year, year_other))
-  let month = calendar.month_to_int(month)
-  let month_other = calendar.month_to_int(month_other)
-  use <- order.lazy_break_tie(int.compare(month, month_other))
-  int.compare(day, day_other)
 }
 
 // PARSING ---------------------------------------------------------------------
@@ -144,7 +131,9 @@ pub fn to_article(post: Post) -> List(Element(a)) {
 pub fn to_preview_list(posts: List(Post)) -> Element(a) {
   html.ol(
     [attr.class("stack-s")],
-    list.sort(posts, compare)
+    list.sort(posts, fn(one, other) {
+      calendar.naive_date_compare(one.meta.date, other.meta.date)
+    })
       |> list.reverse
       |> list.map(to_preview),
   )

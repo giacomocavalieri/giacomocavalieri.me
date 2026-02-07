@@ -1,7 +1,6 @@
 import blog/post
 import gleam/int
 import gleam/list
-import gleam/order
 import gleam/string
 import gleam/time/calendar
 import jot_extra
@@ -11,11 +10,8 @@ import lustre/element/html
 
 pub fn feed_from_posts(posts: List(post.Post)) -> Element(msg) {
   let assert Ok(latest_post) =
-    list.reduce(posts, fn(one, other) {
-      case post.compare(one, other) {
-        order.Gt | order.Eq -> one
-        order.Lt -> other
-      }
+    list.max(posts, fn(one, other) {
+      calendar.naive_date_compare(one.meta.date, other.meta.date)
     })
 
   element("rss", [attr.attribute("version", "2.0")], [

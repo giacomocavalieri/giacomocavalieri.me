@@ -1,5 +1,6 @@
 import blog/page
 import blog/post.{type Post}
+import blog/redirect
 import blog/rss
 import blog/talk
 import filepath
@@ -7,6 +8,7 @@ import gleam/io
 import gleam/list
 import gleam/order
 import gleam/string
+import gleam/time/calendar
 import lustre/element
 import simplifile
 import temporary
@@ -20,7 +22,11 @@ const posts_dir = "writing"
 pub fn main() {
   let all_posts = read_posts()
   let posts = list.filter(all_posts, keeping: post.is_shown)
-  let chronological_posts = list.sort(posts, by: order.reverse(post.compare))
+  let chronological_posts =
+    list.sort(posts, by: fn(one, other) {
+      calendar.naive_date_compare(one.meta.date, other.meta.date)
+      |> order.negate
+    })
 
   // We do everything in a temporary directory and then copy it to the final
   // destination. This way we don't have to take care of cleaning everything up
@@ -81,6 +87,11 @@ pub fn main() {
       |> string.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n", _)
       |> simplifile.write(to: filepath.join(directory, "feed.xml"))
       as "failed to create feed.xml"
+
+    let assert Ok(_) =
+      redirect.generate(chronological_posts, talk.talks)
+      |> simplifile.write(to: filepath.join(directory, "_redirects"))
+      as "failed to create redirects"
 
     let posts_dir = filepath.join(directory, posts_dir)
     let assert Ok(_) = simplifile.create_directory(posts_dir)
