@@ -47,15 +47,18 @@ pub fn contact() -> Element(a) {
     html.address([attr.class("stack-s")], [
       html.p([], [
         html.text("For any inquiry "),
-        html.a([attr.href("mailto:info@giacomocavalieri.me")], [
+        html.a([attr.href("mailto:info@giacomocavalieri.me"), attr.rel("me")], [
           html.text("info@giacomocavalieri.me"),
         ]),
       ]),
       html.p([], [
         html.text("My open source work is on GitHub "),
-        html.a([attr.href("https://github.com/giacomocavalieri")], [
-          html.text("@giacomocavalieri"),
-        ]),
+        html.a(
+          [attr.href("https://github.com/giacomocavalieri"), attr.rel("me")],
+          [
+            html.text("@giacomocavalieri"),
+          ],
+        ),
       ]),
       html.p([], [
         html.text("Connect with me on my "),
@@ -181,50 +184,50 @@ pub fn socials() -> Element(a) {
     html.main([attr.class("stack")], [
       html.p([], [html.text(description)]),
       html.ul([attr.class("stack-s")], [
-        html.li([attr.class("with-icon")], [
+        social_to_li(
           icon.github(),
-          html.a([attr.href("https://github.com/sponsors/giacomocavalieri")], [
-            html.text("GitHub"),
-          ]),
-        ]),
-        html.li([attr.class("with-icon")], [
-          icon.discord(),
-          html.a([attr.href("https://discord.gg/wgm8ssRU5c")], [
-            html.text("Discord"),
-          ]),
-        ]),
-        html.li([attr.class("with-icon")], [
+          "https://github.com/sponsors/giacomocavalieri",
+          "GitHub",
+        ),
+        social_to_li(icon.discord(), "https://discord.gg/wgm8ssRU5c", "Discord"),
+        social_to_li(
           icon.bluesky(),
-          html.a([attr.href("https://bsky.app/profile/giacomocavalieri.me")], [
-            html.text("Bluesky"),
-          ]),
-        ]),
-        html.li([attr.class("with-icon")], [
+          "https://bsky.app/profile/giacomocavalieri.me",
+          "Bluesky",
+        ),
+        social_to_li(
           icon.tiktok(),
-          html.a([attr.href("https://www.tiktok.com/@giacomocavalieri.me")], [
-            html.text("TikTok"),
-          ]),
-        ]),
-        html.li([attr.class("with-icon")], [
+          "https://www.tiktok.com/@giacomocavalieri.me",
+          "TikTok",
+        ),
+        social_to_li(
           icon.twitch(),
-          html.a([attr.href("https://www.twitch.tv/giacomo_cavalieri")], [
-            html.text("Twitch"),
-          ]),
-        ]),
-        html.li([attr.class("with-icon")], [
+          "https://www.twitch.tv/giacomo_cavalieri",
+          "Twitch",
+        ),
+        social_to_li(
           icon.youtube(),
-          html.a([attr.href("https://www.youtube.com/@giacomo_cavalieri")], [
-            html.text("YouTube"),
-          ]),
-        ]),
-        html.li([attr.class("with-icon")], [
+          "https://www.youtube.com/@giacomo_cavalieri",
+          "YouTube",
+        ),
+        social_to_li(
           icon.linkedin(),
-          html.a([attr.href("https://www.linkedin.com/in/giacomo-cavalieri")], [
-            html.text("LinkedIn"),
-          ]),
-        ]),
+          "https://www.linkedin.com/in/giacomo-cavalieri",
+          "LinkedIn",
+        ),
       ]),
     ]),
+  ])
+}
+
+fn social_to_li(
+  icon: Element(msg),
+  url url: String,
+  social name: String,
+) -> Element(msg) {
+  html.li([attr.class("with-icon")], [
+    icon,
+    html.a([attr.href(url), attr.rel("me")], [html.text(name)]),
   ])
 }
 
