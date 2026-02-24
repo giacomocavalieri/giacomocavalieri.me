@@ -263,6 +263,17 @@ fn default_head(
     viewport([
       content("width=device-width, initial-scale=1.0, viewport-fit=cover"),
     ]),
+    html.script(
+      [
+        attr.src("//gc.zgo.at/count.js"),
+        attribute("async", ""),
+        attribute(
+          "data-goatcounter",
+          "https://giacomocavalieri.goatcounter.com/count",
+        ),
+      ],
+      "",
+    ),
     html.link([
       attr.rel("alternate"),
       attr.type_("application/rss+xml"),
