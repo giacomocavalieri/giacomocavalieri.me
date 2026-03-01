@@ -76,6 +76,12 @@ pub fn main() {
       as "failed to create 404.html"
 
     let assert Ok(_) =
+      page.carrier_pigeon()
+      |> element.to_document_string
+      |> simplifile.write(to: filepath.join(directory, "carrier-pigeon.html"))
+      as "failed to create carrier-pigeon.html"
+
+    let assert Ok(_) =
       page.from_post(read_post("uses.md"))
       |> element.to_document_string
       |> simplifile.write(to: filepath.join(directory, "uses.html"))
@@ -103,19 +109,6 @@ pub fn main() {
         |> simplifile.write(to: filepath.join(posts_dir, post_file))
         as { "failed to create post " <> post_file }
     })
-
-    // For now I'm dropping the tag thing
-    //let tags_dir = filepath.join(directory, tags_dir)
-    //let assert Ok(_) = simplifile.create_directory(tags_dir)
-    //list.each(dict.to_list(group_by_tags(posts)), fn(entry) {
-    //  let #(tag, posts) = entry
-    //  let tag_file = tag <> ".html"
-    //  let assert Ok(_) =
-    //    page.from_tag(tag, posts)
-    //    |> element.to_document_string
-    //    |> simplifile.write(to: filepath.join(tags_dir, tag_file))
-    //    as { "failed to create tag page " <> tag_file }
-    //})
 
     let assert Ok(_) = simplifile.copy_directory(assets_dir, directory)
       as "failed to copy assets"

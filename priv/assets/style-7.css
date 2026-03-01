@@ -163,11 +163,14 @@ hr {
 }
 
 .jak-cover {
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 50%, transparent 90%), url("imgs/bg-vertical.jpg");
+    background-image:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 50%, transparent 90%),
+        url("imgs/bg-vertical.jpg");
     background-position: 70% 50%;
     @media (width >= 720px) {
         background-image:
-            linear-gradient(to right, rgba(0, 0, 0, 0.9) 40%, transparent 50%), url("imgs/bg-horizontal.jpg");
+            linear-gradient(to right, rgba(0, 0, 0, 0.9) 40%, transparent 50%),
+            url("imgs/bg-horizontal.jpg");
         background-position: 50% top;
     }
 
@@ -186,7 +189,11 @@ hr {
         margin-inline-end: var(--s-1);
     }
     & .bluesky-embed {
-        background-color: color-mix(in oklab, var(--bluesky-embed-color) 15%, transparent);
+        background-color: color-mix(
+            in oklab,
+            var(--bluesky-embed-color) 15%,
+            transparent
+        );
         padding: var(--s1);
 
         & a {
@@ -200,7 +207,11 @@ hr {
     }
 
     & blockquote {
-        background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
+        background-color: color-mix(
+            in oklab,
+            var(--main-color) 15%,
+            transparent
+        );
         padding: var(--s1);
     }
 }
@@ -222,6 +233,45 @@ a:hover {
     font-style: inherit;
     font-size: 0.7em;
     text-decoration: none;
+}
+
+input {
+    font-size: inherit;
+    color: inherit;
+    width: 100%;
+    background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
+    border-bottom: var(--s-5) solid var(--main-color);
+    padding: var(--s-1);
+}
+
+input:focus {
+    outline: none;
+    outline: var(--s-5) solid var(--main-color);
+}
+
+input::placeholder {
+    color: var(--main-color);
+    opacity: 50%;
+}
+
+button {
+    transition:
+        background-color 0.2s ease-in-out,
+        color 0.2s ease-in-out;
+    background-color: var(--main-color);
+    color: var(--bg-color);
+    padding: var(--s-3);
+    font-size: inherit;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    color: color-mix(in oklab, var(--main-color) 40%, transparent);
+    background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
 }
 
 /*** LAYOUT ELEMENTS **********************************************************/
@@ -272,6 +322,7 @@ a:hover {
 }
 
 .switcher {
+    max-width: var(--measure);
     display: flex;
     flex-wrap: wrap;
     gap: var(--s0);
@@ -331,6 +382,12 @@ a:hover {
 }
 .with-icon .icon {
     margin-inline-end: var(--s-1);
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /*** ANIMATIONS ***************************************************************/

@@ -1,5 +1,6 @@
 import blog/breadcrumbs
 import blog/icon
+import blog/interactive/carrier_pigeon
 import blog/post.{type Post}
 import blog/talk.{type Talk}
 import gleam/dict
@@ -55,9 +56,7 @@ pub fn contact() -> Element(a) {
         html.text("My open source work is on GitHub "),
         html.a(
           [attr.href("https://github.com/giacomocavalieri"), attr.rel("me")],
-          [
-            html.text("@giacomocavalieri"),
-          ],
+          [html.text("@giacomocavalieri")],
         ),
       ]),
       html.p([], [
@@ -161,6 +160,25 @@ pub fn speaking(talks: List(Talk)) -> Element(a) {
   ])
 }
 
+pub fn carrier_pigeon() -> Element(_) {
+  let title = "Carrier pigeon | Giacomo Cavalieri"
+  let description =
+    "Send me any message, it will be printed anonymously by a thermal printer sitting on my desk."
+  page(title, description, Some("pigeon.png"), [attr.class("stack-l")], [
+    breadcrumbs.new([
+      breadcrumbs.link("contact", to: "/contact"),
+      breadcrumbs.animated_link("socials", to: "/socials"),
+      breadcrumbs.animated_link("carrier pigeon", to: "/carrier-pigeon"),
+    ]),
+    html.main([attr.id("carrier-pigeon")], [
+      // We server side render the main content to make sure we don't get a
+      // white flash before Lustre can take control of this element.
+      carrier_pigeon.view(carrier_pigeon.init(Nil).0),
+    ]),
+    html.script([attr.src("/js/carrier_pigeon.js"), attr.type_("module")], ""),
+  ])
+}
+
 pub fn from_post(post: Post) -> Element(a) {
   page(
     post.meta.title,
@@ -215,6 +233,12 @@ pub fn socials() -> Element(a) {
           "https://www.linkedin.com/in/giacomo-cavalieri",
           "LinkedIn",
         ),
+        html.li([attr.class("with-icon")], [
+          icon.twitter(),
+          html.a([attr.href("/carrier-pigeon"), animate("carrier pigeon")], [
+            html.text("Carrier pigeon"),
+          ]),
+        ]),
       ]),
     ]),
   ])
@@ -297,7 +321,7 @@ fn default_head(
     ]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
-    stylesheet("/style-6.css"),
+    stylesheet("/style-7.css"),
     html.script([attr.src(hljs_script_url)], ""),
     html.script([attr.src(hljs_diff_url)], ""),
     html.script([attr.src(gleam_hljs_script_url)], ""),
