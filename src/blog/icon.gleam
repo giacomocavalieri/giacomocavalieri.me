@@ -1,4 +1,4 @@
-import lustre/attribute.{attribute} as attr
+import lustre/attribute.{attribute}
 import lustre/element.{type Element}
 import lustre/element/svg
 
@@ -10,7 +10,7 @@ pub fn twitter() -> Element(a) {
       attribute("width", "50"),
       attribute("fill", "white"),
       attribute("xmlns", "http://www.w3.org/2000/svg"),
-      attr.class("icon"),
+      attribute.class("icon"),
     ],
     [
       svg.path([
@@ -31,7 +31,7 @@ pub fn linkedin() -> Element(a) {
       attribute("viewBox", "0 0 48 48"),
       attribute("height", "48"),
       attribute("width", "48"),
-      attr.class("icon"),
+      attribute.class("icon"),
     ],
     [
       svg.g([attribute("clip-path", "url(#clip0_17_68)")], [
@@ -44,7 +44,7 @@ pub fn linkedin() -> Element(a) {
         ]),
       ]),
       svg.defs([], [
-        element.element("clippath", [attr.id("clip0_17_68")], [
+        element.element("clippath", [attribute.id("clip0_17_68")], [
           svg.rect([
             attribute("fill", "white"),
             attribute("height", "48"),
@@ -64,7 +64,7 @@ pub fn twitch() -> Element(a) {
       attribute("viewBox", "0 0 48 48"),
       attribute("height", "48"),
       attribute("width", "48"),
-      attr.class("icon"),
+      attribute.class("icon"),
     ],
     [
       svg.path([
@@ -94,7 +94,7 @@ pub fn discord() -> Element(a) {
       attribute("viewBox", "0 0 48 48"),
       attribute("height", "48"),
       attribute("width", "48"),
-      attr.class("icon"),
+      attribute.class("icon"),
     ],
     [
       svg.path([
@@ -116,7 +116,7 @@ pub fn tiktok() -> Element(a) {
       attribute("viewBox", "0 0 48 48"),
       attribute("height", "48"),
       attribute("width", "48"),
-      attr.class("icon"),
+      attribute.class("icon"),
     ],
     [
       svg.path([
@@ -138,7 +138,7 @@ pub fn bluesky() -> Element(a) {
       attribute("viewBox", "0 0 48 48"),
       attribute("height", "48"),
       attribute("width", "48"),
-      attr.class("icon"),
+      attribute.class("icon"),
     ],
     [
       svg.path([
@@ -160,7 +160,7 @@ pub fn youtube() -> Element(a) {
       attribute("viewBox", "0 0 48 48"),
       attribute("height", "48"),
       attribute("width", "48"),
-      attr.class("icon"),
+      attribute.class("icon"),
     ],
     [
       svg.path([
@@ -182,7 +182,7 @@ pub fn github() -> Element(a) {
       attribute("viewBox", "0 0 48 48"),
       attribute("height", "48"),
       attribute("width", "48"),
-      attr.class("icon"),
+      attribute.class("icon"),
     ],
     [
       svg.g([attribute("clip-path", "url(#clip0_910_44)")], [
@@ -197,7 +197,7 @@ pub fn github() -> Element(a) {
         ]),
       ]),
       svg.defs([], [
-        element.element("clippath", [attr.id("clip0_910_44")], [
+        element.element("clippath", [attribute.id("clip0_910_44")], [
           svg.rect([
             attribute("fill", "white"),
             attribute("height", "48"),

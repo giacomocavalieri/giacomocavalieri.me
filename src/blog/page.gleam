@@ -8,7 +8,7 @@ import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import jot_extra
-import lustre/attribute.{type Attribute, attribute} as attr
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element}
 import lustre/element/html
 
@@ -18,24 +18,27 @@ const description = "Italy-based developer, Gleam core team member, and function
 
 pub fn home() -> Element(a) {
   let title = "Giacomo Cavalieri"
-  page(title, description, None, [attr.class("stack-l jak-cover")], [
+  page(title, description, None, [attribute.class("stack-l jak-cover")], [
     html.h1([], [html.text("Giacomo Cavalieri")]),
-    html.main([attr.class("stack-s")], [
+    html.main([attribute.class("stack-s")], [
       html.p([], [html.text("Italy-based developer")]),
       html.p([], [
-        html.a([attr.href("https://gleam.run")], [html.text("Gleam")]),
+        html.a([attribute.href("https://gleam.run")], [html.text("Gleam")]),
         html.text(" core team member"),
       ]),
       html.p([], [
         html.text("Appreciate my work? Support me on "),
-        html.a([attr.href("https://github.com/sponsors/giacomocavalieri")], [
-          html.text("GitHub Sponsors"),
-        ]),
+        html.a(
+          [attribute.href("https://github.com/sponsors/giacomocavalieri")],
+          [
+            html.text("GitHub Sponsors"),
+          ],
+        ),
       ]),
     ]),
     navbar(
       html.li([], [
-        html.a([attr.href("contact.html")], [html.text("contact")]),
+        html.a([attribute.href("contact.html")], [html.text("contact")]),
       ]),
     ),
   ])
@@ -43,32 +46,41 @@ pub fn home() -> Element(a) {
 
 pub fn contact() -> Element(a) {
   let title = "Contact | Giacomo Cavalieri"
-  page(title, description, None, [attr.class("stack-l jak-cover")], [
+  page(title, description, None, [attribute.class("stack-l jak-cover")], [
     html.h1([], [html.text("Giacomo Cavalieri")]),
-    html.address([attr.class("stack-s")], [
+    html.address([attribute.class("stack-s")], [
       html.p([], [
         html.text("For any inquiry "),
-        html.a([attr.href("mailto:info@giacomocavalieri.me"), attr.rel("me")], [
-          html.text("info@giacomocavalieri.me"),
-        ]),
+        html.a(
+          [
+            attribute.href("mailto:info@giacomocavalieri.me"),
+            attribute.rel("me"),
+          ],
+          [
+            html.text("info@giacomocavalieri.me"),
+          ],
+        ),
       ]),
       html.p([], [
         html.text("My open source work is on GitHub "),
         html.a(
-          [attr.href("https://github.com/giacomocavalieri"), attr.rel("me")],
+          [
+            attribute.href("https://github.com/giacomocavalieri"),
+            attribute.rel("me"),
+          ],
           [html.text("@giacomocavalieri")],
         ),
       ]),
       html.p([], [
         html.text("Connect with me on my "),
-        html.a([attr.href("/socials.html"), animate("socials")], [
+        html.a([attribute.href("/socials.html"), animate("socials")], [
           html.text("socials"),
         ]),
       ]),
     ]),
     navbar(
       html.li([], [
-        html.a([attr.href("index.html")], [html.text("home")]),
+        html.a([attribute.href("index.html")], [html.text("home")]),
       ]),
     ),
   ])
@@ -76,14 +88,14 @@ pub fn contact() -> Element(a) {
 
 fn navbar(last_item: Element(a)) -> Element(a) {
   html.nav([], [
-    html.ul([attr.class("nav-switcher")], [
+    html.ul([attribute.class("nav-switcher")], [
       html.li([], [
-        html.a([attr.href("writing.html"), animate("writing")], [
+        html.a([attribute.href("writing.html"), animate("writing")], [
           html.text("writing"),
         ]),
       ]),
       html.li([], [
-        html.a([attr.href("speaking.html"), animate("speaking")], [
+        html.a([attribute.href("speaking.html"), animate("speaking")], [
           html.text("speaking"),
         ]),
       ]),
@@ -93,7 +105,7 @@ fn navbar(last_item: Element(a)) -> Element(a) {
 }
 
 fn animate(name: String) -> Attribute(a) {
-  attr.style("view-transition-name", name <> "-animation")
+  attribute.style("view-transition-name", name <> "-animation")
 }
 
 // --- 404 PAGE ---------------------------------------------------------------
@@ -101,11 +113,11 @@ fn animate(name: String) -> Attribute(a) {
 pub fn not_found() -> Element(a) {
   let title = "Not found"
   let description = "There's nothing here"
-  page(title, description, None, [attr.class("stack-l")], [
+  page(title, description, None, [attribute.class("stack-l")], [
     html.h1([], [html.text("There's nothing here!")]),
     html.p([], [
       html.text("Go back "),
-      html.a([attr.href("index.html")], [html.text("home")]),
+      html.a([attribute.href("index.html")], [html.text("home")]),
     ]),
   ])
 }
@@ -119,15 +131,15 @@ pub fn writing(posts: List(Post)) -> Element(a) {
     |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
   let title = "Writing | Giacomo Cavalieri"
-  page(title, description, None, [attr.class("stack-l")], [
+  page(title, description, None, [attribute.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("writing", to: "/writing.html"),
     ]),
     html.main([], [
-      html.ol([attr.class("stack")], {
+      html.ol([attribute.class("stack")], {
         use #(year, posts) <- list.map(posts_by_year)
-        html.li([attr.class("stack-s")], [
+        html.li([attribute.class("stack-s")], [
           html.h2([], [html.text(int.to_string(year))]),
           post.to_preview_list(posts),
         ])
@@ -143,15 +155,15 @@ pub fn speaking(talks: List(Talk)) -> Element(a) {
     |> list.sort(fn(one, other) { int.compare(other.0, one.0) })
 
   let title = "Speaking | Giacomo Cavalieri"
-  page(title, description, None, [attr.class("stack-l")], [
+  page(title, description, None, [attribute.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("home", to: "/"),
       breadcrumbs.animated_link("speaking", to: "/speaking.html"),
     ]),
     html.main([], [
-      html.ol([attr.class("stack")], {
+      html.ol([attribute.class("stack")], {
         use #(year, talks) <- list.map(talks_by_year)
-        html.li([attr.class("stack-s")], [
+        html.li([attribute.class("stack-s")], [
           html.h2([], [html.text(int.to_string(year))]),
           talk.to_preview_list(talks),
         ])
@@ -164,18 +176,21 @@ pub fn carrier_pigeon() -> Element(_) {
   let title = "Carrier pigeon | Giacomo Cavalieri"
   let description =
     "Send me any message, it will be printed anonymously by a thermal printer sitting on my desk."
-  page(title, description, Some("pigeon.png"), [attr.class("stack-l")], [
+  page(title, description, Some("pigeon.png"), [attribute.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("contact", to: "/contact"),
       breadcrumbs.animated_link("socials", to: "/socials"),
       breadcrumbs.animated_link("carrier pigeon", to: "/carrier-pigeon"),
     ]),
-    html.main([attr.id("carrier-pigeon")], [
+    html.main([attribute.id("carrier-pigeon")], [
       // We server side render the main content to make sure we don't get a
       // white flash before Lustre can take control of this element.
       carrier_pigeon.view(carrier_pigeon.init(Nil).0),
     ]),
-    html.script([attr.src("/js/carrier_pigeon.js"), attr.type_("module")], ""),
+    html.script(
+      [attribute.src("/js/carrier_pigeon.js"), attribute.type_("module")],
+      "",
+    ),
   ])
 }
 
@@ -184,7 +199,7 @@ pub fn from_post(post: Post) -> Element(a) {
     post.meta.title,
     jot_extra.to_string(post.meta.abstract),
     post.meta.preview_image,
-    [attr.class("stack-l")],
+    [attribute.class("stack-l")],
     post.to_article(post),
   )
 }
@@ -194,14 +209,14 @@ pub fn socials() -> Element(a) {
   let description =
     "Let's connect on social media! Here's all the places where you can find me."
 
-  page(title, description, None, [attr.class("stack-l")], [
+  page(title, description, None, [attribute.class("stack-l")], [
     breadcrumbs.new([
       breadcrumbs.link("contact", to: "/contact.html"),
       breadcrumbs.animated_link("socials", to: "/socials.html"),
     ]),
-    html.main([attr.class("stack")], [
+    html.main([attribute.class("stack")], [
       html.p([], [html.text(description)]),
-      html.ul([attr.class("stack-s")], [
+      html.ul([attribute.class("stack-s")], [
         social_to_li(
           icon.github(),
           "https://github.com/sponsors/giacomocavalieri",
@@ -233,11 +248,14 @@ pub fn socials() -> Element(a) {
           "https://www.linkedin.com/in/giacomo-cavalieri",
           "LinkedIn",
         ),
-        html.li([attr.class("with-icon")], [
+        html.li([attribute.class("with-icon")], [
           icon.twitter(),
-          html.a([attr.href("/carrier-pigeon"), animate("carrier pigeon")], [
-            html.text("Carrier pigeon"),
-          ]),
+          html.a(
+            [attribute.href("/carrier-pigeon"), animate("carrier pigeon")],
+            [
+              html.text("Carrier pigeon"),
+            ],
+          ),
         ]),
       ]),
     ]),
@@ -249,9 +267,9 @@ fn social_to_li(
   url url: String,
   social name: String,
 ) -> Element(msg) {
-  html.li([attr.class("with-icon")], [
+  html.li([attribute.class("with-icon")], [
     icon,
-    html.a([attr.href(url), attr.rel("me")], [html.text(name)]),
+    html.a([attribute.href(url), attribute.rel("me")], [html.text(name)]),
   ])
 }
 
@@ -289,7 +307,7 @@ fn default_head(
     ]),
     html.script(
       [
-        attr.src("//gc.zgo.at/count.js"),
+        attribute.src("//gc.zgo.at/count.js"),
         attribute("async", ""),
         attribute(
           "data-goatcounter",
@@ -299,15 +317,15 @@ fn default_head(
       "",
     ),
     html.link([
-      attr.rel("alternate"),
-      attr.type_("application/rss+xml"),
-      attr.title("giacomocavalieri.me posts feed"),
-      attr.href("https://giacomocavalieri.me/feed.xml"),
+      attribute.rel("alternate"),
+      attribute.type_("application/rss+xml"),
+      attribute.title("giacomocavalieri.me posts feed"),
+      attribute.href("https://giacomocavalieri.me/feed.xml"),
     ]),
     html.link([
-      attr.rel("icon"),
-      attr.type_("image/x-icon"),
-      attr.href("favicon.ico"),
+      attribute.rel("icon"),
+      attribute.type_("image/x-icon"),
+      attribute.href("favicon.ico"),
     ]),
     html.meta([property("og:site_name"), content("Giacomo Cavalieri")]),
     html.meta([property("og:title"), content(page_title)]),
@@ -320,11 +338,11 @@ fn default_head(
       }),
     ]),
     html.meta([property("og:description"), content(description)]),
-    html.meta([attr.name("description"), content(description)]),
+    html.meta([attribute.name("description"), content(description)]),
     stylesheet("/style-7.css"),
-    html.script([attr.src(hljs_script_url)], ""),
-    html.script([attr.src(hljs_diff_url)], ""),
-    html.script([attr.src(gleam_hljs_script_url)], ""),
+    html.script([attribute.src(hljs_script_url)], ""),
+    html.script([attribute.src(hljs_diff_url)], ""),
+    html.script([attribute.src(gleam_hljs_script_url)], ""),
     html.script([], "hljs.highlightAll();"),
   ])
 }
@@ -332,7 +350,7 @@ fn default_head(
 // --- META BUILDERS -----------------------------------------------------------
 
 fn meta_named(meta_name: String, attributes: List(Attribute(a))) -> Element(a) {
-  html.meta([attr.name(meta_name), ..attributes])
+  html.meta([attribute.name(meta_name), ..attributes])
 }
 
 fn viewport(attributes: List(Attribute(a))) -> Element(a) {
@@ -340,7 +358,7 @@ fn viewport(attributes: List(Attribute(a))) -> Element(a) {
 }
 
 fn stylesheet(file: String) -> Element(a) {
-  html.link([attr.rel("stylesheet"), attr.href(file)])
+  html.link([attribute.rel("stylesheet"), attribute.href(file)])
 }
 
 fn charset(value: String) -> Element(a) {
