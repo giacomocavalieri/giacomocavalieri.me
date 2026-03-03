@@ -178,13 +178,20 @@ pub fn carrier_pigeon() -> Element(_) {
     "Send me any message, it will be printed anonymously by a thermal printer sitting on my desk."
   page(title, description, Some("pigeon.png"), [attribute.class("stack-l")], [
     breadcrumbs.new([
-      breadcrumbs.link("contact", to: "/contact"),
-      breadcrumbs.animated_link("socials", to: "/socials"),
-      breadcrumbs.animated_link("carrier pigeon", to: "/carrier-pigeon"),
+      breadcrumbs.link("contact", to: "/contact.html"),
+      breadcrumbs.animated_link("socials", to: "/socials.html"),
+      breadcrumbs.animated_link("carrier pigeon", to: "/carrier-pigeon.html"),
     ]),
-    html.main([attribute.id("carrier-pigeon")], [
+    html.main([attribute.id("carrier-pigeon"), attribute.class("stack")], [
+      html.p([], [
+        html.text(
+          "Anything that you submit with this form will be printed anonymously by
+        a thermal printer sitting on my desk!
+        I affectionately call her my carrier pigeon.",
+        ),
+      ]),
       // We server side render the main content to make sure we don't get a
-      // white flash before Lustre can take control of this element.
+      // flash before Lustre can take control of this element.
       carrier_pigeon.view(carrier_pigeon.init(Nil).0),
     ]),
     html.script(
@@ -251,7 +258,7 @@ pub fn socials() -> Element(a) {
         html.li([attribute.class("with-icon")], [
           icon.twitter(),
           html.a(
-            [attribute.href("/carrier-pigeon"), animate("carrier pigeon")],
+            [attribute.href("/carrier-pigeon.html"), animate("carrier pigeon")],
             [
               html.text("Carrier pigeon"),
             ],
