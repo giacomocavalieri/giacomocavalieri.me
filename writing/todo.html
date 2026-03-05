@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><title>todo</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><script async data-goatcounter="https://giacomocavalieri.goatcounter.com/count" src="//gc.zgo.at/count.js"></script><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><link href="favicon.ico" rel="icon" type="image/x-icon"><meta content="Giacomo Cavalieri" property="og:site_name"><meta content="todo" property="og:title"><meta content="website" property="og:type"><meta content="https://giacomocavalieri.me/imgs/todo.jpg" property="og:image"><meta content="todo" property="og:description"><meta content="todo" name="description"><link href="/style-7.css" rel="stylesheet"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></head><body class="stack-l"><ol aria-label="Breadcrumb" class="breadcrumb"><li><a href="/">home</a></li><li><a href="/writing.html" style="view-transition-name:writing-animation;">writing</a></li><li><h2 aria-current="page" data-crumb="block">todo</h2></li></ol><main class="stack article"><section class="stack"><div><video
+  muted loop autoplay
+  poster='/imgs/raspberry-display-poster.png'
+  preload='auto'>
+    <source type='video/mp4' src='/imgs/thermal-printer.mp4' />
+</video></div><p>Last week, inspired by a lightning talk I saw at the
+<a href="https://gleamgathering.com">Gleam Gathering</a>, I decided to buy a cheap thermal
+printer and see if I could make it print all sort of things.</p><p>It is now set up to print pictures, receipts whenever some of my projects get a
+star on GitHub, and (the most fun of all) <em>messages from strangers on the internet!</em>
+You can actually send me any message using the form below: anything you submit
+in there will be printed anonymously by the thermal printer that is now sitting
+at my desk.</p><div><blockquote id="carrier-pigeon">
+<script src="/js/carrier_pigeon.js" type="module"></script>
+</blockquote></div><p>So let&#39;s have a look at how these printers work, how I set everything up, and
+how you can do the same!</p></section><section class="stack"><span><h2 id="the-esc-pos-protocol" style="display:inline;"><span><a class="anchor" href="#the-esc-pos-protocol">#</a> </span>The ESC/POS protocol</h2></span><p>Many thermal printers support the <a href="https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/index.html">ESC/POS protocol.</a>
+By sending specific bytes over to the printer we can have it print all sorts of
+messages, even pictures!</p><p>The first command to send the printer initialises it, it&#39;s called
+<a href="https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/esc_atsign.html"><code>ESC @</code></a>
+and consists of two bytes: <code>27</code> and <code>64</code>.
+Gleam has some handy syntax to build sequences of binary data, this is what it
+looks like:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() {
+  let initialise = &lt;&lt;27, 64&gt;&gt;
+
+  todo as &quot;send the command over to the printer&quot;
+}
+</code></pre><p>Now, how do we print some text? The process is pretty straightforward: send the
+text ascii bytes over to the printer, followed by a <code>\r\n</code>.
+For example the message <code>&quot;abc&quot;</code> would be the bytes <code>&lt;&lt;97, 98, 99&gt;&gt;</code>.
+The problem is decyphering those bytes in our code gets really hard, especially
+with long messages!
+Gleam has some nice syntax that allows us to write a string directly, turning it
+into its utf8-encoded bytes:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() {
+  let initialise = &lt;&lt;27, 64&gt;&gt;
+  let message = &lt;&lt;&quot;Hello, world!\r\n&quot;&gt;&gt;
+  //                            ^^
+  //  Don&#39;t forget the carriage return!
+
+  todo as &quot;send the command over to the printer&quot;
+}
+</code></pre><p>So far so good… let&#39;s try and step up our printing game and print a barcode!
+That can be achieved with the <a href="https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/gs_lk.html"><code>GS k</code></a>
+command.
+The documentation is a bit dense so let me break it down for you:</p><ul><li><section class="stack"><p>First we need to send two bytes: <code>29</code> and <code>107</code>, this is to tell the printer
+we want to print a barcode.</p></section></li><li><section class="stack"><p>Then we need to send a single byte (they call it <code>m</code>) which is used to decide
+which kind of barcode system we&#39;re using, the table they have in their docs is
+surprisingly quite nice at explaining the different systems.</p></section></li><li><section class="stack"><p>Next comes the ascii bytes that are describing the content of the barcode,
+depending on the system we picked with the <code>m</code> byte those might be just
+numbers, or numbers and letters.</p></section></li><li><section class="stack"><p>We end the command by sending over a <code>0</code> byte.</p></section></li></ul><p>So let&#39;s try and wrap everything together by printing the
+<a href="https://it.wikipedia.org/wiki/European_Article_Number">EAN-13</a> of a book:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() {
+  let initialise = &lt;&lt;27, 64&gt;&gt;
+  let message = &lt;&lt;&quot;Hello, world!\r\n&quot;&gt;&gt;
+  let barcode = &lt;&lt;
+    29, 107,         // 1. &quot;GS k&quot; command code
+    2,               // 2. the barcode is an EAN-13
+    &quot;9781449320737&quot;, // 3. the ascii content of the barcode
+    0                // 4. terminating byte
+  &gt;&gt;
+
+  todo as &quot;send the command over to the printer&quot;
+}
+</code></pre><p>Not that scary after all!
+And we can combine all those commands into a single sequence of bytes to send
+over to the printer like this:</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">pub fn main() {
+  let initialise = &lt;&lt;27, 64&gt;&gt;
+  let message = &lt;&lt;&quot;Hello, world!\r\n&quot;&gt;&gt;
+  let barcode = &lt;&lt;29, 107, 2, &quot;9781449320737&quot;, 0&gt;&gt;
+  let commands = &lt;&lt;initialise:bits, message:bits, barcode:bits&gt;&gt;
+  todo as &quot;send the command over to the printer&quot;
+}
+</code></pre><p>But now we need to take care of that <code>todo</code> looming at the end of our code…
+how does one send these bytes over to an actual printer?</p></section><section class="stack"><span><h2 id="one-does-not-simply-print" style="display:inline;"><span><a class="anchor" href="#one-does-not-simply-print">#</a> </span>One does not simply print</h2></span><p>The thermal printer I have is a cheap PT-280 one can connect to over bluetooth.
+In my setup I&#39;m connecting it to my <a href="https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/">Raspberry Pi Zero 2 W</a>
+that I use as a little home server.
+The code I&#39;m showing here will most likely work with any model that supports
+bluetooth connection.</p><p>Using the <code>bluetoothctl</code> command we first start looking for the device:</p><pre><code class="not-prose language-sh hljs" data-lang="sh">bluetoothctl power on
+bluetoothctl agent on
+bluetoothctl --timeout 3 scan on
+</code></pre><p>In the command output you should be able to see a line with the name of your
+device (in my case it&#39;s <code>&quot;PT-280&quot;</code>) and its address, something that looks like
+this:</p><div><pre><code data-highlighted='yes' class='not-prose language-shell'><span class='hljs-comment'># ... other devices</span>
+[<span class='hljs-shell-new'>NEW</span>] Device 86:67:7A:DF:F3:FC PT-280
+<span class='hljs-comment'># ... other devices</span></code>
+</pre></div><p>Once you have the printer address (<code>86:67:7A:DF:F3:FC</code> in my case) you can pair
+and trust the device:</p><pre><code class="not-prose language-sh hljs" data-lang="sh">bluetoothctl pair 86:67:7A:DF:F3:FC
+bluetoothctl trust 86:67:7A:DF:F3:FC
+</code></pre><p>The only thing that&#39;s left to do is bind the printer to an RFCOMM device
+creating a virtual serial port we can write to as if it were a file:</p><pre><code class="not-prose language-sh hljs" data-lang="sh">sudo rfcomm bind 0 86:67:7A:DF:F3:FC 1
+</code></pre><p>Phew! The hard bit is out of the way.
+What&#39;s nice is we can now send those bytes to the printer the same way we would
+write to a file.</p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">// In Gleam you can use the simplifile package,
+// add it to your project by running `gleam add simplifile`.
+import simplifile
+
+pub fn main() {
+  let initialise = &lt;&lt;27, 64&gt;&gt;
+  let message = &lt;&lt;&quot;Hello, world!\r\n&quot;&gt;&gt;
+  let barcode = &lt;&lt;29, 107, 2, &quot;9781449320737&quot;, 0&gt;&gt;
+  let commands = &lt;&lt;initialise:bits, message:bits, barcode:bits&gt;&gt;
+  simplifile.write_bits(commands, to: &quot;/dev/rfcomm0&quot;)
+}
+</code></pre><p>I think this is quite remarkable, in about 5 lines of code we managed to print
+some text and a barcode using a thermal printer!
+And here&#39;s the print in all its glory.</p><p>&lt;TODO AGGIUNGI IMMAGINE&gt;</p></section><section class="stack"><span><h2 id="the-sky-s-the-limit" style="display:inline;"><span><a class="anchor" href="#the-sky-s-the-limit">#</a> </span>The sky&#39;s the limit</h2></span><p>Now that everything is set up we can start experimenting with more commands.
+First let&#39;s center align the text with the <a href="https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/esc_la.html"><code>ESC a</code></a>
+command.
+It consists of the two bytes <code>27</code> and <code>97</code>, followed by one additional byte that
+can either have the value <code>0</code> (left-alignment), <code>1</code> (center-alignment), or
+<code>2</code> (right-alignment):</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> import simplifile
+
+ pub fn main() {
+   let initialise = &lt;&lt;27, 64&gt;&gt;
++  let center_align = &lt;&lt;27, 97, 1&gt;&gt;
+   let message = &lt;&lt;&quot;Hello, world!\r\n&quot;&gt;&gt;
+   let barcode = &lt;&lt;29, 107, 2, &quot;9781449320737&quot;, 0&gt;&gt;
+   let commands = &lt;&lt;
+     initialise:bits,
++    center_align:bits,
+     message:bits,
+     barcode:bits,
+   &gt;&gt;
+   simplifile.write_bits(commands, to: &quot;/dev/rfcomm0&quot;)
+ }
+</code></pre><p>We can also play around with the font width and height using the
+<a href="https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/gs_exclamation.html"><code>GS !</code></a>
+command: it starts with two bytes <code>29</code> and <code>33</code>, then it&#39;s followed by a single
+byte. Its individual bits describe how the font is to be enlarged, let&#39;s break
+it down:</p><pre><code class="not-prose language-text hljs" data-lang="text">0 aaa 0 bbb
+┬ ─┬─ ┬ ─┬─
+╰─┄│┄─┴─┄│┄── These two bits are always zero
+   ╰────┄│┄── 3-bit number width multiplier
+         ╰─── 3-bit number height multiplier
+</code></pre><p>The height/width is multiplied by the value of the corresponding 3-bit number,
+plus one. So <code>0b000</code> corresponds to 1x, <code>0b001</code> to 2x, <code>0b010</code> to 3x, and so
+on…</p><p>Say we want to make the greeting twice as tall, that means the last byte needs
+to be <code>0b0_001_0_000</code> (I&#39;m using underscores to split each group of bits and
+make it easier to see each one).
+We can write that directly in Gleam:</p><pre><code class="not-prose language-diff hljs" data-lang="diff"> import simplifile
+
+ pub fn main() {
+   let initialise = &lt;&lt;27, 64&gt;&gt;
+   let center_align = &lt;&lt;27, 97, 1&gt;&gt;
++  let enlarge = &lt;&lt;29, 33, 0b0_001_0_000&gt;&gt;
+   let message = &lt;&lt;&quot;Hello, world!\r\n&quot;&gt;&gt;
+   let barcode = &lt;&lt;29, 107, 2, &quot;9781449320737&quot;, 0&gt;&gt;
+   let commands = &lt;&lt;
+     initialise:bits,
+     center_align:bits,
++    enlarge:bits,
+     message:bits,
+     barcode:bits,
+   &gt;&gt;
+   simplifile.write_bits(commands, to: &quot;/dev/rfcomm0&quot;)
+ }
+</code></pre></section></main></body></html>
