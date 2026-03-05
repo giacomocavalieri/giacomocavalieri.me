@@ -6,7 +6,7 @@ import gleam/option.{None, Some}
 import gleam/regexp
 import gleam/string
 import jot
-import lustre/attribute.{type Attribute} as attr
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element}
 import lustre/element/html
 
@@ -17,7 +17,10 @@ pub fn to_element(document: jot.Document) -> Element(a) {
 
 fn containers_to_elements(containers: List(jot.Container)) -> List(Element(msg)) {
   list.map(blocks(containers), fn(groups) {
-    html.section([attr.class("stack")], list.map(groups, container_to_element))
+    html.section(
+      [attribute.class("stack")],
+      list.map(groups, container_to_element),
+    )
   })
 }
 
@@ -69,8 +72,8 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
       html.pre(djot_attributes(attributes), [
         html.code(
           [
-            attr.class("not-prose language-" <> language <> " hljs"),
-            attr.data("lang", language),
+            attribute.class("not-prose language-" <> language <> " hljs"),
+            attribute.data("lang", language),
           ],
           [html.text(content)],
         ),
@@ -90,7 +93,7 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
         |> to_safe_id
 
       let attributes = [
-        attr.style("display", "inline"),
+        attribute.style("display", "inline"),
         ..djot_attributes(
           attributes
           |> dict.insert("id", id),
@@ -100,7 +103,9 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
       let content = list.map(content, inline_to_element)
       let anchor =
         html.span([], [
-          html.a([attr.href("#" <> id), attr.class("anchor")], [html.text("#")]),
+          html.a([attribute.href("#" <> id), attribute.class("anchor")], [
+            html.text("#"),
+          ]),
           html.text(" "),
         ])
 
@@ -122,7 +127,7 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
 
     jot.BlockQuote(attributes:, items:) ->
       html.blockquote(
-        [attr.class("stack"), ..djot_attributes(attributes)],
+        [attribute.class("stack"), ..djot_attributes(attributes)],
         list.map(items, container_to_element),
       )
   }
@@ -146,7 +151,7 @@ fn djot_attributes(
 ) -> List(Attribute(msg)) {
   dict.to_list(attributes)
   |> list.sort(fn(one, other) { string.compare(one.0, other.0) })
-  |> list.map(fn(tuple) { attr.attribute(tuple.0, tuple.1) })
+  |> list.map(fn(tuple) { attribute(tuple.0, tuple.1) })
 }
 
 fn inline_to_element(inline: jot.Inline) -> Element(msg) {
@@ -159,12 +164,12 @@ fn inline_to_element(inline: jot.Inline) -> Element(msg) {
       case destination {
         jot.Reference(_) -> panic as "references not supported"
         jot.Url(url) ->
-          html.a([attr.href(url)], list.map(content, inline_to_element))
+          html.a([attribute.href(url)], list.map(content, inline_to_element))
       }
     jot.Image(content: _, destination:) ->
       case destination {
         jot.Reference(_) -> panic as "references not supported"
-        jot.Url(url) -> html.img([attr.src(url)])
+        jot.Url(url) -> html.img([attribute.src(url)])
       }
     jot.Emphasis(content:) -> html.em([], list.map(content, inline_to_element))
     jot.Strong(content:) ->
@@ -260,18 +265,23 @@ const bluesky_logo = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/
 fn extra_to_element(extra: Extra) -> Element(msg) {
   case extra {
     BlueskySocialEmbed(display_name:, account:, content:, link:) ->
-      html.figure([attr.class("stack-s bluesky-embed")], [
-        html.div([attr.class("sidebar")], [
-          html.img([attr.class("social-logo"), attr.src(bluesky_logo)]),
-          html.div([attr.class("stack-xs")], [
+      html.figure([attribute.class("stack-s bluesky-embed")], [
+        html.div([attribute.class("sidebar")], [
+          html.img([attribute.class("social-logo"), attribute.src(bluesky_logo)]),
+          html.div([attribute.class("stack-xs")], [
             html.p([], [html.text(display_name)]),
-            html.a([attr.href("https://bsky.app/profile/" <> account)], [
+            html.a([attribute.href("https://bsky.app/profile/" <> account)], [
               html.text("@" <> account),
             ]),
           ]),
         ]),
-        element.unsafe_raw_html("", "div", [attr.class("stack-s")], content),
-        html.a([attr.href(link)], [html.text("Read on Bluesky")]),
+        element.unsafe_raw_html(
+          "",
+          "div",
+          [attribute.class("stack-s")],
+          content,
+        ),
+        html.a([attribute.href(link)], [html.text("Read on Bluesky")]),
       ])
   }
 }

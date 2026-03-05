@@ -14,6 +14,8 @@ status = "show"
 - _reMarkable 1,_ I love the big e-ink display to read books and annotate pdfs
 - _Raspberry Pi Zero W 2,_ it's a small, small $15 computer. I turned it into a
   tiny local server I use to play games with my friends when they come over
+- _PT-280 Thermal Printer,_ I have it print GitHub notifications, and messages
+  from strangers on the internet
 
 ### Writing stuff
 

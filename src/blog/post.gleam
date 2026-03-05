@@ -8,7 +8,7 @@ import gleam/string
 import gleam/time/calendar.{type Date, Date}
 import jot
 import jot_extra
-import lustre/attribute as attr
+import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 import simplifile
@@ -122,7 +122,7 @@ pub fn to_article(post: Post) -> List(Element(a)) {
       breadcrumbs.block_link(post.meta.title),
     ]),
 
-    html.main([attr.class("stack article")], [
+    html.main([attribute.class("stack article")], [
       jot_extra.to_element(post.body),
     ]),
   ]
@@ -130,7 +130,7 @@ pub fn to_article(post: Post) -> List(Element(a)) {
 
 pub fn to_preview_list(posts: List(Post)) -> Element(a) {
   html.ol(
-    [attr.class("stack-s")],
+    [attribute.class("stack-s")],
     list.sort(posts, fn(one, other) {
       calendar.naive_date_compare(one.meta.date, other.meta.date)
     })
@@ -142,9 +142,11 @@ pub fn to_preview_list(posts: List(Post)) -> Element(a) {
 fn to_preview(post: Post) -> Element(a) {
   let post_link = "writing/" <> post.meta.id <> ".html"
   html.li([], [
-    html.article([attr.class("preview sidebar")], [
-      html.time([attr.class("info")], [html.text(month_day(post.meta.date))]),
-      html.a([attr.href(post_link)], [html.text(post.meta.title)]),
+    html.article([attribute.class("preview sidebar")], [
+      html.time([attribute.class("info")], [
+        html.text(month_day(post.meta.date)),
+      ]),
+      html.a([attribute.href(post_link)], [html.text(post.meta.title)]),
     ]),
   ])
 }
