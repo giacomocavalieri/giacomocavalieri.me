@@ -91,13 +91,6 @@ pub fn view(model: Model) -> Element(Message) {
   let message_is_empty = string.trim(model.message) == ""
 
   html.div([attribute.class("stack")], [
-    html.p([], [
-      html.text(
-        "Anything that you submit with this form will be printed anonymously by
-        a thermal printer sitting on my desk!
-        I affectionately call her my carrier pigeon.",
-      ),
-    ]),
     message_form(model, message_is_empty),
     outcome(model.previous_outcome),
   ])
@@ -114,7 +107,6 @@ fn message_form(model: Model, message_is_empty: Bool) -> Element(Message) {
       html.input([
         attribute.name("message"),
         attribute.value(model.message),
-        attribute.autofocus(True),
         attribute.placeholder("Type your message in here..."),
         attribute.disabled(model.sending_message),
         event.on_input(UserTypedMessage)
@@ -139,7 +131,7 @@ fn outcome(previous_outcome: Option(Outcome)) -> Element(Message) {
     Some(outcome) -> {
       let #(img, text) = case outcome {
         Success -> #(
-          "imgs/pigeon-done.png",
+          "/imgs/pigeon-done.png",
           html.p([], [
             html.text(
               "Thank you!! The message has been delivered and printed,
@@ -153,7 +145,7 @@ fn outcome(previous_outcome: Option(Outcome)) -> Element(Message) {
           ]),
         )
         MessageTooHeavy -> #(
-          "imgs/pigeon-too-big.png",
+          "/imgs/pigeon-too-big.png",
           html.p([], [
             html.text(
               "I love the energy but the message is a bit too big for the
@@ -162,7 +154,7 @@ fn outcome(previous_outcome: Option(Outcome)) -> Element(Message) {
           ]),
         )
         Unreachable | UnknownCode(_) | RsvpErrored(_) -> #(
-          "imgs/pigeon-sleeping.png",
+          "/imgs/pigeon-sleeping.png",
           html.p([], [
             html.text(
               "Looks like the printer is not reachable at the moment.

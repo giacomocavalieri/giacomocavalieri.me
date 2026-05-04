@@ -2,7 +2,7 @@ import gleam/list
 import gleam/option.{type Option}
 import gleam/string
 import gleam/time/calendar.{type Date, Date}
-import lustre/attribute as attr
+import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
@@ -101,7 +101,7 @@ pub const talks = [
 
 pub fn to_preview_list(talks: List(Talk)) -> Element(a) {
   html.ol(
-    [attr.class("stack-s")],
+    [attribute.class("stack-s")],
     list.sort(talks, fn(one, other) {
       calendar.naive_date_compare(one.date, other.date)
     })
@@ -113,13 +113,13 @@ pub fn to_preview_list(talks: List(Talk)) -> Element(a) {
 fn to_preview(talk: Talk) -> Element(a) {
   let text = html.text(talk.title)
   let text = case talk.youtube_link {
-    option.Some(link) -> html.a([attr.href(link)], [text])
+    option.Some(link) -> html.a([attribute.href(link)], [text])
     option.None -> html.span([], [text])
   }
 
   html.li([], [
-    html.article([attr.class("preview broken-sidebar")], [
-      html.div([attr.class("info")], [
+    html.article([attribute.class("preview broken-sidebar")], [
+      html.div([attribute.class("info")], [
         html.time([], [html.text(month(talk.date))]),
         html.span([], [html.text(" - " <> talk.place)]),
       ]),

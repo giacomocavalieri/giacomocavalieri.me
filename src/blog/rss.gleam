@@ -4,7 +4,7 @@ import gleam/list
 import gleam/string
 import gleam/time/calendar
 import jot_extra
-import lustre/attribute as attr
+import lustre/attribute.{attribute}
 import lustre/element.{type Element, element}
 import lustre/element/html
 
@@ -14,7 +14,7 @@ pub fn feed_from_posts(posts: List(post.Post)) -> Element(msg) {
       calendar.naive_date_compare(one.meta.date, other.meta.date)
     })
 
-  element("rss", [attr.attribute("version", "2.0")], [
+  element("rss", [attribute("version", "2.0")], [
     element("channel", [], [
       element("title", [], [html.text("giacomocavalieri.me posts feed")]),
       link("https://giacomocavalieri.me"),
