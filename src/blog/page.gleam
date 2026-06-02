@@ -266,7 +266,13 @@ fn page(
 ) -> Element(a) {
   html.html([lang("en")], [
     default_head(title, description, preview_image),
-    html.body(attributes, elements),
+    html.body(attributes, [
+      element.fragment(elements),
+      html.script([attr.src(hljs_script_url)], ""),
+      html.script([attr.src(hljs_diff_url)], ""),
+      html.script([attr.src(gleam_hljs_script_url)], ""),
+      html.script([], "hljs.highlightAll();"),
+    ]),
   ])
 }
 
@@ -322,10 +328,6 @@ fn default_head(
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
     stylesheet("/style-8.css"),
-    html.script([attr.src(hljs_script_url)], ""),
-    html.script([attr.src(hljs_diff_url)], ""),
-    html.script([attr.src(gleam_hljs_script_url)], ""),
-    html.script([], "hljs.highlightAll();"),
   ])
 }
 
