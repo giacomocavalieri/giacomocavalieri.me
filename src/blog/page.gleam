@@ -321,7 +321,7 @@ fn default_head(
     ]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
-    stylesheet("/style-7.css"),
+    stylesheet("/style-8.css"),
     html.script([attr.src(hljs_script_url)], ""),
     html.script([attr.src(hljs_diff_url)], ""),
     html.script([attr.src(gleam_hljs_script_url)], ""),
