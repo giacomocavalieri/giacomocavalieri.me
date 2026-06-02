@@ -5,6 +5,7 @@
         url("fonts/Lexend.ttf") format("truetype");
     font-weight: 400 800;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -14,6 +15,7 @@
         url("fonts/FiraCode.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -23,6 +25,7 @@
         url("fonts/Roboto.ttf") format("truetype");
     font-weight: 400 600;
     font-style: normal;
+    font-display: swap;
 }
 
 :root {
@@ -74,7 +77,7 @@ input {
     margin: 0;
     padding: 0;
 
-    font-family: "Roboto";
+    font-family: "Roboto", sans-serif;
     font-style: normal;
     color: var(--color);
 }
@@ -115,7 +118,7 @@ p {
 }
 
 h1 {
-    font-family: "Lexend";
+    font-family: "Lexend", sans-serif;
     font-weight: bold;
     max-inline-size: 7ch;
 
@@ -128,7 +131,7 @@ h1 {
 }
 
 h2 {
-    font-family: "Lexend";
+    font-family: "Lexend", sans-serif;
     font-weight: bold;
 
     font-size: var(--s2);
@@ -136,7 +139,7 @@ h2 {
 }
 
 h3 {
-    font-family: "Lexend";
+    font-family: "Lexend", sans-serif;
     font-weight: bold;
 
     font-size: var(--s1);
@@ -163,14 +166,11 @@ hr {
 }
 
 .jak-cover {
-    background-image:
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 50%, transparent 90%),
-        url("imgs/bg-vertical.jpg");
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 50%, transparent 90%), url("imgs/bg-vertical.jpg");
     background-position: 70% 50%;
     @media (width >= 720px) {
         background-image:
-            linear-gradient(to right, rgba(0, 0, 0, 0.9) 40%, transparent 50%),
-            url("imgs/bg-horizontal.jpg");
+            linear-gradient(to right, rgba(0, 0, 0, 0.9) 40%, transparent 50%), url("imgs/bg-horizontal.jpg");
         background-position: 50% top;
     }
 
@@ -189,11 +189,7 @@ hr {
         margin-inline-end: var(--s-1);
     }
     & .bluesky-embed {
-        background-color: color-mix(
-            in oklab,
-            var(--bluesky-embed-color) 15%,
-            transparent
-        );
+        background-color: color-mix(in oklab, var(--bluesky-embed-color) 15%, transparent);
         padding: var(--s1);
 
         & a {
@@ -207,11 +203,7 @@ hr {
     }
 
     & blockquote {
-        background-color: color-mix(
-            in oklab,
-            var(--main-color) 15%,
-            transparent
-        );
+        background-color: color-mix(in oklab, var(--main-color) 15%, transparent);
         padding: var(--s1);
     }
 }
