@@ -2,7 +2,7 @@
     font-family: "Lexend";
     src:
         local("Lexend"),
-        url("fonts/Lexend.ttf") format("truetype");
+        url("fonts/Lexend.woff2") format("woff2");
     font-weight: 400 800;
     font-style: normal;
     font-display: swap;
