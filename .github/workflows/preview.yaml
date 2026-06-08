@@ -10,13 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Push
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "29"
           gleam-version: "1.17.0"
           rebar3-version: "3"
+      - name: cache build directory
+        uses: actions/cache@v5
+        with:
+          path: build
+          key: ${{ runner.os }}-build
       - run: bash bin/release lustre system-bun
       - name: push to site branch
         uses: s0/git-publish-subdir-action@develop
