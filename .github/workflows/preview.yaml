@@ -11,12 +11,13 @@ jobs:
     name: Build and Push
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "29"
           gleam-version: "1.17.0"
           rebar3-version: "3"
-      - run: bash bin/release lustre
+      - run: bash bin/release lustre system-bun
       - name: push to site branch
         uses: s0/git-publish-subdir-action@develop
         env:

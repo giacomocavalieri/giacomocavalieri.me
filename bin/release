@@ -9,5 +9,9 @@ if [ "$1" == "lustre" ]; then
         name=$(basename -- "$entry" .gleam)
         files+=("blog/interactive/$name")
     done
-    gleam run -m lustre/dev build --minify --no-html --outdir=site/js "${files[@]}"
+    if [ "$2" == "system-bun" ]; then
+        gleam run -m lustre/dev build --minify --no-html --bun=system --outdir=site/js "${files[@]}"
+    else
+        gleam run -m lustre/dev build --minify --no-html --outdir=site/js "${files[@]}"
+    fi
 fi
