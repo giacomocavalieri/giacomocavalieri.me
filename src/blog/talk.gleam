@@ -20,8 +20,14 @@ pub const talks = [
   Talk(
     title: "Panel - Chat with Gleam Core Team",
     place: "Gleam Gathering",
-    youtube_link: option.None,
+    youtube_link: option.Some("https://www.youtube.com/watch?v=LgfzH_WBlr4"),
     date: Date(day: 21, month: calendar.February, year: 2026),
+  ),
+  Talk(
+    title: "Gleam and the value of small",
+    place: "Ubuntu Summit",
+    youtube_link: option.Some("https://www.youtube.com/watch?v=E6_JqYMeNqs"),
+    date: Date(day: 27, month: calendar.May, year: 2026),
   ),
   Talk(
     title: "A Code Centric Journey Into the Gleam Language",
