@@ -40,7 +40,7 @@ pub type Outcome {
   MessageTooHeavy
   Unreachable
   UnknownCode(code: Int)
-  RsvpErrored(error: rsvp.Error)
+  RsvpErrored(error: rsvp.Error(String))
 }
 
 fn update(model: Model, message: Message) -> #(Model, Effect(Message)) {

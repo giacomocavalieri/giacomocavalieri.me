@@ -11,11 +11,18 @@ import lustre/element.{type Element}
 import lustre/element/html
 
 pub fn to_element(document: jot.Document) -> Element(a) {
-  let jot.Document(content:, references: _, footnotes: _) = document
+  let jot.Document(
+    content:,
+    references: _,
+    footnotes: _,
+    reference_attributes: _,
+  ) = document
   element.fragment(containers_to_elements(content))
 }
 
-fn containers_to_elements(containers: List(jot.Container)) -> List(Element(msg)) {
+fn containers_to_elements(
+  containers: List(jot.Container),
+) -> List(Element(msg)) {
   list.map(blocks(containers), fn(groups) {
     html.section([attr.class("stack")], list.map(groups, container_to_element))
   })
@@ -58,7 +65,10 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
       }
 
     jot.Paragraph(attributes:, content:) ->
-      html.p(djot_attributes(attributes), list.map(content, inline_to_element))
+      html.p(
+        djot_attributes(None, attributes),
+        list.map(content, inline_to_element),
+      )
 
     jot.Codeblock(attributes:, language:, content:) -> {
       let language = case language {
@@ -66,7 +76,7 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
         None -> "text"
       }
 
-      html.pre(djot_attributes(attributes), [
+      html.pre(djot_attributes(None, attributes), [
         html.code(
           [
             attr.class("not-prose language-" <> language <> " hljs"),
@@ -83,6 +93,12 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
         html.li([], containers_to_elements(item))
       })
 
+    jot.OrderedList(layout: _, punctuation: _, ordinal: _, start: _, items:) ->
+      html.ol([], {
+        use item <- list.map(items)
+        html.li([], containers_to_elements(item))
+      })
+
     jot.Heading(attributes:, level:, content:) -> {
       let id =
         list.map(content, inline_to_string)
@@ -91,10 +107,7 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
 
       let attributes = [
         attr.style("display", "inline"),
-        ..djot_attributes(
-          attributes
-          |> dict.insert("id", id),
-        )
+        ..djot_attributes(None, dict.insert(attributes, "id", id))
       ]
 
       let content = list.map(content, inline_to_element)
@@ -114,15 +127,15 @@ fn container_to_element(container: jot.Container) -> Element(msg) {
       }
     }
 
-    jot.Div(attributes:, items:) ->
+    jot.Div(attributes:, items:, class:) ->
       html.div(
-        djot_attributes(attributes),
+        djot_attributes(class, attributes),
         list.map(items, container_to_element),
       )
 
     jot.BlockQuote(attributes:, items:) ->
       html.blockquote(
-        [attr.class("stack"), ..djot_attributes(attributes)],
+        [attr.class("stack"), ..djot_attributes(None, attributes)],
         list.map(items, container_to_element),
       )
   }
@@ -142,11 +155,18 @@ pub fn to_safe_id(string: String) -> String {
 }
 
 fn djot_attributes(
+  class: option.Option(String),
   attributes: dict.Dict(String, String),
 ) -> List(Attribute(msg)) {
-  dict.to_list(attributes)
-  |> list.sort(fn(one, other) { string.compare(one.0, other.0) })
-  |> list.map(fn(tuple) { attr.attribute(tuple.0, tuple.1) })
+  let attributes =
+    dict.to_list(attributes)
+    |> list.sort(fn(one, other) { string.compare(one.0, other.0) })
+    |> list.map(fn(tuple) { attr.attribute(tuple.0, tuple.1) })
+
+  case class {
+    Some(class) -> [attr.class(class), ..attributes]
+    None -> attributes
+  }
 }
 
 fn inline_to_element(inline: jot.Inline) -> Element(msg) {
@@ -155,30 +175,55 @@ fn inline_to_element(inline: jot.Inline) -> Element(msg) {
     jot.Linebreak -> html.br([])
     jot.Text(string) -> html.text(string)
     jot.NonBreakingSpace -> html.text(" ")
-    jot.Link(content:, destination:) ->
+    jot.Link(content:, destination:, attributes:) ->
       case destination {
         jot.Reference(_) -> panic as "references not supported"
         jot.Url(url) ->
-          html.a([attr.href(url)], list.map(content, inline_to_element))
+          html.a(
+            [attr.href(url), ..djot_attributes(None, attributes)],
+            list.map(content, inline_to_element),
+          )
       }
-    jot.Image(content: _, destination:) ->
+    jot.Image(content: _, destination:, attributes:) ->
       case destination {
         jot.Reference(_) -> panic as "references not supported"
-        jot.Url(url) -> html.img([attr.src(url)])
+        jot.Url(url) ->
+          html.img([attr.src(url), ..djot_attributes(None, attributes)])
       }
+
+    jot.MathDisplay(content: _) -> panic as "math display not supported"
+    jot.MathInline(content: _) -> panic as "math inline not supported"
+    jot.Symbol(content: _) -> panic as "symbol not supported"
+
+    jot.Span(attributes:, content:) ->
+      html.span(
+        djot_attributes(None, attributes),
+        list.map(content, inline_to_element),
+      )
+
     jot.Emphasis(content:) -> html.em([], list.map(content, inline_to_element))
     jot.Strong(content:) ->
       html.strong([], list.map(content, inline_to_element))
+    jot.Delete(content:) -> html.del([], list.map(content, inline_to_element))
+    jot.Insert(content:) -> html.ins([], list.map(content, inline_to_element))
+    jot.Mark(content:) -> html.mark([], list.map(content, inline_to_element))
+    jot.Superscript(content:) ->
+      html.sup([], list.map(content, inline_to_element))
+    jot.Subscript(content:) ->
+      html.sub([], list.map(content, inline_to_element))
     jot.Code(content:) -> html.code([], [html.text(content)])
-    jot.MathDisplay(content: _) -> panic as "math display not supported"
-    jot.MathInline(content: _) -> panic as "math inline not supported"
   }
 }
 
 // TO STRING -------------------------------------------------------------------
 
 pub fn to_string(document: jot.Document) -> String {
-  let jot.Document(content:, references: _, footnotes: _) = document
+  let jot.Document(
+    content:,
+    references: _,
+    footnotes: _,
+    reference_attributes: _,
+  ) = document
   containers_to_string(content)
 }
 
@@ -194,9 +239,10 @@ fn container_to_string(container: jot.Container) -> String {
     jot.Heading(attributes: _, level: _, content:) -> inlines_to_string(content)
     jot.Codeblock(attributes: _, language: _, content:) -> content
     jot.BlockQuote(attributes: _, items:) -> containers_to_string(items)
-    jot.Div(attributes: _, items:) -> containers_to_string(items)
+    jot.Div(attributes: _, items:, class: _) -> containers_to_string(items)
     jot.RawBlock(content:) -> content
-    jot.BulletList(layout: _, style: _, items:) ->
+    jot.BulletList(layout: _, style: _, items:)
+    | jot.OrderedList(layout: _, punctuation: _, ordinal: _, start: _, items:) ->
       list.map(items, containers_to_string)
       |> string.join(with: "\n")
   }
@@ -213,12 +259,20 @@ fn inline_to_string(inline: jot.Inline) -> String {
     jot.Text(string) -> string
     jot.Footnote(reference:) -> reference
 
-    jot.Code(content:) | jot.MathDisplay(content:) | jot.MathInline(content:) ->
-      content
+    jot.Symbol(content:)
+    | jot.Code(content:)
+    | jot.MathDisplay(content:)
+    | jot.MathInline(content:) -> content
 
-    jot.Link(content:, destination: _)
-    | jot.Image(content:, destination: _)
+    jot.Delete(content:)
+    | jot.Insert(content:)
+    | jot.Mark(content:)
+    | jot.Superscript(content:)
+    | jot.Subscript(content:)
+    | jot.Link(content:, destination: _, attributes: _)
+    | jot.Image(content:, destination: _, attributes: _)
     | jot.Emphasis(content:)
+    | jot.Span(attributes: _, content:)
     | jot.Strong(content:) -> inlines_to_string(content)
   }
 }
