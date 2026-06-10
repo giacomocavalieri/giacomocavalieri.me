@@ -40,7 +40,7 @@ pub const talks = [
   Talk(
     title: "You Don't Need an ORM",
     place: "Code BEAM Europe",
-    youtube_link: option.None,
+    youtube_link: option.Some("https://www.youtube.com/watch?v=6O9wq2GjZpc"),
     date: Date(day: 4, month: calendar.November, year: 2025),
   ),
   Talk(
