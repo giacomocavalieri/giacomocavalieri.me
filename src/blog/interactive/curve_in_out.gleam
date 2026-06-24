@@ -42,9 +42,9 @@ type Status {
 type Message {
   TimerTicked
   UserMovedSlider(value: String)
-  RestartTimerStarted(timer: Timer)
   UserReleasedSlider
-  RestartTimerEnded
+  ResumeTimerStarted(timer: Timer)
+  ResumeTimerEnded
 }
 
 type Direction {
@@ -74,10 +74,10 @@ fn start_timer() -> Effect(Message) {
   Nil
 }
 
-fn start_restart_timer() -> Effect(Message) {
+fn start_resume_timer() -> Effect(Message) {
   use dispatch <- effect.from
-  let timer = after(ms: 1000, do: fn() { dispatch(RestartTimerEnded) })
-  dispatch(RestartTimerStarted(timer))
+  let timer = after(ms: 1000, do: fn() { dispatch(ResumeTimerEnded) })
+  dispatch(ResumeTimerStarted(timer))
   Nil
 }
 
@@ -149,13 +149,13 @@ fn update(model: Model, message: Message) -> #(Model, Effect(Message)) {
         }
       }
 
-    UserReleasedSlider -> #(model, start_restart_timer())
+    UserReleasedSlider -> #(model, start_resume_timer())
 
-    RestartTimerStarted(timer:) -> {
+    ResumeTimerStarted(timer:) -> {
       #(Model(..model, restart_timer: Some(timer)), effect.none())
     }
 
-    RestartTimerEnded -> {
+    ResumeTimerEnded -> {
       #(Model(..model, restart_timer: None, status: Playing), start_timer())
     }
   }
