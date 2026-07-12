@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en"><head><title>Closing a three-year-old issue using Rust arenas</title><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><script async data-goatcounter="https://giacomocavalieri.goatcounter.com/count" src="//gc.zgo.at/count.js"></script><link href="https://giacomocavalieri.me/feed.xml" rel="alternate" title="giacomocavalieri.me posts feed" type="application/rss+xml"><link href="favicon.ico" rel="icon" type="image/x-icon"><meta content="Giacomo Cavalieri" property="og:site_name"><meta content="Closing a three-year-old issue using Rust arenas" property="og:title"><meta content="website" property="og:type"><meta content="https://giacomocavalieri.me/imgs/og-preview-image.jpg" property="og:image"><meta content="How I used arenas to make the Gleam formatter faster and less memory hungry" property="og:description"><meta content="How I used arenas to make the Gleam formatter faster and less memory hungry" name="description"><link href="/style-9.css" rel="stylesheet"></head><body class="stack-l"><!-- lustre:fragment --><ol aria-label="Breadcrumb" class="breadcrumb"><li><a href="/">home</a></li><li><a href="/writing.html" style="view-transition-name:writing-animation;">writing</a></li><li><h2 aria-current="page" data-crumb="block">Closing a three-year-old issue using Rust arenas</h2></li></ol><main class="stack article"><!-- lustre:fragment --><!-- lustre:fragment --><section class="stack"><p>I am part of the core team working on <a href="https://gleam.run">Gleam</a>, a small,
+friendly functional programming language written in Rust.</p><p>A little while ago I ran into a three-year-old
+<a href="https://github.com/gleam-lang/gleam/issues/2251">issue</a> suggesting how we could
+start using arenas to make the language&#39;s pretty printer faster.
+Quite ominously the issue ends with:</p><blockquote class="stack"><p><em>&quot;This would be quite a long manual job.&quot;</em></p></blockquote><p>That sounds grand. I find it actually quite fun to tackle those boring and
+repetitive jobs where I can turn my brain off and just punch at a keyboard.
+<sup><a href="#^llms-footnote" id="^llms-origin">^llms</a></sup></p><p>After a couple of days of careful find-and-replace and a
+<a href="https://github.com/gleam-lang/gleam/pull/5824"><code>+2963/-1032</code> pull request</a>
+later, I managed to make the Gleam formatter a lot faster, also cutting its peak
+memory usage by a good 10%!</p></section><section class="stack"><span><h2 id="what-s-the-problem" style="display:inline;"><span><a class="anchor" href="#what-s-the-problem">#</a> </span>What&#39;s the problem?</h2></span><p>As the issue points out, Gleam&#39;s pretty printer is based on a recursive data
+structure, the <code>Document</code>. Here&#39;s a slightly simplified version of the one that
+Gleam uses:</p><pre><code class="not-prose language-rust hljs" data-lang="rust">pub enum Document&lt;&#39;string&gt; {
+    /// A literal string that will be printed
+    /// exactly as it is.
+    String(&amp;&#39;string str),
+
+    /// A possible point where the rendered
+    /// document could be broken if any line
+    /// line gets too long.
+    Break {
+        /// The string to render if this is broken
+        broken: &amp;&#39;string str,
+        /// The string to render if this in not broken
+        unbroken: &amp;&#39;string str
+    },
+
+    /// A document that can be broken along its
+    /// `Break`s.
+    Group(Vec&lt;Self&gt;),
+
+    /// If this document is broken, increase its nesting
+    /// by some amount.
+    Nest(Box&lt;Self&gt;),
+
+    // ...and many more...
+}
+</code></pre><p>This allows us to describe how a piece of code should be rendered and how the
+pretty printer is allowed to break it if it gets too long for the line limit.
+For example, this is how a list is represented:</p><pre><code class="not-prose language-rust hljs" data-lang="rust">  Group(vec![
+    String(&quot;[&quot;),
+    Nest(Box::new(Break { broken: &quot;&quot;, unbroken: &quot;&quot; })),
+    String(&quot;1&quot;),
+    Nest(Box::new(Break { broken: &quot;,&quot;, unbroken: &quot;, &quot; })),
+    String(&quot;2&quot;),
+    Break { broken: &quot;,&quot;, unbroken: &quot;&quot; },
+    String(&quot;]&quot;)
+  ])
+</code></pre><p>This means the formatter is allowed to either render the list without ever
+breaking it, or (if it doesn&#39;t fit on the current line) to break it along the
+given break points:<sup><a href="#^how-this-works-footnote" id="^how-this-works-origin">^how-this-works</a></sup></p><pre><code class="not-prose language-gleam hljs" data-lang="gleam">// Rendered with none of the `Break`s broken...
+[1, 2]
+
+// ...or rendered breaking it along the `Break`s!
+[
+  1,
+  2,
+]
+</code></pre><p>Since some <code>Document</code> variants can hold other documents, like <code>Nest</code> does, those
+will have to be boxed on the heap.
+And quite a good chunk of time could be spent just doing that!</p></section><section class="stack"><span><h2 id="arenas" style="display:inline;"><span><a class="anchor" href="#arenas">#</a> </span>Arenas</h2></span><p>What if instead we could just store references to other documents?
+The <code>Document</code> enum would need some updating.
+We need a new lifetime for those references:</p><pre><code class="not-prose language-diff hljs" data-lang="diff">pub enum Document&lt;&#39;doc, &#39;string&gt; {
+-    Nest(Box&lt;Self&gt;),
++    Nest(&amp;&#39;doc Self),
+
+    // ...and the other variants...
+}
+</code></pre><p>If you&#39;ve worked with references in Rust you know it can sometimes be quite a
+bit of a pain to deal with lifetimes. But using an arena can make it a lot
+nicer.</p><p>In our case I&#39;ve decided to use the
+<a href="https://docs.rs/typed-arena/latest/typed_arena/"><code>typed_arena</code></a> crate.
+The API is pretty straightforward: you can <code>alloc</code> new things on the arena, and
+get a reference back. That&#39;s basically it!
+As long as the arena is alive, you will be able to use the data in it; and when
+the arena gets out of scope and is dropped, all the data will be dropped with
+it.</p><pre><code class="not-prose language-rust hljs" data-lang="rust">let arena = Arena::new();
+
+let comma_break = arena.alloc(Break {
+    broken: &quot;,&quot;, unbroken: &quot;, &quot;
+});
+
+let nested_break = arena.alloc(Nest(comma_break));
+
+// ...render the docs or whatever...
+</code></pre><p>The borrow checker will make sure that we can&#39;t reference data in the arena once
+the arena is dropped:</p><pre><code class="not-prose language-rust hljs" data-lang="rust">pub fn alloc(&amp;self, value: T) -&gt; &amp;mut T
+//           ^                   ^^^^
+// The reference to the value allocated in
+// the arena can&#39;t outlive it!
+</code></pre><p>Another nice benefit is that we can cache a lot of documents that are repeated
+throughout the code without having to allocate one every single time.
+For example the documents with all the language&#39;s keywords <code>String(&quot;fn&quot;)</code>,
+<code>String(&quot;pub&quot;)</code>, <code>String(&quot;type&quot;)</code>; or the comma we use to separate list items:
+<code>Break { unbroken: &quot;, &quot;, broken: &quot;,&quot; }</code>.
+There&#39;s literally <a href="https://github.com/gleam-lang/gleam/pull/5824/changes#diff-fd77bddd869b2a4e981c876948b9c61e195184ef23a2becbc4ac023aed51f920R590">hundreds of little documents</a>
+that are allocated just once rather than being constantly boxed.</p></section><section class="stack"><span><h2 id="the-result" style="display:inline;"><span><a class="anchor" href="#the-result">#</a> </span>The result</h2></span><p>As nice as the arena is to use, changing a big chunk of code to start using it
+required a bit of grunt work: all the bits of code that previously were fine
+with just <code>Box::new</code>, now need to take the arena where the data will be
+allocated as an additional argument:</p><pre><code class="not-prose language-diff hljs" data-lang="diff">const comma_break = Break { broken: &quot;,&quot;, unbroken: &quot;, &quot;) };
+
+pub fn format_list(
++   arena: &amp;&#39;doc arena : Arena&lt;Document&lt;&#39;doc, &#39;string&gt;&gt;,
+    items: Vec&lt;UntypedEpxression&gt;
+) -&gt; Document&lt;&#39;string&gt; {
+    let comma =
+-        Nest(Box::new(comma_break));
++        arena.alloc(Nest(comma_break));
+
+    Group(vec![
+        String(&quot;[&quot;),
+        items
+          .iter()
+          .map(|item|
+-             Nest(Box::new(format_expression(item)))
++             Nest(format_expression(arena, item))
+          )
+          .intersperse(comma)
+          .collect(),
+        String(&quot;]&quot;)
+    ])
+}
+</code></pre><p>In the end, the outcome was much better than I anticipated, the pretty printer
+alone got a huge speedup.
+The time spent formatting a real Gleam project like
+<a href="https://github.com/giacomocavalieri/squirrel"><code>squirrel</code></a> went from 13ms to
+9,8ms. <em>That&#39;s 24% faster!</em></p><p>The formatting is just a fraction of what goes into running <code>gleam format</code>, we
+first have to read and parse the source code of a project.
+And yet the improvement is actually noticeable, running <code>gleam format</code> is 13%
+faster.
+The peak memory footprint also went down from 8.4MB to 7.6MB.</p><p>As it turns out spending less time allocating stuff on the heap can make our
+code faster and less memory hungry, and arenas are a really nice way to do that
+in Rust.</p></section><!-- /lustre:fragment --><hr><dl class="footnotes stack-s"><div><dt><sup><a href="#^how-this-works-origin" id="^how-this-works-footnote">^how-this-works</a></sup></dt><dd><section class="stack"><p>The pretty printing algorithm itself is quite fascinating, if you&#39;re curious
+to learn how this works you can check the
+<a href="https://lindig.github.io/papers/strictly-pretty-2000.pdf">&quot;Strictly Pretty&quot;</a>
+paper out. I found it a really nice read, and it&#39;s what the Gleam pretty
+printer is based on!</p></section></dd></div><div><dt><sup><a href="#^llms-origin" id="^llms-footnote">^llms</a></sup></dt><dd><section class="stack"><p>This is also one of the resons why I despise LLMs so much, and you won&#39;t see
+me use them: I like typing and thinking for myself, thanks!</p></section></dd></div></dl><!-- /lustre:fragment --></main><!-- /lustre:fragment --><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/diff.min.js"></script><script src="/highlightjs-gleam.js"></script><script>hljs.highlightAll();</script></body></html>
