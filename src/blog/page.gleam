@@ -327,7 +327,7 @@ fn default_head(
     ]),
     html.meta([property("og:description"), content(description)]),
     html.meta([attr.name("description"), content(description)]),
-    stylesheet("/style-8.css"),
+    stylesheet("/style-9.css"),
   ])
 }
 

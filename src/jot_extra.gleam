@@ -11,13 +11,48 @@ import lustre/element.{type Element}
 import lustre/element/html
 
 pub fn to_element(document: jot.Document) -> Element(a) {
-  let jot.Document(
-    content:,
-    references: _,
-    footnotes: _,
-    reference_attributes: _,
-  ) = document
-  element.fragment(containers_to_elements(content))
+  let jot.Document(content:, references: _, footnotes:, reference_attributes: _) =
+    document
+
+  let main_content = element.fragment(containers_to_elements(content))
+
+  case dict.is_empty(footnotes) {
+    True -> main_content
+    False ->
+      element.fragment([
+        main_content,
+        html.hr([]),
+        render_footnoted(footnotes),
+      ])
+  }
+}
+
+fn render_footnoted(
+  footnotes: dict.Dict(String, List(jot.Container)),
+) -> Element(a) {
+  html.dl(
+    [attr.class("footnotes stack-s")],
+    dict.to_list(footnotes)
+      |> list.sort(fn(one, other) { string.compare(one.0, other.0) })
+      |> list.map(fn(pair) {
+        let #(key, content) = pair
+
+        html.div([], [
+          html.dt([], [
+            html.sup([], [
+              html.a(
+                [
+                  attr.href("#" <> key <> "-origin"),
+                  attr.id(key <> "-footnote"),
+                ],
+                [html.text(key)],
+              ),
+            ]),
+          ]),
+          html.dd([], containers_to_elements(content)),
+        ])
+      }),
+  )
 }
 
 fn containers_to_elements(
@@ -171,7 +206,17 @@ fn djot_attributes(
 
 fn inline_to_element(inline: jot.Inline) -> Element(msg) {
   case inline {
-    jot.Footnote(reference: _) -> panic as "footnotes not supported"
+    jot.Footnote(reference:) ->
+      html.sup([], [
+        html.a(
+          [
+            attr.id(reference <> "-origin"),
+            attr.href("#" <> reference <> "-footnote"),
+          ],
+          [html.text(reference)],
+        ),
+      ])
+
     jot.Linebreak -> html.br([])
     jot.Text(string) -> html.text(string)
     jot.NonBreakingSpace -> html.text(" ")
